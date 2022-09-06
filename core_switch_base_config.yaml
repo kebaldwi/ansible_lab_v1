@@ -2,7 +2,7 @@
 # Get Initial State of the devices
 
 #Specify Host Group to use
-- hosts: switches
+- hosts: core
   connection: ansible.netcommon.network_cli
   roles:
     - ansible-pyats
@@ -16,7 +16,7 @@
 
     - name: Apply Initial Configuration
       ios_config:
-        src: access_config.j2
+        src: templates/core_config.j2
         save_when: changed
 
     - name: Post-Run Config Collection
