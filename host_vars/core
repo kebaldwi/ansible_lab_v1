@@ -1,0 +1,13 @@
+---
+core_lo0_ip: 172.16.1.2
+core_wan_interface_ip: 192.168.1.2
+core_wan_interface_mask: 255.255.255.252
+ospf_area: 0
+core_vl100_SVI_ip: 10.1.100.1
+core_vl100_SVI_mask: 255.255.255.0
+core_vl200_SVI_ip: 10.1.200.1
+core_vl200_SVI_mask: 255.255.255.0
+tftp_source_interface: GigabitEthernet0/0
+vlan100_dhcp_pool: "10.1.100.0 255.255.255.0"
+vlan200_dhcp_pool: "10.1.200.0 255.255.255.0"
+...
