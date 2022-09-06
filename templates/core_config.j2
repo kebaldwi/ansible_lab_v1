@@ -1,4 +1,53 @@
 {# Replace with Needed Initial Config on Devices #}
 
-{{ interface_range }}
-  description changed by ansible
+{% for vlan in vlans%}
+  vlan {{ vlan }}
+{%endfor %}
+
+interface range GigabitEthernet1/0/1-8
+  load-interval 30
+
+interface Loopback0
+  no shut
+  ip address {{ core_lo0_ip }} 255.255.255.255
+
+interface GigabitEthernet1/0/8
+   no shut
+   no switchport
+   description wan facing interface
+   ip address {{ core_wan_interface_ip }} {{ core_wan_interface_mask }}
+   ip ospf {{ ospf_processid }} area {{ ospf_area }}
+   ip tcp adjust-mss 1280
+
+interface Vlan100
+  ip address {{ core_vl100_SVI_ip }} {{ core_vl100_SVI_mask }}
+  no shut
+  ip tcp adjust-mss 1280
+
+interface Vlan200
+  ip address {{ core_vl200_SVI_ip }} {{ core_vl200_SVI_mask }}
+  no shut
+  ip tcp adjust-mss 1280
+
+router ospf {{ ospf_processid }}
+  router-id {{ core_lo0_ip }}
+  redistribute connected
+
+ip tcp mss 1280
+ip tcp window-size 212000
+ip http server
+ip http secure-server
+ip tftp source-interface {{ tftp_source_interface }}
+ip dhcp pool vlan100
+  network {{ vlan100_dhcp_pool }}
+  default-router {{ core_vl100_SVI_ip }} 
+ip dhcp pool vlan200
+  network {{ vlan200_dhcp_pool }}
+  default-router {{ core_vl200_SVI_ip }} 
+ 
+gnxi
+gnxi server
+
+event manager applet catchall
+  event cli pattern ".*" sync no skip no
+  action 1 syslog msg "$_cli_msg"
