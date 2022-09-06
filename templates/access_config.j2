@@ -1,4 +1,44 @@
 {# Replace with Needed Initial Config on Devices #}
 
-{{ interface_range }}
-  description changed by ansible
+{# Replace with Needed Initial Config on Devices #}
+
+{% for vlan in vlans%}
+  vlan {{ vlan }}
+{%endfor %}
+exit
+
+interface range GigabitEthernet1/0/1-8
+  load-interval 30
+
+interface {{ vlan100_interface }}
+  no shut
+  description configured by ansible
+  switchport access vlan 100
+  switchport mode access
+  spanning-tree portfast
+
+interface {{ vlan200_interface }}
+  no shut
+  description configured by ansible
+  switchport access vlan 200
+  spanning-tree portfast
+
+interface {{ trunk_interface }}
+  no shut
+  description configured by ansible
+  switchport mode trunk
+
+interface range GigabitEthernet1/0/1-8
+  load-interval 30
+
+ip tcp mss 1280
+ip http server
+ip http secure-server
+ip http client source-interface gigabitEthernet 0/0
+ip http authentication local
+gnxi server
+
+event manager applet catchall
+  event cli pattern ".*" sync no skip no
+  action 1 syslog msg "$_cli_msg"
+
