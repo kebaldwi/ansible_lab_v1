@@ -1,0 +1,37 @@
+---
+# Get Initial State of the devices
+
+#Specify Host Group to use, connection methods, and add ansible-pyats as a role
+- hosts: edge
+  connection: ansible.netcommon.network_cli
+  roles:
+    - ansible-pyats
+
+#Collect Running Config, make config change, collect again and then write diffs to a file
+  tasks:
+    - name: Prerun Config Collection
+      ios_command: 
+        commands: show run
+      register: prior_config
+
+    - name: Apply Initial Configuration
+      ios_config:
+        src: initial_config.j2
+        save_when: changed
+
+    - name: Post-Run Config Collection
+      ios_command: 
+        commands: show run
+      register: post_config
+    
+    - name: Show Lines Added to Config
+      copy:
+        content: "{{ prior_config.stdout[0] | genie_config_diff(post_config.stdout[0], exclude=exclude_list)}}"
+        dest: diff.txt
+
+  vars:
+    exclude_list:
+      - (^Using.*)
+      - (Building.*)
+      - (Current.*)
+      - (crypto pki certificate chain.*)

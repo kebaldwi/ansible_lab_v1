@@ -1,0 +1,3 @@
+---
+interface_range: "interface range GigabitEthernet2/0/5 - 10"
+...
