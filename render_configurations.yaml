@@ -1,0 +1,19 @@
+# Playbook to show the final configuration rendered from Jinja2 Templates and host and group variables
+
+#Specify Hosts and Connection Type to use
+- hosts: switches
+  connection: ansible.netcommon.network_cli
+
+#Render Core and Access Templates for Devices and place them in the review_configs directory
+  tasks:
+    - name: Core Config Render
+      when: inventory_hostname in groups['core']
+      template:
+        src: core_config.j2
+        dest: "review_configs/{{ inventory_hostname }}.config"
+
+    - name: Access Config Render
+      when: inventory_hostname in groups['access']
+      template:
+        src: access_config.j2
+        dest: "review_configs/{{ inventory_hostname }}.config"
