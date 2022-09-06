@@ -1,0 +1,20 @@
+[access]
+<access switches>
+
+[core]
+<core switches>
+
+[router]
+<routers>
+
+[switches:children]
+access
+core
+
+[all:vars]
+ansible_network_os=cisco.ios.ios
+ansible_become=yes
+ansible_user=
+ansible_become_method=enable
+ansible_ssh_pass=
+ansible_become_password=
