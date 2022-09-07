@@ -2,13 +2,30 @@
 
 This is a quick rundown of format and file content
 
-[ansible.cfg](ansible.cfg):  turns off host key checking and specifies inventory file
+[ansible.cfg](ansible.cfg)
+  * Turns off Host Key Checking
+  * Identifies inventory file as inventory_pod.ini
+  
+[inventory_pod.ini](inventory_pod.ini)
+NOTE:  device ips not filled see sharepoint or pod
+Groups:  
+  * access, core, router
+  * switches:children:  access, core
+Global Variables:
+NOTE:  usernames,passwords not filled see sharepoint or pod
+  * ansible_network_os=cisco.ios.ios
+  * ansible_become
+  * ansible_user
+  * ansible_become_method=enable
+  * ansible_ssh_pass
+  * ansible_become_pass
 
-Hosts File:  inventory.ini
-
-Variable Files: 
-  * group_vars/switches
-  * host_vars/.  (1 file for core switch and 1 for access switch)
+Variable Files:
+Note: On pod, core and access are named the host ip for each host
+  * [group_vars/switches](group_vars/switches)
+  * host_vars/access
+  * host_vars/core
+  
 
 
 Deploy initial config:
