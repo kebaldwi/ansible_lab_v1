@@ -48,5 +48,5 @@ Note: On pod, core and access are named the host ip for each host
 * Deploy Base Config to Core Switch:  [core_switch_base_config.yaml](core_switch_base_config.yaml) uses core_config.j2 and ansible-pyats role
 * Deploy Base Config to Access Switch:  [access_switch_base_config.yaml](access_switch_base_config.yaml) uses access_config.j2 and ansible-pyats role
 * Audit Devices using pyATS: [get_switch_info_pyats_parsers.yaml](get_switch_info_pyats_parsers.yaml) uses ansible-pyats role
-* Deploy MDT Config to Core Switch:  [core_switch_mdt_config.yaml](core_switch_mdt_config_placeholder.yaml) uses core_mdt_config.j2 and ansible-pyats role
+* Deploy MDT Config to Core Switch:  [core_switch_mdt_config_placeholder.yaml](core_switch_mdt_config_placeholder.yaml) uses core_mdt_config.j2 and ansible-pyats role
 * Deploy MDT Config to Access Switch:  [access_switch_mdt_config_placeholder.yaml](access_switch_mdt_config_placeholder.yaml) uses access_mdt_config.j2 and ansible-pyats role
