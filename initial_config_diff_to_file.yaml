@@ -1,5 +1,5 @@
 ---
-# Get Initial State of the devices
+# Ignore -- Experiment with writing to file
 
 #Specify Host Group to use, connection methods, and add ansible-pyats as a role
 - hosts: edge
