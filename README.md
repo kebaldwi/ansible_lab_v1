@@ -14,7 +14,7 @@ NOTE:  device ips not filled see sharepoint or pod
 Groups:  
   * access, core, router
   * switches:children:  access, core
-  * 
+ 
 Global Variables:
 
 NOTE:  usernames,passwords not filled see sharepoint or pod
