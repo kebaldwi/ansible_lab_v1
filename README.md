@@ -10,10 +10,13 @@ This is a quick rundown of format and file content
  ## Inventory File
 [inventory_pod.ini](inventory_pod.ini)
 NOTE:  device ips not filled see sharepoint or pod
+
 Groups:  
   * access, core, router
   * switches:children:  access, core
+  * 
 Global Variables:
+
 NOTE:  usernames,passwords not filled see sharepoint or pod
   * ansible_network_os=cisco.ios.ios
   * ansible_become
@@ -23,12 +26,15 @@ NOTE:  usernames,passwords not filled see sharepoint or pod
   * ansible_become_pass
 
 ## Variable Files
+
 Note: On pod, core and access are named the host ip for each host
+
   * [group_vars/switches](group_vars/switches)
   * [host_vars/access](host_vars/access)
   * [host_vars/core](host_vars/core)
   
 ## Templates
+
   * [templates/access_config.j2](templates/access_config.j2): base config template for access switch
   * [templates/core_config.j2](templates/core_config.j2): base config template for core switch
   * [templates/access_mdt_config.j2](templates/access_mdt_config.j2): empty placeholder mdt template for access switch
