@@ -1,0 +1,34 @@
+- hosts: switches
+  connection: network_cli
+  gather_facts: no
+  roles:
+    - ansible-pyats
+  tasks:
+    - name: Get Version Info
+      pyats_parse_command:
+        command: show version
+      register: version_output
+
+    - name: Get VLAN Info
+      pyats_parse_command:
+        command: show vlan summary
+      register: vlan_output
+
+    - name: Get Trunk Info
+      pyats_parse_command:
+        command: show interface trunk
+      register: trunk_output 
+
+    - name: Display Switch Info
+      debug:
+        msg:
+          - "Hostname: {{ version_output.structured.version.hostname }}"
+          - "Serial Number: {{ version_output.structured.version.chassis_sn }}"
+          - "IOS-XE Version: {{ version_output.structured.version.version }}"
+          - "Config Register: {{ version_output.structured.version.curr_config_register }}"
+          - "Uptime: {{ version_output.structured.version.uptime }}"
+          - "Number of VLANs: {{ vlan_output.structured.vlan_summary.existing_vlans }}"
+          - "License Information: {{ version_output.structured | json_query('version.license_package.[*][0][0].license_level') }} {{ version_output.structured | json_query('version.license_package.[*][0][1].license_level') }}"
+          - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
+
+      
