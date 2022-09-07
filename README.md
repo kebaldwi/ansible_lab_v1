@@ -2,12 +2,12 @@
 
 This is a quick rundown of format and file content
 
-##Ansible Config File
+## Ansible Config File
 [ansible.cfg](ansible.cfg)
   * Turns off Host Key Checking
   * Identifies inventory file as inventory_pod.ini
  
- ##Inventory File
+ ## Inventory File
 [inventory_pod.ini](inventory_pod.ini)
 NOTE:  device ips not filled see sharepoint or pod
 Groups:  
@@ -22,22 +22,22 @@ NOTE:  usernames,passwords not filled see sharepoint or pod
   * ansible_ssh_pass
   * ansible_become_pass
 
-##Variable Files
+## Variable Files
 Note: On pod, core and access are named the host ip for each host
   * [group_vars/switches](group_vars/switches)
   * [host_vars/access](host_vars/access)
   * [host_vars/core](host_vars/core)
   
-##Templates
+## Templates
   * [templates/access_config.j2](templates/access_config.j2): base config template for access switch
   * [templates/core_config.j2](templates/core_config.j2): base config template for core switch
   * [templates/access_mdt_config.j2](templates/access_mdt_config.j2): empty placeholder mdt template for access switch
   * [templates/core_mdt_config.j2](templates/core_mdt_config.j2): empty placeholder mdt template for core switch
 
-##Roles
+## Roles
 [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) is installed in this folder
 
-##Playbooks
+## Playbooks
 * Render Template to view Variable Substitutions: [render_configurations.yaml](render_configurations.yaml) uses J2 templates
 * Deploy Base Config to Core Switch:  [core_switch_base_config.yaml](core_switch_base_config.yaml) uses core_config.j2 and ansible-pyats role
 * Deploy Base Config to Access Switch:  [access_switch_base_config.yaml](access_switch_base_config.yaml) uses access_config.j2 and ansible-pyats role
