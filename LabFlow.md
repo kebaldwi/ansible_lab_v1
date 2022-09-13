@@ -37,13 +37,13 @@ Let's take a look at the inventory file.  The inventory file can be in many form
 
 ```
 [access]  
-<access switches>  
+10.1.2.121 
 
 [core]  
-<core switches>  
+10.1.2.122
 
 [router]  
-<routers>  
+10.1.2.123 
 
 [switches:children]  
 access  
@@ -57,6 +57,8 @@ ansible_become_method=enable
 ansible_ssh_pass=  
 ansible_become_password=  
 ```
+
+Some items to note about our inventory files.  We define a group with the \[groupname\] notation.  To create a group of groups, we can use the \[groupname:children\].  We can define variables for a group or a host in the inventory file with the \[groupname:vars\] or \[hostname:vars\] notation.    
 
 
 #### Explore Variable Files and Directories
