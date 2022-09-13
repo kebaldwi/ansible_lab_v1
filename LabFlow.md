@@ -23,11 +23,9 @@ In our ansible.cfg, we are taking all defaults except for two settings:
 2. Disabling strict host key checking.  When we connect via SSH to a device for the first time, we will be asked if we trust the ssh key of the host.  If we choose yes, the ssh key for the host will be added to our known-hosts file. 
 
 
-`The authenticity of host '10.88.64.17 (10.88.64.17)' can't be established.`
-
-`RSA key fingerprint is SHA256:TUs+SFgw+lv2VKGAVoWd9ZFSZsJEA0G91cAKf3tqCf0.`
-
-`Are you sure you want to continue connecting (yes/no/[fingerprint])? 
+`The authenticity of host '10.88.64.17 (10.88.64.17)' can't be established.  
+RSA key fingerprint is SHA256:TUs+SFgw+lv2VKGAVoWd9ZFSZsJEA0G91cAKf3tqCf0.  
+Are you sure you want to continue connecting (yes/no/[fingerprint])?   
 `
 
 This can cause issues for our Ansible Playbook run if we are connecting to a device for the first time.  For the purposes of our lab, we are going to disable this behavior and avoid this check with this line:
