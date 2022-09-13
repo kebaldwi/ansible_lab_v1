@@ -30,3 +30,9 @@ This process can cause issues for our Ansible Playbook run if we are connecting 
 `host_key_checking = False`
 
 For security reasons, we likely wouldn't do this in production.  
+
+#### Explore Variable Files and Directories
+
+There are many ways to define variables for use in our playbooks.  We can define them in our inventory files, but that can get messy.  We can also define them in our group_vars and host_vars folders and in our playbooks themselves.  Let's explore some of these options.
+
+#### Variables in the Inventory File
