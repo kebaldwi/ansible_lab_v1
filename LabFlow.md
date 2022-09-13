@@ -58,11 +58,43 @@ ansible_ssh_pass=
 ansible_become_password=  
 ```
 
-Some items to note about our inventory files.  We define a group with the \[groupname\] notation.  To create a group of groups, we can use the \[groupname:children\].  We can define variables for a group or a host in the inventory file with the \[groupname:vars\] or \[hostname:vars\] notation.    
+Some items to note about our inventory files.  We define a group with the \[groupname\] notation.  To create a group of groups, we can use the \[groupname:children\].  We can define variables for a group or a host in the inventory file with the \[groupname:vars\] or \[hostname:vars\] notation.  There is also an implicit group called **all**.  So, \[all:vars\] contains the variables that apply to all devices in the inventory.    
 
 
 #### Explore Variable Files and Directories
 
-There are many ways to define variables for use in our playbooks.  We can define them in our inventory files, but that can get messy.  We can also define them in our group_vars and host_vars folders and in our playbooks themselves.  Let's explore some of these options.
+There are many ways to define variables for use in our playbooks.  As we have just explored, we can define variables in our inventory files, but that can lead to complex and hard to manage inventory files.  Alternatively, we can also define them in our group_vars and host_vars folders and in our playbooks themselves.  Let's explore some of these other options.
 
-#### Variables in the Inventory File
+#### Variables Directories
+
+Let's explore our group_vars and host_vars directories:
+
+```
+├──group_vars
+   └──switches
+├──host_vars
+  ├──10.1.2.121
+  └──10.1.2.122
+```
+
+In the group_vars folder we have a file called **switches**, which contains the variables that apply to the devices in the group **switches** as defined in our inventory file.
+
+In the host_vars folder, we have 2 files.  Each file corresponds to a specific device defined in the inventory file.  So the file titled **10.1.2.121** contains variables that apply specifically to the host 10.1.2.121. 
+
+If we view the contents of the switches file we see the following:  
+
+```
+---
+vlans:
+  - 100
+  - 200
+
+ospf_processid: 1
+...
+```
+
+The starting --- and ending ... mark this file as a YAML file.  We can see we have a variable called vlans, which is a list of 2 vlan numbers and a variable called ospf_processid.  These variables will apply to all devices in the group **switches**.
+
+
+
+
