@@ -31,6 +31,34 @@ This process can cause issues for our Ansible Playbook run if we are connecting 
 
 For security reasons, we likely wouldn't do this in production.  
 
+#### Explore the Inventory file
+
+Let's take a look at the inventory file.  The inventory file can be in many formats, but is generally either in ini or YAML format.  See the [Ansible Documentation](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html) on inventories.  Our Inventory file is in ini format. 
+
+```
+[access]  
+<access switches>  
+
+[core]  
+<core switches>  
+
+[router]  
+<routers>  
+
+[switches:children]  
+access  
+core  
+
+[all:vars]  
+ansible_network_os=cisco.ios.ios  
+ansible_become=yes  
+ansible_user=  
+ansible_become_method=enable  
+ansible_ssh_pass=  
+ansible_become_password=  
+```
+
+
 #### Explore Variable Files and Directories
 
 There are many ways to define variables for use in our playbooks.  We can define them in our inventory files, but that can get messy.  We can also define them in our group_vars and host_vars folders and in our playbooks themselves.  Let's explore some of these options.
