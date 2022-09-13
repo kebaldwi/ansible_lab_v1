@@ -96,13 +96,14 @@ ospf_processid: 1
 
 The starting --- and ending ... mark this file as a YAML file.  We can see we have a variable called **vlans**, which is a list of 2 vlan numbers and a variable called **ospf_processid**.  These variables will apply to all devices in the group **switches**.
 
+
 ### Part 2: Ansible Playbooks & Templates
 
 #### Ansible Playbook Taxonomy
 
+In order to explore playbook structure, we will view the playbook titled [render_configurations.yaml](render_configurations.yaml). This playbook will generate a CLI configuration file based on variables and Jinja2 templates that we have defined.
+
 ```
-
-
 # Playbook to show the final configuration rendered from Jinja2 Templates and host and group variables
 
 #Specify Hosts and Connection Type to use
@@ -124,5 +125,4 @@ The starting --- and ending ... mark this file as a YAML file.  We can see we ha
         dest: "review_configs/{{ inventory_hostname }}.config"
 
 ```
-
 
