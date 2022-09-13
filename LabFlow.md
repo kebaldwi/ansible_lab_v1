@@ -1,5 +1,5 @@
 
-## Overall Lab Flow
+## Overall Lab Flow  -- Under Construction!!!
 
 
 ### Part 1: Ansible Setup Exploration
@@ -126,3 +126,14 @@ In order to explore playbook structure, we will view the playbook titled [render
 
 ```
 
+### Jinja2 Template Exploration
+
+### Ansible Roles 
+
+#### Quick Intro to pyATS and the ansible-pyats role
+
+### Deploy Base Configuration to a site using Ansible Playbooks
+
+### Deploy Model Driven Telemetry configurations to a site using Ansible Playbooks
+
+### 
