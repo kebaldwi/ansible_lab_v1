@@ -24,7 +24,9 @@ In our ansible.cfg, we are taking all defaults except for two settings:
 
 `
 The authenticity of host '10.88.64.17 (10.88.64.17)' can't be established.
+
 RSA key fingerprint is SHA256:TUs+SFgw+lv2VKGAVoWd9ZFSZsJEA0G91cAKf3tqCf0.
+
 Are you sure you want to continue connecting (yes/no/[fingerprint])? 
 `
 
