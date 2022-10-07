@@ -1,0 +1,98 @@
+#ensure protocols are running
+netconf-yang
+gnmi-yang
+gnxi
+
+! CPU
+no telemetry ietf subscription 3301
+telemetry ietf subscription 3301
+ encoding encode-kvgpb
+ filter xpath /process-cpu-ios-xe-oper:cpu-usage/cpu-utilization/five-seconds
+ source-vrf Mgmt-vrf
+ source-address {{  telemetry_source_ip }}
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.15.141 57500 protocol grpc-tcp
+
+! Memory 
+no telemetry ietf subscription 3302
+telemetry ietf subscription 3302
+ encoding encode-kvgpb
+ filter xpath /oc-sys:system/memory/state
+ source-vrf Mgmt-vrf
+ source-address {{  telemetry_source_ip }}
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.15.141 57500 protocol grpc-tcp
+
+! IOS Version
+no telemetry ietf subscription 3303
+telemetry ietf subscription 3303
+ encoding encode-kvgpb
+ filter xpath /ios:native/version
+ source-vrf Mgmt-vrf
+ source-address {{  telemetry_source_ip }}
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.15.141 57500 protocol grpc-tcp
+
+! System Up Time
+no telemetry ietf subscription 3304
+telemetry ietf subscription 3304
+ encoding encode-kvgpb
+ filter xpath /oc-sys:system/state
+ source-vrf Mgmt-vrf
+ source-address {{  telemetry_source_ip }}
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.15.141 57500 protocol grpc-tcp
+
+! PID
+telemetry ietf subscription 3305
+ encoding encode-kvgpb
+ filter xpath /device-hardware-xe-oper:device-hardware-data/device-hardware
+ source-vrf Mgmt-vrf
+ source-address {{  telemetry_source_ip }}
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.15.141 57500 protocol grpc-tcp
+
+! Interface Counters
+telemetry ietf subscription 3306
+ encoding encode-kvgpb
+ filter xpath /interfaces-ios-xe-oper:interfaces/interface/statistics
+ source-vrf Mgmt-vrf
+ source-address {{  telemetry_source_ip }}
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.15.141 57500 protocol grpc-tcp
+
+! Interface State
+telemetry ietf subscription 3307
+ encoding encode-kvgpb
+ filter xpath /interfaces-ios-xe-oper:interfaces/interface/oper-status
+ source-vrf Mgmt-vrf
+ source-address {{  telemetry_source_ip }}
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.15.141 57500 protocol grpc-tcp
+
+! ARP
+telemetry ietf subscription 3308
+ encoding encode-kvgpb
+ filter xpath /arp-ios-xe-oper:arp-data
+ source-vrf Mgmt-vrf
+ source-address {{  telemetry_source_ip }}
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.15.141 57500 protocol grpc-tcp
+
+! Routes
+telemetry ietf subscription 3309
+ encoding encode-kvgpb
+ filter xpath /rt:routing-state/routing-instance[name="default"]/ribs/rib[name="ipv4-default"]/routes/route/destination-prefix
+ source-vrf Mgmt-vrf
+ source-address {{  telemetry_source_ip }}
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.15.141 57500 protocol grpc-tcp
