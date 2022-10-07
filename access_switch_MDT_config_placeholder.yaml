@@ -16,7 +16,7 @@
 
     - name: Apply Initial Configuration
       ios_config:
-        src: templates/access_mdt_config.j2
+        src: templates/telemetry_config.j2
         save_when: changed
 
     - name: Post-Run Config Collection
