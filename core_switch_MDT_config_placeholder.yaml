@@ -14,7 +14,7 @@
         commands: show run
       register: prior_config
 
-    - name: Apply Initial Configuration
+    - name: Apply MDT Configuration
       ios_config:
         src: templates/telemetry_config.j2
         save_when: changed
