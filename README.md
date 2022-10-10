@@ -45,11 +45,10 @@ Note: On pod, core and access are named the host ip for each host
 
 ## Playbooks
 * Render Template to view Variable Substitutions: [render_configurations.yaml](Task_0_Fact_Finding/render_configurations.yaml) uses J2 templates
-* Deploy Base Config to Core Switch:  [core_switch_base_config.yaml](core_switch_base_config.yaml) uses core_config.j2 and ansible-pyats role
-* Deploy Base Config to Access Switch:  [access_switch_base_config.yaml](access_switch_base_config.yaml) uses access_config.j2 and ansible-pyats role
-* Audit Devices using pyATS: [get_switch_info_pyats_parsers.yaml](get_switch_info_pyats_parsers.yaml) uses ansible-pyats role
-* Deploy MDT Config to Core Switch:  [core_switch_MDT_config_placeholder.yaml](core_switch_MDT_config_placeholder.yaml) uses core_mdt_config.j2 and ansible-pyats role
-* Deploy MDT Config to Access Switch:  [access_switch_MDT_config_placeholder.yaml](access_switch_MDT_config_placeholder.yaml) uses access_mdt_config.j2 and ansible-pyats role
+* Deploy Base Config to Core Switch:  [core_switch_base_config.yaml](Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) uses core_config.j2 and ansible-pyats role
+* Deploy Base Config to Access Switch:  [access_switch_base_config.yaml](Task_1_Apply_Base_Configuration/access_switch_base_config.yaml) uses access_config.j2 and ansible-pyats role
+* Audit Devices using pyATS: [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml) uses ansible-pyats role
+* Deploy MDT Config to Switches:  [Task_2_Apply_MDT_Configuration/switch_MDT_config.yaml](core_switch_MDT_config_placeholder.yaml) uses core_mdt_config.j2 and ansible-pyats role
 
 ## Lab Flow Doc
 
