@@ -80,7 +80,7 @@ Let's explore our group_vars and host_vars directories:
 
 In the group_vars folder we have a file called **switches**, which contains the variables that apply to the devices in the group **switches** as defined in our inventory file.
 
-In the host_vars folder, we have 2 files.  Each file corresponds to a specific device defined in the inventory file.  So the file titled **10.1.2.121** contains variables that apply specifically to the host 10.1.2.121. 
+In the host_vars folder, we have 2 files.  Each file corresponds to a specific device defined in the inventory file.  So the file titled **10.1.1.14** contains variables that apply specifically to the host 10.1.1.14. 
 
 If we view the contents of the switches file we see the following:  
 
