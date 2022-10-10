@@ -213,7 +213,19 @@ We can see what the final CLI configuration will be by running the playbook that
 
 ### Ansible Roles 
 
-Let's briefly touch on Ansible Roles.   
+Let's briefly touch on Ansible Roles.   Roles allow for the modularization and re-use of Ansible tasks, variables and other dependencies that can be loaded into a playbook.  See the documentation on [Ansible Roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).  For our work today, we will be using the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role so that we can make use of the pyats_parse_command module and genie_config_diff filter when running our configuration playbooks. 
+
+Roles can be installed by running `ansible-galaxy install role.name` and a new role can be created with the correct directory structure by running `ansible-galaxy init mynewrole`
+
+Roles can be referenced in a playbook using the **roles** keyword.  See this example from our playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml):  
+
+```
+- hosts: switches
+  connection: network_cli
+  gather_facts: no
+  roles:
+    - ansible-pyats  
+```
 
 #### Quick Intro to pyATS and the ansible-pyats role
 
