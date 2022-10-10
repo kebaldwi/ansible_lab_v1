@@ -127,9 +127,10 @@ In order to explore playbook structure, we will view the playbook titled [render
 
 ```
 The first section of the playbook contains the following:
-**hosts**:  The hosts should this playbook run against.  Possible values here are a single host, a host group or all.
-**gather_facts**: A yes or no switch that tells ansible whether to run the gather_facts module on the hosts
-**connection**: What type of connection should be used See the [Documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details. 
+
+**hosts**:  The hosts should this playbook run against.  Possible values here are a single host, a host group or all.  
+**gather_facts**: A yes or no switch that tells ansible whether to run the gather_facts module on the hosts.   
+**connection**: What type of connection should be used See the [Documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  
 
 ```
 
@@ -139,7 +140,7 @@ The first section of the playbook contains the following:
   connection: ansible.netcommon.network_cli
   
 ```
-The next section of the playbook includes the tasks to be run.  We have 2 tasks in this playbook.  Each of these tasks will use the template module in order to render CLI configuration for our devices based on the template defined as the source, the host group defined previously modified by the **when** statement,  and a destination for our rendered config.  Please note that each of our hosts and host groups come with variables assigned that will provide values for the variables in our templates.  We will explore the templates themselves in the next section.
+The next section of the playbook includes the tasks to be run.  We have 2 tasks in this playbook.  Each of these tasks will use the template module in order to render CLI configuration for our devices based on the template defined as the source, the host group defined previously modified by the **when** statement,  and a destination for our rendered config using variables defined in the inventory file, group_vars, and host_vars files.  We will explore the templates themselves in the next section.
 
 ```
 #Render Core and Access Templates for Devices and place them in the review_configs directory
@@ -159,7 +160,60 @@ The next section of the playbook includes the tasks to be run.  We have 2 tasks 
 
 ### Jinja2 Template Exploration
 
+Jinja2 Templates are a dynamic way to apply standard configurations to multiple devices using variables.   To read more about using Jinja2 templates in Ansible, see the [documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html).  Templates are usually found in the [templates](templates) directory under our ansible playbook working directory.  Let's review the [access_config.j2](templates/access_config.j2) template.
+
+The template begins with a **for loop**.  If you recall from our group_vars file [switches](group_vars/switches), we have a variable called vlans, which is a list of vlan numbers.  The for loop in our template will iterate through the list of vlans and run the commmand vlan \<number\> for each vlan in the list and then exit out of vlan config mode. 
+
+```
+{% for vlan in vlans%}
+  vlan {{ vlan }}
+{%endfor %}
+exit
+```
+The next section will configure the access and trunk ports as defined in our [host_vars file for the access switch](host_vars/10.1.1.15) and some other configuration items that we need.
+
+```
+interface range GigabitEthernet1/0/1-8
+  load-interval 30
+
+interface {{ vlan100_interface }}
+  no shut
+  description configured by ansible
+  switchport access vlan 100
+  switchport mode access
+  spanning-tree portfast
+
+interface {{ vlan200_interface }}
+  no shut
+  description configured by ansible
+  switchport access vlan 200
+  spanning-tree portfast
+
+interface {{ trunk_interface }}
+  no shut
+  description configured by ansible
+  switchport mode trunk
+
+interface range GigabitEthernet1/0/1-8
+  load-interval 30
+
+ip tcp mss 1280
+ip http server
+ip http secure-server
+ip http client source-interface gigabitEthernet 0/0
+ip http authentication local
+gnxi server
+
+event manager applet catchall
+  event cli pattern ".*" sync no skip no
+  action 1 syslog msg "$_cli_msg"
+
+```
+We can see what the final CLI configuration will be by running the playbook that we reviewed earlier: [render_configurations.yaml](render_configurations.yaml), which we will do further on in the lab guide.
+
 ### Ansible Roles 
+
+Let's briefly touch on Ansible Roles.   
 
 #### Quick Intro to pyATS and the ansible-pyats role
 
