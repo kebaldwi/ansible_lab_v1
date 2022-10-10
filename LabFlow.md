@@ -73,8 +73,8 @@ Let's explore our group_vars and host_vars directories:
 ├──group_vars
 |  └──switches
 ├──host_vars
-|  ├──10.1.2.121
-|  └──10.1.2.122
+|  ├──10.1.1.14
+|  └──10.1.1.15
 
 ```
 
