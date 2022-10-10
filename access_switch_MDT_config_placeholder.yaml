@@ -3,6 +3,7 @@
 
 #Specify Host Group to use
 - hosts: access
+  gather_facts: no
   connection: ansible.netcommon.network_cli
   roles:
     - ansible-pyats
