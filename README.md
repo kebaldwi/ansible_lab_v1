@@ -44,7 +44,7 @@ Note: On pod, core and access are named the host ip for each host
 [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) is installed in this folder
 
 ## Playbooks
-* Render Template to view Variable Substitutions: [render_configurations.yaml](render_configurations.yaml) uses J2 templates
+* Render Template to view Variable Substitutions: [render_configurations.yaml](Task_0_Fact_Finding/render_configurations.yaml) uses J2 templates
 * Deploy Base Config to Core Switch:  [core_switch_base_config.yaml](core_switch_base_config.yaml) uses core_config.j2 and ansible-pyats role
 * Deploy Base Config to Access Switch:  [access_switch_base_config.yaml](access_switch_base_config.yaml) uses access_config.j2 and ansible-pyats role
 * Audit Devices using pyATS: [get_switch_info_pyats_parsers.yaml](get_switch_info_pyats_parsers.yaml) uses ansible-pyats role
