@@ -126,6 +126,36 @@ In order to explore playbook structure, we will view the playbook titled [render
         dest: "review_configs/{{ inventory_hostname }}.config"
 
 ```
+The first section of the playbook contains the following:
+**hosts**:  The hosts should this playbook run against.  Possible values here are a single host, a host group or all.
+**gather_facts**: A yes or no switch that tells ansible whether to run the gather_facts module on the hosts
+**connection**: What type of connection should be used See the [Documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details. 
+
+```
+
+#Specify Hosts and Connection Type to use
+- hosts: switches
+  gather_facts: no
+  connection: ansible.netcommon.network_cli
+  
+```
+The next section of the playbook includes the tasks to be run.  We have 2 tasks in this playbook.  Each of these tasks will use the template module in order to render CLI configuration for our devices based on the template defined as the source, the host group defined previously modified by the **when** statement,  and a destination for our rendered config.  Please note that each of our hosts and host groups come with variables assigned that will provide values for the variables in our templates.  We will explore the templates themselves in the next section.
+
+```
+#Render Core and Access Templates for Devices and place them in the review_configs directory
+  tasks:
+    - name: Core Config Render
+      when: inventory_hostname in groups['core']
+      template:
+        src: core_config.j2
+        dest: "review_configs/{{ inventory_hostname }}.config"
+
+    - name: Access Config Render
+      when: inventory_hostname in groups['access']
+      template:
+        src: access_config.j2
+        dest: "review_configs/{{ inventory_hostname }}.config"
+```
 
 ### Jinja2 Template Exploration
 
