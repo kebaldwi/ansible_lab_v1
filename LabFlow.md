@@ -37,13 +37,13 @@ Let's take a look at the inventory file.  The inventory file can be in many form
 
 ```
 [access]  
-10.1.2.121 
+10.1.1.15 
 
 [core]  
-10.1.2.122
+10.1.1.14
 
 [router]  
-10.1.2.123 
+10.1.1.13 
 
 [switches:children]  
 access  
