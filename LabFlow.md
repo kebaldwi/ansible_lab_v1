@@ -108,6 +108,7 @@ In order to explore playbook structure, we will view the playbook titled [render
 
 #Specify Hosts and Connection Type to use
 - hosts: switches
+  gather_facts: no
   connection: ansible.netcommon.network_cli
 
 #Render Core and Access Templates for Devices and place them in the review_configs directory
