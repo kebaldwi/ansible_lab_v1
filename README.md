@@ -30,15 +30,14 @@ NOTE:  usernames,passwords not filled see sharepoint or pod
 Note: On pod, core and access are named the host ip for each host
 
   * [group_vars/switches](group_vars/switches)
-  * [host_vars/access](host_vars/access)
-  * [host_vars/core](host_vars/core)
+  * [host_vars/access_switch](host_vars/10.1.1.15)
+  * [host_vars/core_switch](host_vars/10.1.1.14)
   
 ## Templates
 
   * [templates/access_config.j2](templates/access_config.j2): base config template for access switch
   * [templates/core_config.j2](templates/core_config.j2): base config template for core switch
-  * [templates/access_mdt_config.j2](templates/access_mdt_config.j2): empty placeholder mdt template for access switch
-  * [templates/core_mdt_config.j2](templates/core_mdt_config.j2): empty placeholder mdt template for core switch
+  * [templates/telemetry_config.j2](templates/telemetry_config.j2): MDT config template for switches
 
 ## Roles
 [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) is installed in this folder
