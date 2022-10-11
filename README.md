@@ -30,26 +30,24 @@ NOTE:  usernames,passwords not filled see sharepoint or pod
 Note: On pod, core and access are named the host ip for each host
 
   * [group_vars/switches](group_vars/switches)
-  * [host_vars/access](host_vars/access)
-  * [host_vars/core](host_vars/core)
+  * [host_vars/access_switch](host_vars/10.1.1.15)
+  * [host_vars/core_switch](host_vars/10.1.1.14)
   
 ## Templates
 
   * [templates/access_config.j2](templates/access_config.j2): base config template for access switch
   * [templates/core_config.j2](templates/core_config.j2): base config template for core switch
-  * [templates/access_mdt_config.j2](templates/access_mdt_config.j2): empty placeholder mdt template for access switch
-  * [templates/core_mdt_config.j2](templates/core_mdt_config.j2): empty placeholder mdt template for core switch
+  * [templates/telemetry_config.j2](templates/telemetry_config.j2): MDT config template for switches
 
 ## Roles
 [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) is installed in this folder
 
 ## Playbooks
-* Render Template to view Variable Substitutions: [render_configurations.yaml](render_configurations.yaml) uses J2 templates
-* Deploy Base Config to Core Switch:  [core_switch_base_config.yaml](core_switch_base_config.yaml) uses core_config.j2 and ansible-pyats role
-* Deploy Base Config to Access Switch:  [access_switch_base_config.yaml](access_switch_base_config.yaml) uses access_config.j2 and ansible-pyats role
-* Audit Devices using pyATS: [get_switch_info_pyats_parsers.yaml](get_switch_info_pyats_parsers.yaml) uses ansible-pyats role
-* Deploy MDT Config to Core Switch:  [core_switch_MDT_config_placeholder.yaml](core_switch_MDT_config_placeholder.yaml) uses core_mdt_config.j2 and ansible-pyats role
-* Deploy MDT Config to Access Switch:  [access_switch_MDT_config_placeholder.yaml](access_switch_MDT_config_placeholder.yaml) uses access_mdt_config.j2 and ansible-pyats role
+* Render Template to view Variable Substitutions: [render_configurations.yaml](Task_0_Fact_Finding/render_configurations.yaml) uses J2 templates
+* Deploy Base Config to Core Switch:  [core_switch_base_config.yaml](Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) uses core_config.j2 and ansible-pyats role
+* Deploy Base Config to Access Switch:  [access_switch_base_config.yaml](Task_1_Apply_Base_Configuration/access_switch_base_config.yaml) uses access_config.j2 and ansible-pyats role
+* Audit Devices using pyATS: [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml) uses ansible-pyats role
+* Deploy MDT Config to Switches:  [Task_2_Apply_MDT_Configuration/switch_MDT_config.yaml](core_switch_MDT_config_placeholder.yaml) uses core_mdt_config.j2 and ansible-pyats role
 
 ## Lab Flow Doc
 

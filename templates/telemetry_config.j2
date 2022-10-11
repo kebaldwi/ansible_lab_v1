@@ -94,3 +94,12 @@ telemetry ietf subscription 3309
  stream yang-push
  update-policy periodic 500
  receiver ip address 10.1.15.141 57500 protocol grpc-tcp
+ 
+ telemetry ietf subscription 3310
+ encoding encode-kvgpb
+ filter xpath /native/ios-sw:switch/ios-sw:provision
+ source-address {{  telemetry_source_ip }}
+ source-vrf Mgmt-vrf
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.1.19 57500 protocol grpc-tcp 
