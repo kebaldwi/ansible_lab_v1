@@ -1,0 +1,59 @@
+- hosts: access
+  gather_facts: no
+  connection: ansible.netcommon.network_cli
+  roles:
+    - ansible-pyats
+
+#Specify Tasks to perform
+  tasks:
+    - name: Remove L2 Interface Configurations
+      cisco.ios.ios_l2_interfaces:
+        config:
+        - name: "{{ vlan100_interface }}"
+          mode: access
+          access:
+            vlan: 100
+        - name: "{{ vlan200_interface }}"
+          mode: access
+          access:
+            vlan: 200
+        - name: "{{ trunk_interface }}"
+          mode: trunk
+        state: deleted
+
+    - name: Remove VLANs
+      cisco.ios.ios_vlans:
+        state: deleted
+
+    - name: Remove the Rest of the Base Config using ios_config
+      cisco.ios.ios_config:
+        lines:
+          - no ip tcp mss 1280
+          - no ip http server
+          - no ip http secure-server
+          - no ip http client source-interface gigabitEthernet 0/0
+          - no ip http authentication local
+          - no gnxi server
+          - no event manager applet catchall
+
+    - name: Remove Load Interval
+      cisco.ios.ios_config:
+        lines:
+          - no load interval 30
+        parents: "interface range GigabitEthernet1/0/1-8"
+
+    - name: Remove Telemetry Config
+      cisco.ios.ios_config:
+        lines:
+          - no telemetry ietf subscription {{item}}
+      loop:
+          - 3301
+          - 3302
+          - 3303
+          - 3304
+          - 3305
+          - 3306
+          - 3307
+          - 3308
+          - 3309
+          - 3310
