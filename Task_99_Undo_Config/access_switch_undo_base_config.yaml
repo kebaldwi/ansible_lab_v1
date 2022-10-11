@@ -36,10 +36,11 @@
           - no gnxi server
           - no event manager applet catchall
 
-    - name: Remove Load Interval
+    - name: Remove Other Interface Commands
       cisco.ios.ios_config:
         lines:
           - no load interval 30
+          - no description
         parents: "interface range GigabitEthernet1/0/1-8"
 
     - name: Remove Telemetry Config
