@@ -159,7 +159,7 @@ In order to explore playbook structure, we will view and run the playbook titled
 The first section of the playbook contains the following:
 
 **hosts**:  The hosts this playbook applies to.  Possible values here are a single host, a host group or all.  
-**connection**: What type of connection should be used See the [documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ansible.netcommon.network_cli will be used.  
+**connection**: What type of connection should be used See the [documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ***ansible.netcommon.network_cli*** is used.  
 **gather_facts**: A yes or no option that tells ansible whether to run the gather_facts module on the hosts.  Since this module is optimized for servers, we don't use it. Instead we will use the cisco.ios.ios_facts module. 
 
 ```
@@ -259,7 +259,7 @@ event manager applet catchall
   action 1 syslog msg "$_cli_msg"
 
 ```
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#   
 NOTE:  A great resource for learning more about Jinja2 Templating is [Przemek Rogala's Blog Series](https://ttl255.com/jinja2-tutorial-part-1-introduction-and-variable-substitution/) on the subject.  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
@@ -300,9 +300,9 @@ Let's focus on the tasks section of the playbook.
 
 There are 3 tasks that are very similar.  Each uses the [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html) module to render configuration based on the specified Jinja2 template.
 
-The first task, named Core Config Render, will render a config into the review_configs directory based on the template called [core_config.j2](templates/core_config.j2).  The rendered configuration will be written to a file named after the host, so that the host 10.2.6.14 will result in a file called **10.2.6.14.config**.  There is a new keyword in this task that we haven't seen before:  **when**.    
+The first task, named Core Config Render, will render a config based on the template called [core_config.j2](templates/core_config.j2).  The rendered configuration will be written to a file named after the host in the review_configs directory, such that the host 10.2.6.14, will result in a file called **10.2.6.14.config**.  There is a new keyword in this task that we haven't seen before:  **when**.    
 
-The **when** keyword allows us to add a condition for when this task will run.  In this case, we only want to render the Core configuration for hosts in the group **core**.  **When** allows us to specify an umbrella host group for the playbook while still limiting each task to only the hosts to which it should apply.  Host group is only one of the conditions that can be used in a when statement.
+The **when** keyword allows us to add a condition for when this task will run.  In this case, we only want to render the Core configuration for hosts in the group **core**.  **When** allows us to specify a comprehensive host group for the playbook while still limiting each task to only the hosts to which it should apply.  Host group is only one of the conditions that can be used in a when statement.
 
 ```
     - name: Core Config Render
@@ -312,7 +312,7 @@ The **when** keyword allows us to add a condition for when this task will run.  
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 ```   
 
-The next task does the same for the access switch.
+The next task does the same for the access switch group.
 
 ```
     - name: Access Config Render
@@ -322,7 +322,7 @@ The next task does the same for the access switch.
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 
 ```   
-The last task is missing the **when** statement as we use a single template [telemetry_config.j2](templates/telemetry_config.j2) for both core and access switches.  
+The last task omits the **when** statement as we use a single template [telemetry_config.j2](templates/telemetry_config.j2) for all switches.  
 
 ```
     - name: MDT Config Render
@@ -334,7 +334,7 @@ The last task is missing the **when** statement as we use a single template [tel
 
 Now that we have reviewed the render_configurations.yaml playbook, we can run it.
 
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 5:  Run the render_configurations.yaml playbook  
 
 Run the playbook in the VSCode Terminal
@@ -343,7 +343,7 @@ Run the playbook in the VSCode Terminal
 cd ~/ansible_lab_v1/
 ansible-playbook -i inventory_pod.ini Task_0_Fact_Finding/render_configurations.yaml
 ```  
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#   
 
 After a successful run of this playbook, we should see four new files in the review_configs directory.  Take a moment to review the rendered configurations.  As you can see, variables defined in the Jinja2 template have been replaced with values from both the host_vars and group_vars files.  
 
@@ -351,9 +351,11 @@ Now we are almost ready to review and run our configuration playbooks, but befor
 
 ### Ansible Roles 
 
-Ansible Roles allow for the modularization and re-use of Ansible tasks, variables and other dependencies that can be loaded into a playbook.  See the documentation on [Ansible Roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).  For our work today, we will be using the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role so that we can make use of the pyats_parse_command module and genie_config_diff filter when running our configuration playbooks. 
+Ansible Roles allow for the modularization and re-use of Ansible tasks, variables, handlers and other dependencies that can be loaded into a playbook.  See the documentation on [Ansible Roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).  For our work today, we will be using the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role so that we can make use of the pyats_parse_command module and genie_config_diff filter when running our configuration playbooks.  
 
-Roles can be installed by running `ansible-galaxy install role.name` and a new role can be created with the correct directory structure by running `ansible-galaxy init mynewrole`
+pyATS is a powerful framework for automated testing and the de-facto test framework for internal Cisco Engineers.  For a more comprehensive introduction to pyATS, see the [Cisco pyATS Documentation](https://developer.cisco.com/docs/pyats/)  
+
+Roles can be installed by running `ansible-galaxy install role.name` for roles in [Ansible Galaxy](https://galaxy.ansible.com/), where collections and roles are published for use by vendors (including Cisco and most other major vendors) and the Ansible Community. A new role can be created with the proper directory structure by running `ansible-galaxy init mynewrole`.  Custom roles can also simply be copied into the roles directory.  As long as the role directory can be found in the roles_path that we reviewed earlier as part of the ansible.cfg file, it can be used in your playbook.
 
 Roles can be referenced in a playbook using the **roles** keyword.  See this example from our playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml):  
 
@@ -364,6 +366,7 @@ Roles can be referenced in a playbook using the **roles** keyword.  See this exa
   roles:
     - ansible-pyats  
 ```
+If we review our lab directory structure, we can see that there is a roles directory.  Within that roles directory there is a directory called **ansible-pyats**.   A deep dive into roles is beyond the scope of this session, but as you move further into your Ansible journey, you may find that roles bring some highly beneficial re-use and modularity to your Ansible practice.  
 
 ### Deploy Base Configuration to a site using Ansible Playbooks
 
