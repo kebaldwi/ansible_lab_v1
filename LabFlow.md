@@ -294,7 +294,9 @@ Let's focus on the tasks section of the playbook.
 
 There are 3 tasks that are very similar.  Each uses the [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html) module to render configuration based on the specified Jinja2 template.
 
-The first task, named Core Config Render, will render a config into the review_configs directory based on the template called [core_config.j2](templates/core_config.j2).  The rendered configuration will be written to a file named after the host, so that the host 10.2.6.14 will result in a file called **10.2.6.14.config**.  There is a new keyword in this task that we haven't seen before:  **when**.  The when keyword allows us to add a condition for when this task will run.  In this case, we only want to render the Core configuration for hosts in the group **core**.  When allows us to specify an umbrella host group for the playbook while still limiting each task to only the hosts to which it should apply.  Host group is only one of the conditions that can be used in a when statement.
+The first task, named Core Config Render, will render a config into the review_configs directory based on the template called [core_config.j2](templates/core_config.j2).  The rendered configuration will be written to a file named after the host, so that the host 10.2.6.14 will result in a file called **10.2.6.14.config**.  There is a new keyword in this task that we haven't seen before:  **when**.    
+
+The **when** keyword allows us to add a condition for when this task will run.  In this case, we only want to render the Core configuration for hosts in the group **core**.  **When** allows us to specify an umbrella host group for the playbook while still limiting each task to only the hosts to which it should apply.  Host group is only one of the conditions that can be used in a when statement.
 
 ```
     - name: Core Config Render
@@ -337,11 +339,13 @@ ansible-playbook -i inventory_pod.ini Task_0_Fact_Finding/render_configurations.
 ```  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
+After a successful run of this playbook, we should see four new files in the review_configs directory.  Take a moment to review the rendered configurations.  As you can see, variables defined in the Jinja2 template have been replaced with values from both the host_vars and group_vars files.  
 
+Now we are almost ready to review and run our configuration playbooks, but before that, let's briefly review the concept of Ansible Roles.  
 
 ### Ansible Roles 
 
-Let's briefly touch on Ansible Roles.   Roles allow for the modularization and re-use of Ansible tasks, variables and other dependencies that can be loaded into a playbook.  See the documentation on [Ansible Roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).  For our work today, we will be using the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role so that we can make use of the pyats_parse_command module and genie_config_diff filter when running our configuration playbooks. 
+Ansible Roles allow for the modularization and re-use of Ansible tasks, variables and other dependencies that can be loaded into a playbook.  See the documentation on [Ansible Roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).  For our work today, we will be using the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role so that we can make use of the pyats_parse_command module and genie_config_diff filter when running our configuration playbooks. 
 
 Roles can be installed by running `ansible-galaxy install role.name` and a new role can be created with the correct directory structure by running `ansible-galaxy init mynewrole`
 
@@ -354,8 +358,6 @@ Roles can be referenced in a playbook using the **roles** keyword.  See this exa
   roles:
     - ansible-pyats  
 ```
-
-#### Quick Intro to pyATS and the ansible-pyats role
 
 ### Deploy Base Configuration to a site using Ansible Playbooks
 
