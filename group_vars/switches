@@ -4,4 +4,6 @@ vlans:
   - 200
 
 ospf_processid: 1
+
+telemetry_destination_ip: "10.1.1.19"
 ...
