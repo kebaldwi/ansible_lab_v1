@@ -1,0 +1,27 @@
+---
+# use pyATS parsers to get structured data back from devices and display in debug
+
+- hosts: switches
+  connection: network_cli
+  gather_facts: no
+  roles:
+    - ansible-pyats
+    
+  tasks:
+    - name: Get Version Info
+      pyats_parse_command:
+        command: show version
+      register: version_output
+
+    - name: Display Switch Info
+      debug:
+        msg:
+          - "Hostname: {{ version_output.structured.version.hostname }}"
+          - "Serial Number: {{ version_output.structured.version.chassis_sn }}"
+          - "IOS-XE Version: {{ version_output.structured.version.version }}"
+          - "Config Register: {{ version_output.structured.version.curr_config_register }}"
+          - "Uptime: {{ version_output.structured.version.uptime }}"
+          - "License Information: {{ version_output.structured | json_query('version.license_package.[*][0][0].license_level') }} {{ version_output.structured | json_query('version.license_package.[*][0][1].license_level') }}"
+          
+
+      

@@ -10,11 +10,11 @@
     - name: Core Config Render
       when: inventory_hostname in groups['core']
       template:
-        src: core_config.j2
-        dest: "review_configs/{{ inventory_hostname }}.config"
+        src: "~/ansible_lab_v1/templates/core_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 
     - name: Access Config Render
       when: inventory_hostname in groups['access']
       template:
-        src: access_config.j2
-        dest: "review_configs/{{ inventory_hostname }}.config"
+        src: "~/ansible_lab_v1/templates/access_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
