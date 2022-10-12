@@ -2,7 +2,7 @@
 # Use IOS Facts Module to verify connectivity and get some info on our devices
 
 - hosts: all
-  connection: network_cli
+  connection: ansible.netcommon.network_cli
   gather_facts: no
     
   tasks:
@@ -12,7 +12,7 @@
         gather_network_resources: interfaces
       
 
-    - name: Display Switch Info
+    - name: Display Device Info
       debug:
         msg:
           - "Hostname: {{ ansible_net_hostname }}"

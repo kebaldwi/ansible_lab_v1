@@ -153,59 +153,62 @@ mv 10.#.#.15 10.1.7.15
 
 #### Ansible Playbook Taxonomy
 
-In order to explore playbook structure, we will view and run the playbook titled [ios_facts.yaml](Task_0_Fact_Finding/ios_facts.yaml). This playbook will connect to the devices in our inventory and collect data using the [cisco.ios.ios_facts](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_facts_module.html#ansible-collections-cisco-ios-ios-facts-module) module.
+In order to explore playbook structure, we will view the playbook titled [render_configurations.yaml](Task_0_Fact_Finding/render_configurations.yaml). This playbook will generate a CLI configuration file based on variables and Jinja2 templates that we have defined.
 
+```
+# Playbook to show the final configuration rendered from Jinja2 Templates and host and group variables
+
+#Specify Hosts and Connection Type to use
+- hosts: switches
+  gather_facts: no
+  connection: ansible.netcommon.network_cli
+
+#Render Core and Access Templates for Devices and place them in the review_configs directory
+  tasks:
+    - name: Core Config Render
+      when: inventory_hostname in groups['core']
+      template:
+        src: "~/ansible_lab_v1/templates/core_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
+
+    - name: Access Config Render
+      when: inventory_hostname in groups['access']
+      template:
+        src: "~/ansible_lab_v1/templates/access_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
+
+```
 The first section of the playbook contains the following:
 
 **hosts**:  The hosts this playbook applies to.  Possible values here are a single host, a host group or all.  
-**connection**: What type of connection should be used See the [Documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ansible.netcommon.network_cli will be used.  
-**gather_facts**: A yes or no option that tells ansible whether to run the gather_facts module on the hosts.  Since this module is optimized for servers, we don't use it. Instead we will use the cisco.ios.ios_facts module. 
+**gather_facts**: A yes or no switch that tells ansible whether to run the gather_facts module on the hosts.  Since this module is optimized for servers, we don't use it.  There are other ways to gather information about our IOS-XE devices that we will see later.
+**connection**: What type of connection should be used See the [Documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ansible.netcommon.network_cli will be used.
 
 ```
 
 #Specify Hosts and Connection Type to use
-- hosts: all
+- hosts: switches
+  gather_facts: no
   connection: ansible.netcommon.network_cli
-  gather_facts: no   
   
-```  
-
-The next section of the playbook includes the tasks to be run.  We have 2 tasks in this playbook.  The first task will use the cisco.ios.ios_facts module to gather information about our devices.  There are two different methods for noting which facts to gather:  the legacy gather_subset notation and the newer, gather_network_resources notation.  The newer notation is especially powerful because it returns structured data which can then be used directly to configure devices, ingested by scripts or just more easily parsed.  See the link above to read further about the cisco.ios.ios_facts module.
-
-The second task uses the debug module to display a message containing some of the information we've gathered.  
+```
+The next section of the playbook includes the tasks to be run.  We have 2 tasks in this playbook.  Each of these tasks will use the template module in order to render CLI configuration for our devices based on the template defined as the source, the host group defined previously modified by the **when** statement,  and a destination for our rendered config using variables defined in the inventory file, group_vars, and host_vars files.  We will explore the templates themselves in the next section.
 
 ```
+#Render Core and Access Templates for Devices and place them in the review_configs directory
   tasks:
-    - name: Get IOS Facts
-      cisco.ios.ios_facts:
-        gather_subset: min
-        gather_network_resources: interfaces
+    - name: Core Config Render
+      when: inventory_hostname in groups['core']
+      template:
+        src: core_config.j2
+        dest: "review_configs/{{ inventory_hostname }}.config"
 
-    - name: Display Device Info
-      debug:
-        msg:
-          - "Hostname: {{ ansible_net_hostname }}"
-          - "Serial Number: {{ ansible_net_serialnum }}"
-          - "IOS-XE Version: {{ ansible_net_version }}"
-          - "Model: {{ ansible_net_model }}"
-          - "Interfaces {{ ansible_network_resources['interfaces'] }}"
+    - name: Access Config Render
+      when: inventory_hostname in groups['access']
+      template:
+        src: access_config.j2
+        dest: "review_configs/{{ inventory_hostname }}.config"
 ```
-
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
-### Action 4:  Run the ios_facts.yaml playbook  
-
-Run the playbook in the VSCode Terminal
-
-```
-cd ~/ansible_lab_v1/
-ansible-playbook -i inventory_pod.ini Task_0_Fact_Finding/ios_facts.yaml
-```  
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
-
-The output should look similar to this, but it is ok, if the exact details of the output are different:
-
-## Image Placeholder for output of ios_facts run ##
-
 
 ### Jinja2 Template Exploration
 
