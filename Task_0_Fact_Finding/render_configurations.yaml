@@ -5,16 +5,21 @@
   gather_facts: no
   connection: ansible.netcommon.network_cli
 
-#Render Core and Access Templates for Devices and place them in the review_configs directory
+#Render Templates for Devices and place them in the review_configs directory
   tasks:
     - name: Core Config Render
       when: inventory_hostname in groups['core']
-      template:
+      ansible.builtin.template:
         src: "~/ansible_lab_v1/templates/core_config.j2"
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 
     - name: Access Config Render
       when: inventory_hostname in groups['access']
-      template:
+      ansible.builtin.template:
         src: "~/ansible_lab_v1/templates/access_config.j2"
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
+
+    - name: MDT Config Render
+      ansible.builtin.template:
+        src: "~/ansible_lab_v1/templates/telemetry_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}_MDT.config"

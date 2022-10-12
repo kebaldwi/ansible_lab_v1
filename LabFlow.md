@@ -158,7 +158,7 @@ In order to explore playbook structure, we will view and run the playbook titled
 The first section of the playbook contains the following:
 
 **hosts**:  The hosts this playbook applies to.  Possible values here are a single host, a host group or all.  
-**connection**: What type of connection should be used See the [Documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ansible.netcommon.network_cli will be used.  
+**connection**: What type of connection should be used See the [documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ansible.netcommon.network_cli will be used.  
 **gather_facts**: A yes or no option that tells ansible whether to run the gather_facts module on the hosts.  Since this module is optimized for servers, we don't use it. Instead we will use the cisco.ios.ios_facts module. 
 
 ```
@@ -206,15 +206,15 @@ The output should look similar to this, but it is ok if the exact details of the
 
 ## Image Placeholder for output of ios_facts run ##
 
-As we can see, we've quickly and easily collected some good information about our devices.  We have hostnames, serial numbers, code versions and model numbers.   This also verifies that we are able to connect to our network devices and our inventory file is correct.
+As we can see, we've quickly and easily collected some valuable information about our devices.  We have hostnames, serial numbers, code versions and model numbers. This also verifies that we are able to connect to our network devices and our inventory file is correct.
 
 Next we will move on to exploring Jinja2 Templates and configuring our network devices using Ansible Playbooks.
 
 ### Jinja2 Template Exploration
 
-Jinja2 Templates are a dynamic way to apply standard configurations to multiple devices using variables.   To read more about using Jinja2 templates in Ansible, see the [documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html).  Templates are usually found in the [templates](templates) directory under our ansible playbook working directory.  Let's review the [access_config.j2](templates/access_config.j2) template.
+Jinja2 Templates are a dynamic way to apply standard configurations to multiple devices using variables.   To read more about using Jinja2 templates in Ansible, see the [documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html).  Templates are usually found in the [templates](templates) directory under our ansible playbook working directory.  Let's review the [access_config.j2](templates/access_config.j2) template, which as the name suggests, is the template for our access switch.
 
-The template begins with a **for loop**.  If you recall from our group_vars file [switches](group_vars/switches), we have a variable called vlans, which is a list of vlan numbers.  The for loop in our template will iterate through the list of vlans and run the commmand vlan \<number\> for each vlan in the list and then exit out of vlan config mode. 
+This template begins with a **for loop**.  If you recall from our group_vars file [switches](group_vars/switches), we have a variable called vlans, which is a list of vlan numbers.  The for loop in our template will iterate through the list of vlans and run the commmand vlan \<number\> for each vlan in the list and then exit out of vlan config mode. 
 
 ```
 {% for vlan in vlans%}
@@ -222,7 +222,7 @@ The template begins with a **for loop**.  If you recall from our group_vars file
 {%endfor %}
 exit
 ```
-The next section will configure the access and trunk ports as defined in our [host_vars file for the access switch](host_vars/10.1.1.15) and some other configuration items that we need.
+The next section will configure the access and trunk ports as defined in our [host_vars file for the access switch](host_vars/10.#.#.15) and some other configuration items that we need.
 
 ```
 interface range GigabitEthernet1/0/1-8
@@ -246,22 +246,98 @@ interface {{ trunk_interface }}
   description configured by ansible
   switchport mode trunk
 
-interface range GigabitEthernet1/0/1-8
-  load-interval 30
-
 ip tcp mss 1280
 ip http server
 ip http secure-server
 ip http client source-interface gigabitEthernet 0/0
 ip http authentication local
-gnxi server
 
 event manager applet catchall
   event cli pattern ".*" sync no skip no
   action 1 syslog msg "$_cli_msg"
 
 ```
-We can see what the final CLI configuration will be by running the playbook that we reviewed earlier: [render_configurations.yaml](render_configurations.yaml), which we will do further on in the lab guide.
+We can see what the final CLI configuration will be by running the playbook: [render_configurations.yaml](render_configurations.yaml).
+
+The playbook render_configurations.yaml will take the configuration templates and values from the host and group vars we defined and generate the CLI configuration that will pushed to the switches for us to review.  This step is not necessary, but will allow us to get a preview of our complete configuration that will be pushed to the network devices prior to running the playbooks that will configure the switches.
+
+Let's take a look at [render_configurations.yaml](render_configurations.yaml).
+
+```
+# Playbook to show the final configuration rendered from Jinja2 Templates and host and group variables
+
+#Specify Hosts and Connection Type to use
+- hosts: switches
+  gather_facts: no
+  connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: Core Config Render
+      when: inventory_hostname in groups['core']
+      ansible.builtin.template:
+        src: "~/ansible_lab_v1/templates/core_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
+
+    - name: Access Config Render
+      when: inventory_hostname in groups['access']
+      ansible.builtin.template:
+        src: "~/ansible_lab_v1/templates/access_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
+
+    - name: MDT Config Render
+      ansible.builtin.template:
+        src: "~/ansible_lab_v1/templates/telemetry_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}_MDT.config"
+```
+
+Let's focus on the tasks section of the playbook.
+
+There are 3 tasks that are very similar.  Each uses the [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html) module to render configuration based on the specified Jinja2 template.
+
+The first task, named Core Config Render, will render a config into the review_configs directory based on the template called [core_config.j2](templates/core_config.j2).  The rendered configuration will be written to a file named after the host, so that the host 10.2.6.14 will result in a file called **10.2.6.14.config**.  There is a new keyword in this task that we haven't seen before:  **when**.  The when keyword allows us to add a condition for when this task will run.  In this case, we only want to render the Core configuration for hosts in the group **core**.  When allows us to specify an umbrella host group for the playbook while still limiting each task to only the hosts to which it should apply.  Host group is only one of the conditions that can be used in a when statement.
+
+```
+    - name: Core Config Render
+      when: inventory_hostname in groups['core']
+      ansible.builtin.template:
+        src: "~/ansible_lab_v1/templates/core_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
+```   
+
+The next task does the same for the access switch.
+
+```
+    - name: Access Config Render
+      when: inventory_hostname in groups['access']
+      ansible.builtin.template:
+        src: "~/ansible_lab_v1/templates/access_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
+
+```   
+The last task is missing the **when** statement as we use a single template [telemetry_config.j2](templates/telemetry_config.j2) for both core and access switches.  
+
+```
+    - name: MDT Config Render
+      ansible.builtin.template:
+        src: "~/ansible_lab_v1/templates/telemetry_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}_MDT.config"
+
+```   
+
+Now that we have reviewed the render_configurations.yaml playbook, we can run it.
+
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+### Action 5:  Run the render_configurations.yaml playbook  
+
+Run the playbook in the VSCode Terminal
+
+```
+cd ~/ansible_lab_v1/
+ansible-playbook -i inventory_pod.ini Task_0_Fact_Finding/render_configurations.yaml
+```  
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
+
+
 
 ### Ansible Roles 
 
