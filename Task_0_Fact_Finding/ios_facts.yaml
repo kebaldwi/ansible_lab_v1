@@ -1,0 +1,22 @@
+---
+# Use IOS Facts Module to verify connectivity and get some info on our devices
+
+- hosts: all
+  connection: network_cli
+  gather_facts: no
+    
+  tasks:
+    - name: Get IOS Facts
+      cisco.ios.ios_facts:
+        gather_subset: min
+        gather_network_resources: interfaces
+      
+
+    - name: Display Switch Info
+      debug:
+        msg:
+          - "Hostname: {{ ansible_net_hostname }}"
+          - "Serial Number: {{ ansible_net_serialnum }}"
+          - "IOS-XE Version: {{ ansible_net_version }}"
+          - "Model: {{ ansible_net_model }}"
+          - "Interfaces {{ ansible_network_resources['interfaces'] }}"

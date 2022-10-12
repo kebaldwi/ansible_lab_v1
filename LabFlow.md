@@ -67,7 +67,7 @@ Some items to note about our inventory files.  We define a group with the \[grou
 
 <b>
 Step 1:  Modify the **inventory_pod.ini** file and enter the correct IPs for the **access**, **core** and **wan** devices using your pool and pod number.  For example, if you are in pool 1 pod 4, your access switch ip will be **10.1.4.15**  
-
+<br>  
 Step 2:  Complete the \[all:vars\] section in your inventory file.  Enter the values for **ansible_user**, **ansible_ssh_pass**, and **ansible_become_pass**.  
 </b>  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
@@ -111,7 +111,9 @@ The starting --- and ending ... mark this file as a YAML file.  We can see we ha
 ### Action 2:  Modify the switches file in the group_vars directory  
 
 <b>
+<br>
  Modify the **switches** file and enter the correct IP for the **telemetry_destination_ip** using your pool and pod number.  For example, if you are in pool 2 pod 3, your value for **telemetry_destination_ip** will be "10.2.3.19"  
+<br>
 </b>  
   
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
@@ -133,19 +135,25 @@ You can also explore the **10.#.#.14** file, which maps to our core switch.  You
 ### Action 3:  Rename the files in the host_vars directory  
 
 <b>
-
+<br>
+Rename the files in the host_vars directory to reflect the IPs in your pool and pod.  For example if you are in pool 1 pod 7, your files should be named 10.1.7.14 and 10.1.7.15.
+<br>
 </b>
 
+You can accomplish by right-clicking the file name in VSCode and selecting **Rename** or in the terminal by entering the host_vars directory and using the mv command.  See this example:  
 
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
-
-
+```
+cd ~/ansible_lab_v1/host_vars
+mv 10.#.#.14 10.1.7.14
+mv 10.#.#.15 10.1.7.15
+```  
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 
 ### Part 2: Ansible Playbooks & Templates
 
 #### Ansible Playbook Taxonomy
 
-In order to explore playbook structure, we will view the playbook titled [render_configurations.yaml](render_configurations.yaml). This playbook will generate a CLI configuration file based on variables and Jinja2 templates that we have defined.
+In order to explore playbook structure, we will view the playbook titled [render_configurations.yaml](Task_0_Fact_Finding/render_configurations.yaml). This playbook will generate a CLI configuration file based on variables and Jinja2 templates that we have defined.
 
 ```
 # Playbook to show the final configuration rendered from Jinja2 Templates and host and group variables
@@ -160,21 +168,21 @@ In order to explore playbook structure, we will view the playbook titled [render
     - name: Core Config Render
       when: inventory_hostname in groups['core']
       template:
-        src: core_config.j2
-        dest: "review_configs/{{ inventory_hostname }}.config"
+        src: "~/ansible_lab_v1/templates/core_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 
     - name: Access Config Render
       when: inventory_hostname in groups['access']
       template:
-        src: access_config.j2
-        dest: "review_configs/{{ inventory_hostname }}.config"
+        src: "~/ansible_lab_v1/templates/access_config.j2"
+        dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 
 ```
 The first section of the playbook contains the following:
 
-**hosts**:  The hosts should this playbook run against.  Possible values here are a single host, a host group or all.  
-**gather_facts**: A yes or no switch that tells ansible whether to run the gather_facts module on the hosts.   
-**connection**: What type of connection should be used See the [Documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  
+**hosts**:  The hosts this playbook applies to.  Possible values here are a single host, a host group or all.  
+**gather_facts**: A yes or no switch that tells ansible whether to run the gather_facts module on the hosts.  Since this module is optimized for servers, we don't use it.  There are other ways to gather information about our IOS-XE devices that we will see later.
+**connection**: What type of connection should be used See the [Documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ansible.netcommon.network_cli will be used.
 
 ```
 
