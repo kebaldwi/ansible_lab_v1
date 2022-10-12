@@ -208,8 +208,6 @@ The output should look similar to this, but it is ok if the exact details of the
 ![json](./images/ios_facts_screen_1.png?raw=true "Import JSON")  
 ![json](./images/ios_facts_screen_2.png?raw=true "Import JSON")  
 
-## Image Placeholder for output of ios_facts run ##
-
 As we can see, we've quickly and easily collected some valuable information about our devices.  We have hostnames, serial numbers, code versions and model numbers. This also verifies that we are able to connect to our network devices and our inventory file is correct.
 
 Next we will move on to exploring Jinja2 Templates and configuring our network devices using Ansible Playbooks.
@@ -218,7 +216,7 @@ Next we will move on to exploring Jinja2 Templates and configuring our network d
 
 Jinja2 Templates are a dynamic way to apply standard configurations to multiple devices using variables.   To read more about using Jinja2 templates in Ansible, see the [documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html).  Templates are usually found in the [templates](templates) directory under our ansible playbook working directory.  Let's review the [access_config.j2](templates/access_config.j2) template, which as the name suggests, is the template for our access switch.
 
-This template begins with a **for loop**.  If you recall from our group_vars file [switches](group_vars/switches), we have a variable called vlans, which is a list of vlan numbers.  The for loop in our template will iterate through the list of vlans and run the commmand vlan \<number\> for each vlan in the list and then exit out of vlan config mode. 
+This template begins with a **for loop**.  If you recall from our group_vars file [switches](group_vars/switches), we have a variable called vlans, which is a list of vlan numbers.  The for loop in our template will iterate through the list of vlans and run the commmand vlan \<number\> for each vlan in the list and then exit out of vlan config mode.
 
 ```
 {% for vlan in vlans%}
@@ -226,7 +224,7 @@ This template begins with a **for loop**.  If you recall from our group_vars fil
 {%endfor %}
 exit
 ```
-The next section will configure the access and trunk ports as defined in our [host_vars file for the access switch](host_vars/10.#.#.15) and some other configuration items that we need.
+The next section will configure the access and trunk ports as defined in our [host_vars file for the access switch](host_vars/10.#.#.15) and some other configuration items that we need.  The variable notation in Jinja2 is the double curly brace ***{{ }}***
 
 ```
 interface range GigabitEthernet1/0/1-8
@@ -261,6 +259,10 @@ event manager applet catchall
   action 1 syslog msg "$_cli_msg"
 
 ```
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
+NOTE:  A great resource for learning more about Jinja2 Templating is [Przemek Rogala's Blog Series](https://ttl255.com/jinja2-tutorial-part-1-introduction-and-variable-substitution/) on the subject.  
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
+
 We can see what the final CLI configuration will be by running the playbook: [render_configurations.yaml](render_configurations.yaml).
 
 The playbook render_configurations.yaml will take the configuration templates and values from the host and group vars we defined and generate the CLI configuration that will pushed to the switches for us to review.  This step is not necessary, but will allow us to get a preview of our complete configuration that will be pushed to the network devices prior to running the playbooks that will configure the switches.
