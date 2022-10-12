@@ -202,10 +202,13 @@ ansible-playbook -i inventory_pod.ini Task_0_Fact_Finding/ios_facts.yaml
 ```  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
-The output should look similar to this, but it is ok, if the exact details of the output are different:
+The output should look similar to this, but it is ok if the exact details of the output are different:
 
 ## Image Placeholder for output of ios_facts run ##
 
+As we can see, we've quickly and easily collected some good information about our devices.  We have hostnames, serial numbers, code versions and model numbers.   This also verifies that we are able to connect to our network devices and our inventory file is correct.
+
+Next we will move on to exploring Jinja2 Templates and configuring our network devices using Ansible Playbooks.
 
 ### Jinja2 Template Exploration
 
