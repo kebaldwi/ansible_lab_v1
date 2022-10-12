@@ -265,7 +265,7 @@ NOTE:  A great resource for learning more about Jinja2 Templating is [Przemek Ro
 
 We can see what the final CLI configuration will be by running the playbook: [render_configurations.yaml](render_configurations.yaml).
 
-The playbook render_configurations.yaml will take the configuration templates and values from the host and group vars we defined and generate the CLI configuration that will pushed to the switches for us to review.  This step is not necessary, but will allow us to get a preview of our complete configuration that will be pushed to the network devices prior to running the playbooks that will configure the switches.
+The playbook render_configurations.yaml will take the configuration templates and values from the host and group vars we defined and generate the CLI configuration that will pushed to the switches for us to review.  This step is not necessary as the config will be rendered on the fly by our configuration playbooks, but will allow us to get a preview of our complete configuration that will be pushed to the network devices prior to running the playbooks that will configure the switches.
 
 Let's take a look at [render_configurations.yaml](render_configurations.yaml).
 
@@ -355,7 +355,7 @@ Ansible Roles allow for the modularization and re-use of Ansible tasks, variable
 
 pyATS is a powerful framework for automated testing and the de-facto test framework for internal Cisco Engineers.  For a more comprehensive introduction to pyATS, see the [Cisco pyATS Documentation](https://developer.cisco.com/docs/pyats/)  
 
-Roles can be installed by running `ansible-galaxy install role.name` for roles in [Ansible Galaxy](https://galaxy.ansible.com/), where collections and roles are published for use by vendors (including Cisco and most other major vendors) and the Ansible Community. A new role can be created with the proper directory structure by running `ansible-galaxy init mynewrole`.  Custom roles can also simply be copied into the roles directory.  As long as the role directory can be found in the roles_path that we reviewed earlier as part of the ansible.cfg file, it can be used in your playbook.
+Roles can be installed by running `ansible-galaxy install role.name` for roles in [Ansible Galaxy](https://galaxy.ansible.com/), where collections and roles are published for use by vendors (including Cisco and most other major vendors) and the Ansible Community at large. A new role can be created with the proper directory structure by running `ansible-galaxy init mynewrole`.  Custom roles can also simply be copied into the roles directory.  As long as the role directory can be found in the roles_path that we reviewed earlier as part of the ansible.cfg file, it can be used in your playbooks.
 
 Roles can be referenced in a playbook using the **roles** keyword.  See this example from our playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml):  
 
