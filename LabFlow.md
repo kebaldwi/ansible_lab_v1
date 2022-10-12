@@ -204,6 +204,9 @@ ansible-playbook -i inventory_pod.ini Task_0_Fact_Finding/ios_facts.yaml
 
 The output should look similar to this, but it is ok if the exact details of the output are different:
 
+![json](./images/ios_facts_screen_1.png?raw=true "Import JSON")  
+![json](./images/ios_facts_screen_2.png?raw=true "Import JSON")  
+
 ## Image Placeholder for output of ios_facts run ##
 
 As we can see, we've quickly and easily collected some valuable information about our devices.  We have hostnames, serial numbers, code versions and model numbers. This also verifies that we are able to connect to our network devices and our inventory file is correct.
