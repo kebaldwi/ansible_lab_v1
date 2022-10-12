@@ -1,7 +1,6 @@
 ---
 # use pyATS parsers to get structured data back from devices and display in debug
 
-
 - hosts: switches
   connection: network_cli
   gather_facts: no

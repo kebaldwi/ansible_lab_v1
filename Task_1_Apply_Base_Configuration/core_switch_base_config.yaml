@@ -17,7 +17,7 @@
 
     - name: Apply Initial Configuration
       ios_config:
-        src: templates/core_config.j2
+        src: "~/ansible_lab_v1/templates/core_config.j2"
         save_when: changed
 
     - name: Post-Run Config Collection

@@ -28,15 +28,11 @@ interface {{ trunk_interface }}
   description configured by ansible
   switchport mode trunk
 
-interface range GigabitEthernet1/0/1-8
-  load-interval 30
-
 ip tcp mss 1280
 ip http server
 ip http secure-server
 ip http client source-interface gigabitEthernet 0/0
 ip http authentication local
-gnxi server
 
 event manager applet catchall
   event cli pattern ".*" sync no skip no
