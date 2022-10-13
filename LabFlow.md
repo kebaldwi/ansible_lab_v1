@@ -415,7 +415,11 @@ Let's review the core_switch_base_config.yaml playbook
 ```
 At the start of the playbook we see familiar statements that we can interpret to mean this playbook will run on devices in the group **core** using the ansible.netcommon.network_cli connection method and that we do not want to run the gather_facts module on our devices.
 
-The first task contains a module we haven't seen before:  **cisco.ios.ios_command**.  The [cisco.ios.ios_command](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_command_module.html) module executes a command or list of commands on a cisco device.  Note, the **cisco.ios.ios_command** module isn't used to make configuration changes on network devices.  In this case, we're using the module to execute a show run on the device and get back the output.  Note that there a number of different ways to get the configuration from a device, you may have come across other options during your Ansible practice. The next new item is the **register** parameter.  This simply tells Ansible to save the result of the task to a variable that is, in this case, called **prior_config** and can be referenced later.
+The first task contains a module we haven't seen before:  **cisco.ios.ios_command**.  The [cisco.ios.ios_command](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_command_module.html) module executes a command or list of commands on a cisco device.  Note, the **cisco.ios.ios_command** module isn't used to make configuration changes on network devices.  
+
+In this case, we're using the module to execute a show run on the device and get back the output.  Note that there a number of different ways to get the configuration from a device, you may have come across other options during your Ansible practice.  
+
+The next new item is the **register** parameter.  This simply tells Ansible to save the result of the task to a variable that is, in this case, called **prior_config** and can be referenced later.
 
 ```
     - name: Prerun Config Collection
@@ -424,7 +428,11 @@ The first task contains a module we haven't seen before:  **cisco.ios.ios_comman
       register: prior_config
 
 ```
-The second task is where we actually deploy our configuration template to our network device using the [cisco.ios.ios_config](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html).  As the name implies, the cisco.ios.ios_config module is used to modify the configuration on a Cisco IOS/IOS-XE device.  Note that the **src** parameter allows us to reference the previously discussed Jinja2 template which contains the actual configuration we want to send.  The cisco.ios.ios_config module is powerful and flexible.  The usage here is only one way of sending configuration to network devices.  Please review the documentation linked above for more options and examples.  The final parameter in the task is **save_when**.  This parameter controls under what circumstances the task will save the running-config, the option **changed** will only do so if the task results in a change to the running configuration, other options can be explored in the documentation.
+The second task is where we actually deploy our configuration template to our network device using the [cisco.ios.ios_config](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html).  As the name implies, the cisco.ios.ios_config module is used to modify the configuration on a Cisco IOS/IOS-XE device.  Note that the **src** parameter allows us to reference the previously discussed Jinja2 template which contains the actual configuration we want to send.  
+
+The cisco.ios.ios_config module is powerful and flexible.  The usage here is only one way of sending configuration to network devices.  Please review the documentation linked above for more options and examples.  
+
+The final parameter in the task is **save_when**.  This parameter controls under what circumstances the task will save the running-config, the option **changed** will only do so if the task results in a change to the running configuration, other options can be explored in the documentation.
 
 ```
     - name: Apply Initial Configuration
@@ -432,8 +440,6 @@ The second task is where we actually deploy our configuration template to our ne
         src: "~/ansible_lab_v1/templates/core_config.j2"
         save_when: changed
 ```
-
-
 
 ### Deploy Model Driven Telemetry configurations to a site using Ansible Playbooks
 
