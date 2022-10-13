@@ -374,6 +374,7 @@ In this section of the lab, we will deploy a base configuration to our topology.
 
 ![json](./images/pod_diagram.png?raw=true "Import JSON")  
 
+some text to trigger an M
 
 ### Deploy Model Driven Telemetry configurations to a site using Ansible Playbooks
 
