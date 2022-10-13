@@ -441,6 +441,46 @@ The final parameter in the task is **save_when**.  This parameter controls under
         save_when: changed
 ```
 
+The final two tasks in this playbook, in conjunction with the first task, will allow us to see exactly what was changed by our configuration task.   First, we collect the running config again using a repeat of task 1:  
+
+```
+    - name: Post-Run Config Collection
+      cisco.ios.ios_command: 
+        commands: show run
+      register: post_config
+```
+
+Then we make use of the **debug** module as referenced earlier to display information on our configuration change.  To provide more detail, the task, **Show Lines Added to Config**, uses the filter **genie_config_diff** to compare the running config taken prior to the configuration change to the post-change configuration.  The option `mode='add'` limits the output to lines added to the config (meaning we ignore any lines that were removed) and the `exclude=exclude_list` option will ignore any diffs in configuration that match the **exclude_list** specified in the **vars** section at the bottom of the playbook.  This is done to limit irrelevant output or output that might have changed simply based on the time difference between the two tasks.
+
+```
+    - name: Show Lines Added to Config
+      debug:
+        msg: "{{ prior_config.stdout[0] | genie_config_diff(post_config.stdout[0], mode='add', exclude=exclude_list) }}"
+
+  vars:
+    exclude_list:
+      - (^Using.*)
+      - (Building.*)
+      - (Current.*)
+      - (crypto pki certificate chain.*)
+
+```
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
+### Action 6:  Run the core_switch_base_config.yaml playbook  
+
+Run the playbook in the VSCode Terminal
+
+```
+cd ~/ansible_lab_v1/
+ansible-playbook -i inventory_pod.ini Task_1_Apply_Base_Configuration/core_switch_base_config.yaml
+```  
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+
+The output should look similar to this. It is ok if the exact details of the output are different, but you should see a number of lines added to the config and a successful completion of the playbook with no failed tasks:  
+
+![json](./images/core_switch_base_config_1.png?raw=true "Import JSON")  
+![json](./images/core_switch_base_config_2.png?raw=true "Import JSON")  
+
 ### Deploy Model Driven Telemetry configurations to a site using Ansible Playbooks
 
 
