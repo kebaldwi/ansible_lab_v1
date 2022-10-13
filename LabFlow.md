@@ -374,9 +374,9 @@ In this section of the lab, we will deploy a base configuration to our topology.
 
 ![json](./images/pod_diagram.png?raw=true "Import JSON")  
 
-We'll use the playbooks, [access_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/access_switch_base_config.yaml) and [core_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) to push the base configuration templates to the core and access switch.  In the interest of time, the wan router has already been configured, but as it is also an IOS-XE device, the techniques in this guide can be used to configure a router.
+We'll use Ansible playbooks to push the base configuration templates to the core and access switch.  In the interest of time, the wan router has already been configured, but as it is also an IOS-XE device, the techniques in this guide can be used to configure a router.
 
-Let's review the core_switch_base_config.yaml playbook
+Let's review the [core_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) playbook
 
 ```
 - hosts: core
@@ -480,6 +480,42 @@ The output should look similar to this. It is ok if the exact details of the out
 
 ![json](./images/core_switch_base_config_1.png?raw=true "Import JSON")  
 ![json](./images/core_switch_base_config_2.png?raw=true "Import JSON")  
+
+In order to complete the provisioning of our site, we need to configure the access switch.   The playbook created for this purpose is [access_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/access_switch_base_config.yaml), but it is not complete.
+
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
+### Action 6:  Complete and Run the access_switch_base_config.yaml playbook  
+
+This playbook, located in the Task_1_Apply_Base_Config directory is missing a number of parameters.  Using your learning from previous sections, fill in the missing parameters and run the playbook.
+
+Open the file in VSCode by clicking on it.
+
+If you get stuck, the completed playbook is in the Final_Playbooks folder in your working directory.
+
+Run the playbook in the VSCode Terminal
+
+```
+cd ~/ansible_lab_v1/
+ansible-playbook -i inventory_pod.ini Task_1_Apply_Base_Configuration/access_switch_base_config.yaml
+```  
+
+Verification:
+If your playbook has run correctly, The site should have full connectivity and client1 and client2 should be able to reach server1.  
+
+To test this:
+1. Open the Chrome Browser from your jumphost.  
+2. Click on the client1-vnc bookmark in the bookmarks bar.  
+![json](./images/client1vnc_bookmark.png?raw=true "Import JSON") 
+3. Once the VNC window opens, open the Firefox Browser in the VNC window.  
+![json](./images/firefox.png?raw=true "Import JSON")  
+4.  Once the Firefox Browser opens, click on the server1 bookmark in the bookmarks bar.  
+![json](./images/server1_bookmark.png?raw=true "Import JSON")
+  
+Wait a minute or so and if you are successful, you'll see a cool message from a cool guy!  Let your proctor know who you saw!
+
+
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+
 
 ### Deploy Model Driven Telemetry configurations to a site using Ansible Playbooks
 
