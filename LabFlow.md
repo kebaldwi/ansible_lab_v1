@@ -224,7 +224,7 @@ This template begins with a **for loop**.  If you recall from our group_vars fil
 {%endfor %}
 exit
 ```
-The next section will configure the access and trunk ports as defined in our [host_vars file for the access switch](host_vars/10.#.#.15) and some other configuration items that we need.  The variable notation in Jinja2 is the double curly brace ***{{ }}***
+The next section will configure the access and trunk ports as defined in our [host_vars file](host_vars/10.#.#.15)  for the access switch and some other configuration items that we need.  The variable notation in Jinja2 is the double curly brace ***{{ }}***
 
 ```
 interface range GigabitEthernet1/0/1-8
