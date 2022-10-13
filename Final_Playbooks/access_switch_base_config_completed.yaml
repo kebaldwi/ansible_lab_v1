@@ -2,31 +2,31 @@
 # Deploy base config to access switch and use genie parser to show diffs in debug
 
 #Specify Host Group to use
-- hosts: #Enter the appropriate host group
+- hosts: access
   gather_facts: no
-  connection: #Enter the connection type
+  connection: ansible.netcommon.network_cli
   roles:
     - ansible-pyats
 
 #Specify Tasks to perform
   tasks:
     - name: Prerun Config Collection
-      cisco.ios.ios_command: 
+      ios_command: 
         commands: show run
-      #Enter the parameter that will save the output to a variable called "prior_config"
+      register: prior_config
 
     - name: Apply Initial Configuration
-      cisco.ios.ios_config:
+      ios_config:
         src: "~/ansible_lab_v1/templates/access_config.j2"
-        save_when: #Enter the correct option to save the configuration when this task modifies the config
+        save_when: changed
 
     - name: Post-Run Config Collection
-      cisco.ios.ios_command: 
+      ios_command: 
         commands: show run
-      #Enter the parameter that will save the output to a variable called "post_config"
+      register: post_config
     
     - name: Show Lines Added to Config
-      #Enter the module name to print the output.  Be Sure to enter it exactly where the # at the beginning of this line is
+      debug:
         msg: "{{ prior_config.stdout[0] | genie_config_diff(post_config.stdout[0], mode='add', exclude=exclude_list) }}"
 
   vars:
