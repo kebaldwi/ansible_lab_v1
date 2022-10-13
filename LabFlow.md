@@ -370,6 +370,11 @@ If we review our lab directory structure, we can see that there is a roles direc
 
 ### Deploy Base Configuration to a site using Ansible Playbooks
 
+In this section of the lab, we will deploy a base configuration to our topology.  Let's briefly review the topology
+
+
+
+
 ### Deploy Model Driven Telemetry configurations to a site using Ansible Playbooks
 
 ### 
