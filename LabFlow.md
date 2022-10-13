@@ -300,9 +300,9 @@ Let's focus on the tasks section of the playbook.
 
 There are 3 tasks that are very similar.  Each uses the [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html) module to render configuration based on the specified Jinja2 template.
 
-The first task, named Core Config Render, will render a config based on the template called [core_config.j2](templates/core_config.j2).  The rendered configuration will be written to a file named after the host in the review_configs directory, such that the host 10.2.6.14, will result in a file called **10.2.6.14.config**.  There is a new keyword in this task that we haven't seen before:  **when**.    
+The first task, named Core Config Render, will render a config based on the template called [core_config.j2](templates/core_config.j2).  The rendered configuration will be written to a file named after the host in the review_configs directory, such that the host 10.2.6.14, will result in a file called **10.2.6.14.config**.  There is a new parameter in this task that we haven't seen before:  **when**.    
 
-The **when** keyword allows us to add a condition for when this task will run.  In this case, we only want to render the Core configuration for hosts in the group **core**.  **When** allows us to specify a comprehensive host group for the playbook while still limiting each task to only the hosts to which it should apply.  Host group is only one of the conditions that can be used in a when statement.
+The **when** parameter allows us to add a condition for when this task will run.  In this case, we only want to render the Core configuration for hosts in the group **core**.  **When** allows us to specify a comprehensive host group for the playbook while still limiting each task to only the hosts to which it should apply.  Host group is only one of the conditions that can be used in a when statement.
 
 ```
     - name: Core Config Render
@@ -357,7 +357,7 @@ pyATS is a powerful framework for automated testing and the de-facto test framew
 
 Roles can be installed by running `ansible-galaxy install role.name` for roles in [Ansible Galaxy](https://galaxy.ansible.com/), where collections and roles are published for use by vendors (including Cisco and most other major vendors) and the Ansible Community at large. A new role can be created with the proper directory structure by running `ansible-galaxy init mynewrole`.  Custom roles can also simply be copied into the roles directory.  As long as the role directory can be found in the roles_path that we reviewed earlier as part of the ansible.cfg file, it can be used in your playbooks.
 
-Roles can be referenced in a playbook using the **roles** keyword.  See this example from our playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml):  
+Roles can be referenced in a playbook using the **roles** option.  See this example from our playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml):  
 
 ```
 - hosts: switches
@@ -374,7 +374,66 @@ In this section of the lab, we will deploy a base configuration to our topology.
 
 ![json](./images/pod_diagram.png?raw=true "Import JSON")  
 
-some text to trigger an M
+We'll use the playbooks, [access_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/access_switch_base_config.yaml) and [core_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) to push the base configuration templates to the core and access switch.  In the interest of time, the wan router has already been configured, but as it is also an IOS-XE device, the techniques in this guide can be used to configure a router.
+
+Let's review the core_switch_base_config.yaml playbook
+
+```
+- hosts: core
+  gather_facts: no
+  connection: ansible.netcommon.network_cli
+  roles:
+    - ansible-pyats
+
+#Specify Tasks to perform
+  tasks:
+    - name: Prerun Config Collection
+      cisco.ios.ios_command: 
+        commands: show run
+      register: prior_config
+
+    - name: Apply Initial Configuration
+      cisco.ios.ios_config:
+        src: "~/ansible_lab_v1/templates/core_config.j2"
+        save_when: changed
+
+    - name: Post-Run Config Collection
+      cisco.ios.ios_command: 
+        commands: show run
+      register: post_config
+    
+    - name: Show Lines Added to Config
+      debug:
+        msg: "{{ prior_config.stdout[0] | genie_config_diff(post_config.stdout[0], mode='add', exclude=exclude_list) }}"
+
+  vars:
+    exclude_list:
+      - (^Using.*)
+      - (Building.*)
+      - (Current.*)
+      - (crypto pki certificate chain.*)
+```
+At the start of the playbook we see familiar statements that we can interpret to mean this playbook will run on devices in the group **core** using the ansible.netcommon.network_cli connection method and that we do not want to run the gather_facts module on our devices.
+
+The first task contains a module we haven't seen before:  **cisco.ios.ios_command**.  The [cisco.ios.ios_command](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_command_module.html) module executes a command or list of commands on a cisco device.  Note, the **cisco.ios.ios_command** module isn't used to make configuration changes on network devices.  In this case, we're using the module to execute a show run on the device and get back the output.  Note that there a number of different ways to get the configuration from a device, you may have come across other options during your Ansible practice. The next new item is the **register** parameter.  This simply tells Ansible to save the result of the task to a variable that is, in this case, called **prior_config** and can be referenced later.
+
+```
+    - name: Prerun Config Collection
+      cisco.ios.ios_command: 
+        commands: show run
+      register: prior_config
+
+```
+The second task is where we actually deploy our configuration template to our network device using the [cisco.ios.ios_config](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html).  As the name implies, the cisco.ios.ios_config module is used to modify the configuration on a Cisco IOS/IOS-XE device.  Note that the **src** parameter allows us to reference the previously discussed Jinja2 template which contains the actual configuration we want to send.  The cisco.ios.ios_config module is powerful and flexible.  The usage here is only one way of sending configuration to network devices.  Please review the documentation linked above for more options and examples.  The final parameter in the task is **save_when**.  This parameter controls under what circumstances the task will save the running-config, the option **changed** will only do so if the task results in a change to the running configuration, other options can be explored in the documentation.
+
+```
+    - name: Apply Initial Configuration
+      cisco.ios.ios_config:
+        src: "~/ansible_lab_v1/templates/core_config.j2"
+        save_when: changed
+```
+
+
 
 ### Deploy Model Driven Telemetry configurations to a site using Ansible Playbooks
 

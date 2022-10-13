@@ -11,17 +11,17 @@
 #Specify Tasks to perform
   tasks:
     - name: Prerun Config Collection
-      ios_command: 
+      cisco.ios.ios_command: 
         commands: show run
       register: prior_config
 
     - name: Apply Initial Configuration
-      ios_config:
+      cisco.ios.ios_config:
         src: "~/ansible_lab_v1/templates/core_config.j2"
         save_when: changed
 
     - name: Post-Run Config Collection
-      ios_command: 
+      cisco.ios.ios_command: 
         commands: show run
       register: post_config
     
