@@ -522,9 +522,53 @@ You have applied a base config to your site and established end-to-end connectiv
 
 Ansible [Network Resource Modules](https://docs.ansible.com/ansible/latest/network/user_guide/network_resource_modules.html) allows you to configure subsections of the configuration in a structured way.   To see a list of avaiable network resource modules for Cisco IOS/IOS-XE devices see the [cisco.ios](https://docs.ansible.com/ansible/latest/collections/cisco/ios/index.html) module documentation. 
 
-Stuff about network resource modules
+The new network resource modules provide some really good benefits, Such as:
+- gather_network_resources returns facts in a structured data format that can be directly used by network resource modules to configure devices,  and there is a corresponding gather subset for every network resource module    
+- Different vendors' network resource modules use the same structure/syntax for the same network resources  
+- Better options for **state** keys   
+- More intuitive and logical structure for configuration with nested structures where it makes sense  
 
-In order to get a little bit of exposure to network resource modules, we will use a simple playbook to change the hostname of our C8kv router.  We will use the [cisco.ios.ios_hostname](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_hostname_module.html)
+The only down side of network resource modules is the limited number of modules availble.  There aren't network resource modules for every configuration that you might need to manage.  
+
+In order to get a little bit of exposure to network resource modules, we will use a simple playbook to change the hostname of our C8kv router.  We will use the [cisco.ios.ios_hostname](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_hostname_module.html) network resource module in the playbook titled [router_hostname.yaml](Task_1.5_Day_N_Config_Change/router_hostname.yaml):
+
+```
+# Modify Hostname on WAN Router
+
+- hosts: router
+  connection: ansible.netcommon.network_cli
+  gather_facts: no
+    
+  tasks:
+    - name: Modify Router Hostname
+      cisco.ios.ios_hostname:
+        config:
+          hostname:  # Enter hostname as wan-pool#pod#
+        state: replaced  
+
+```
+
+This playbook is very straightforward.  We are using the cisco.ios.ios_hostname to modify the hostname on the router.  The only thing to discuss here is the final line `state: replaced`.  There are a number of different state options, such as `merged`, which, while not useful for a this hostname module, is used when we just want to add our config to what is existing, or `overridden`, which is a dangerous option that removes all configuration under the purview of the network resource module and replaces it with what is specified in the task.  Consider a resource module for l3 interfaces, `overridden` would remove all l3 interface configuration from all l3 interfaces and then configure what is specified in the task, whereas `replaced` simply replaces the exact configuration specified in the task.  Review the documentation for more detail on states.
+
+We will also explore running an ansible playbook in verbose mode.  By adding a command line option we can see more and more information.  From a little bit of extra information with **-v** up to debug-level information with **-vvvv**.
+
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
+### Action 7:  Run the router_hostname.yaml playbook  
+
+Step 1:  Modify the playbook with a new hostname for the router.  Use your pool number and pod number. For example, if you are in pool 2 pod 1, your new hostname would be wan-21
+
+Step 2:  Run the playbook with different verbosity options to see what is returned.  Due to the Idempotency of the resource module, only your first run should result in a change to the configuration on the router.
+
+```
+cd ~/ansible_lab_v1/
+ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -v
+ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vv
+ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vvv
+ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vvvv
+```  
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+
+
 
 
 ### Deploy Model Driven Telemetry configurations to a site using Ansible Playbooks
