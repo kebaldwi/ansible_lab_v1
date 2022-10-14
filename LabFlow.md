@@ -368,7 +368,7 @@ Roles can be referenced in a playbook using the **roles** option.  See this exam
 ```
 If we review our lab directory structure, we can see that there is a roles directory.  Within that roles directory there is a directory called **ansible-pyats**.   A deep dive into roles is beyond the scope of this session, but as you move further into your Ansible journey, you may find that roles bring some highly beneficial re-use and modularity to your Ansible practice.  
 
-### Deploy Base Configuration to a site using Ansible Playbooks
+### Part 3: Using Ansible Playbooks to Apply Configuration
 
 In this section of the lab, we will deploy a base configuration to our topology.  Let's briefly review the topology
 
@@ -511,10 +511,20 @@ To test this:
 4.  Once the Firefox Browser opens, click on the server1 bookmark in the bookmarks bar.  
 ![json](./images/server1_bookmark.png?raw=true "Import JSON")
   
-Wait a minute or so and if you are successful, you'll see a cool message from a cool guy!  Let your proctor know who you saw!
+Wait a minute or so and if you are successful, you'll see a cool message from a mysterious guy!  Let your proctor know who you saw!
 
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+
+You have applied a base config to your site and established end-to-end connectivity!  On to the next section!
+
+### Part 3: A Quick look at Network Resource Modules and running playbooks with Verbose Options
+
+Ansible [Network Resource Modules](https://docs.ansible.com/ansible/latest/network/user_guide/network_resource_modules.html) allows you to configure subsections of the configuration in a structured way.   To see a list of avaiable network resource modules for Cisco IOS/IOS-XE devices see the [cisco.ios](https://docs.ansible.com/ansible/latest/collections/cisco/ios/index.html) module documentation. 
+
+Stuff about network resource modules
+
+In order to get a little bit of exposure to network resource modules, we will use a simple playbook to change the hostname of our C8kv router.  We will use the [cisco.ios.ios_hostname](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_hostname_module.html)
 
 
 ### Deploy Model Driven Telemetry configurations to a site using Ansible Playbooks

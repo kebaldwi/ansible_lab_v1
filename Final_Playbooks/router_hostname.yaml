@@ -9,5 +9,5 @@
     - name: Modify Router Hostname
       cisco.ios.ios_hostname:
         config:
-          hostname:  # Enter hostname as wan-pool#pod#
+          hostname:  example-wan-12
         state: replaced  
