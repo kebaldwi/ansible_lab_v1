@@ -548,9 +548,11 @@ In order to get a little bit of exposure to network resource modules, we will us
 
 ```
 
-This playbook is very straightforward.  We are using the cisco.ios.ios_hostname to modify the hostname on the router.  The only thing to discuss here is the final line `state: replaced`.  There are a number of different state options, such as `merged`, which, while not useful for a this hostname module, is used when we just want to add our config to what is existing, or `overridden`, which is a dangerous option that removes all configuration under the purview of the network resource module and replaces it with what is specified in the task.  Consider a resource module for l3 interfaces, `overridden` would remove all l3 interface configuration from all l3 interfaces and then configure what is specified in the task, whereas `replaced` simply replaces the exact configuration specified in the task.  Review the documentation for more detail on states.
+This playbook is very straightforward.  We are using the cisco.ios.ios_hostname to modify the hostname on the router.  The only thing to discuss here is the final line `state: replaced`.  There are a number of different state options, such as `merged`, which, while not useful for a this hostname module, is used when we just want to add our config to what already exists on the device, or `overridden`, which is a dangerous option that removes all configuration under the purview of the network resource module and replaces it with what is specified in the task.   
 
-We will also explore running an ansible playbook in verbose mode.  By adding a command line option we can see more and more information.  From a little bit of extra information with **-v** up to debug-level information with **-vvvv**.
+Consider a resource module for l3 interfaces, `overridden` would remove all l3 interface configuration from all l3 interfaces and then configure what is specified in the task, whereas `replaced` simply replaces the exact configuration specified in the task.  Review the documentation for more detail on states.
+
+Let's also take the time to explore running an ansible playbook in verbose mode.  By adding a command line option we can see more and more information.  From a little bit of extra information with **-v** up to debug-level information with **-vvvv**.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 7:  Run the router_hostname.yaml playbook  
@@ -568,10 +570,7 @@ ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostna
 ```  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
-
-
-
-### Deploy Model Driven Telemetry configurations to a site using Ansible Playbooks
+### Part 4: Finish up by deploying Model Driven Telemetry configurations to our switches using Ansible Playbooks
 
 
 ### 
