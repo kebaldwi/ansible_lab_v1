@@ -70,7 +70,6 @@ Step 1:  Modify the **inventory_pod.ini** file and enter the correct IPs for the
   
 Step 2:  Complete the \[all:vars\] section in your inventory file.  Enter the values for **ansible_user**, **ansible_ssh_pass**, and **ansible_become_pass**.  
 
-
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
 #### Explore Variable Files and Directories
@@ -111,11 +110,7 @@ The starting --- and ending ... mark this file as a YAML file.  We can see we ha
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 ### Action 2:  Modify the switches file in the group_vars directory  
 
-<b>
-<br>
  Modify the **switches** file and enter the correct IP for the **telemetry_destination_ip** using your pool and pod number.  For example, if you are in pool 2 pod 3, your value for **telemetry_destination_ip** will be "10.2.3.19"  
-<br>
-</b>  
   
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
@@ -589,6 +584,112 @@ Step 3:  Run the playbook with your preferred level of verbosity and view the ou
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
-You have completed the Ansible Configuration section of the lab.  Congratulations!!  Next we will explore Model-Driven Telemetry with the Granfana Dashboard.
+You have completed the Ansible Configuration section of the lab.  Congratulations!! Let's take a look at using pyATS parsers to glean information from our network devices.   Ansible module cisco.ios.ios_facts can provide structured data for a subset of network resource modules, but what if you want to glean some data in a structured format that doesn't currently have a network resource module?
+
+This is where pyATS & Genie can help!  pyATS/Genie supports structured parsers for [hundreds](https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers) of IOS/IOS-XE show commands, with more being added often!  This allows you to get predictable, structured data back that can be used in your playbooks or with native pyATS & Genie.
+
+Let's explore this reviewing the playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml).
+
+```
+# use pyATS parsers to get structured data back from devices and display in debug
+
+- hosts: switches
+  connection: network_cli
+  gather_facts: no
+  roles:
+    - ansible-pyats
+    
+  tasks:
+    - name: Get Version Info
+      pyats_parse_command:
+        command: show version
+      register: version_output
+
+    - name: Get VLAN Info
+      pyats_parse_command:
+        command: show vlan summary
+      register: vlan_output
+
+    - name: Get Trunk Info
+      pyats_parse_command:
+        command: show interface trunk
+      register: trunk_output 
+
+    - name: Display Switch Info
+      debug:
+        msg:
+          - "Hostname: {{ version_output.structured.version.hostname }}"
+          - "Serial Number: {{ version_output.structured.version.chassis_sn }}"
+          - "IOS-XE Version: {{ version_output.structured.version.version }}"
+          - "Config Register: {{ version_output.structured.version.curr_config_register }}"
+          - "Uptime: {{ version_output.structured.version.uptime }}"
+          - "Number of VLANs: {{ vlan_output.structured.vlan_summary.existing_vlans }}"
+          - "License Information: {{ version_output.structured | json_query('version.license_package.[*][0][0].license_level') }} {{ version_output.structured | json_query('version.license_package.[*][0][1].license_level') }}"
+          - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
+```
+
+At the start of the playbook, you can see the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role being called.  We covered roles and the ansible-pyats role previously.
+
+```
+- hosts: switches
+  connection: network_cli
+  gather_facts: no
+  roles:
+    - ansible-pyats
+```
+
+ In the tasks section you can see a number of pyats_parse_command tasks that register their output to variables.
+
+ ```
+   tasks:
+    - name: Get Version Info
+      pyats_parse_command:
+        command: show version
+      register: version_output
+
+    - name: Get VLAN Info
+      pyats_parse_command:
+        command: show vlan summary
+      register: vlan_output
+
+    - name: Get Trunk Info
+      pyats_parse_command:
+        command: show interface trunk
+      register: trunk_output 
+ ```
+
+ And finally we see a debug task that outputs data:  
+
+ ```
+    - name: Display Switch Info
+      debug:
+        msg:
+          - "Hostname: {{ version_output.structured.version.hostname }}"
+          - "Serial Number: {{ version_output.structured.version.chassis_sn }}"
+          - "IOS-XE Version: {{ version_output.structured.version.version }}"
+          - "Config Register: {{ version_output.structured.version.curr_config_register }}"
+          - "Uptime: {{ version_output.structured.version.uptime }}"
+          - "Number of VLANs: {{ vlan_output.structured.vlan_summary.existing_vlans }}"
+          - "License Information: {{ version_output.structured | json_query('version.license_package.[*][0][0].license_level') }} {{ version_output.structured | json_query('version.license_package.[*][0][1].license_level') }}"
+          - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
+
+ ```
+These outputs might look a bit intimidating, but because we know ahead of time what the exact structure of the returned data will be, it is trivial to access the exact data points that we are looking for.  Go ahead and run this playbook.
+
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
+### Action 9:  Run the get_switch_info_pyats_parsers.yaml playbook  
+
+Run the playbook with your preferred level of verbosity and view the output.  There should be no failed tasks.  The playbook should run successfully and provide the information specified in the **Display Switch Info** task for both switches.
+
+The output should look similar to this.  It's ok if it doesn't match exactly.  
+
+![json](./images/get_switch_info_1.png?raw=true "Import JSON")  
+![json](./images/get_switch_info_2.png?raw=true "Import JSON") 
+
+
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+
+
+
 
 ### 
