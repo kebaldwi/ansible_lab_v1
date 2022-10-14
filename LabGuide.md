@@ -65,11 +65,11 @@ Some items to note about our inventory files.  We define a group with the \[grou
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 ### Action 1:  Complete the inventory   
 
-<b>
+
 Step 1:  Modify the **inventory_pod.ini** file and enter the correct IPs for the **access**, **core** and **wan** devices using your pool and pod number.  For example, if you are in pool 1 pod 4, your access switch ip will be **10.1.4.15**  
-<br>  
+  
 Step 2:  Complete the \[all:vars\] section in your inventory file.  Enter the values for **ansible_user**, **ansible_ssh_pass**, and **ansible_become_pass**.  
-</b>  
+
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
