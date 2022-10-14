@@ -572,5 +572,23 @@ ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostna
 
 ### Part 4: Finish up by deploying Model Driven Telemetry configurations to our switches using Ansible Playbooks
 
+Later in the day, we will be exploring Model Driven Telemetry and using the TIG Stack in order to monitor our network devices.  We will use ansible playbooks and a Jinja2 template to deploy the MDT configuration to our switches so that we will be able to review the telemetry in our Grafana dashboard later. 
+
+Let's go ahead and run the [switch_MDT_config.yaml](Task_2_Apply_MDT_Configuration/switch_MDT_config.yaml) playbook
+
+
+
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
+### Action 8:  Run the switch_MDT_configuration.yaml playbook  
+
+Step 1: Review the telemetry_config.j2 template in the templates directory.  We will go over what this config is doing later in the day.  Remeber that you specified a value for the variable **telemetry_destination_ip** in the group_vars/switches variable file in the first section of the lab.  Feel free to review the switches variable file.
+
+Step 2:  Review the switch_MDT_configuration.yaml playbook in the Task_2_Apply_MDT_Configuration directory.   You'll note this playbook is almost identical to the playbooks we ran to deploy the base configuration in earlier sections.   
+
+Step 3:  Run the playbook with your preferred level of verbosity and view the output.  There should be no failed tasks.  The playbook should successfully add the telemetry configuration to the access and core switches.  Review the configuration lines added in the **Show Lines Added to Config** output.
+
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+
+You have completed the Ansible Configuration section of the lab.  Congratulations!!  Next we will explore Model-Driven Telemetry with the Granfana Dashboard.
 
 ### 
