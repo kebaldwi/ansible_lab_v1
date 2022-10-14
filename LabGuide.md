@@ -584,9 +584,9 @@ Step 3:  Run the playbook with your preferred level of verbosity and view the ou
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
-You have completed the Ansible Configuration section of the lab.  Congratulations!! Let's take a look at using pyATS parsers to glean information from our network devices.   Ansible module cisco.ios.ios_facts can provide structured data for a subset of network resource modules, but what if you want to glean some data in a structured format that doesn't currently have a network resource module?
+Before we finish with Ansible playbooks, let's take a look at using pyATS parsers to glean information from our network devices.   Ansible module cisco.ios.ios_facts can provide structured data for a subset of network resource modules, but what if you want to glean some data in a structured format that doesn't currently have a network resource module?
 
-This is where pyATS & Genie can help!  pyATS/Genie supports structured parsers for [hundreds](https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers) of IOS/IOS-XE show commands, with more being added often!  This allows you to get predictable, structured data back that can be used in your playbooks or with native pyATS & Genie.
+This is where pyATS & Genie can help!  pyATS/Genie supports structured parsers for [hundreds](https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers) of IOS/IOS-XE show commands, with more being added often!  This allows you to get predictable, structured data from your devices that can be used in your playbooks or with native pyATS & Genie.
 
 Let's explore this reviewing the playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml).
 
@@ -638,7 +638,7 @@ At the start of the playbook, you can see the [ansible-pyats](https://github.com
     - ansible-pyats
 ```
 
- In the tasks section you can see a number of pyats_parse_command tasks that register their output to variables.
+ In the tasks section you can see a number of **pyats_parse_command** tasks that register their output to variables.  The **pyats_parse_command** module takes an argument of a ios/ios-xe command and uses the parser library to convert that output into a structured data format that is documented in the parser library linked above.
 
  ```
    tasks:
@@ -674,22 +674,21 @@ At the start of the playbook, you can see the [ansible-pyats](https://github.com
           - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
 
  ```
-These outputs might look a bit intimidating, but because we know ahead of time what the exact structure of the returned data will be, it is trivial to access the exact data points that we are looking for.  Go ahead and run this playbook.
+These outputs might look a bit intimidating, but because we know ahead of time what the exact structure of the returned data will be, it is straightforward to access the exact data points that we are looking for, or use something like the [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html) module to write them out to CSV and have the exact data that we need from our install base readily available.  Go ahead and run this playbook.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 9:  Run the get_switch_info_pyats_parsers.yaml playbook  
 
-Run the playbook with your preferred level of verbosity and view the output.  There should be no failed tasks.  The playbook should run successfully and provide the information specified in the **Display Switch Info** task for both switches.
+Run the playbook and view the output.  There should be no failed tasks.  The playbook should run successfully and provide the information specified in the **Display Switch Info** task for both switches.
 
 The output should look similar to this.  It's ok if it doesn't match exactly.  
 
 ![json](./images/get_switch_info_1.png?raw=true "Import JSON")  
 ![json](./images/get_switch_info_2.png?raw=true "Import JSON") 
 
-
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
-
+Congratulations! You have finished the Ansible Section of this lab!  Next, let's explore MDT, the TIG stack and the Grafana dashboard!!
 
 
 ### 
