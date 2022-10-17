@@ -576,7 +576,7 @@ Let's go ahead and run the [switch_MDT_config.yaml](Task_2_Apply_MDT_Configurati
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 8:  Run the switch_MDT_configuration.yaml playbook  
 
-Step 1: Review the telemetry_config.j2 template in the templates directory.  We will go over what this config is doing later in the day.  Remeber that you specified a value for the variable **telemetry_destination_ip** in the group_vars/switches variable file in the first section of the lab.  Feel free to review the switches variable file.
+Step 1: Review the telemetry_config.j2 template in the templates directory.  We will go over what this config is doing later in the day.  Remember that you specified a value for the variable **telemetry_destination_ip** in the group_vars/switches variable file in the first section of the lab.  Feel free to review the switches variable file.
 
 Step 2:  Review the switch_MDT_configuration.yaml playbook in the Task_2_Apply_MDT_Configuration directory.   You'll note this playbook is almost identical to the playbooks we ran to deploy the base configuration in earlier sections.   
 
