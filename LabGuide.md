@@ -66,7 +66,7 @@ Some items to note about our inventory files.  We define a group with the \[grou
 ### Action 1:  Complete the inventory   
 
 
-Step 1:  Modify the **inventory_pod.ini** file and enter the correct IPs for the **access**, **core** and **wan** devices using your pool and pod number.  For example, if you are in pool 1 pod 4, your access switch ip will be **10.1.4.15**  
+Step 1:  Modify the **inventory_pod.ini** file and enter the correct IPs for the **access**, **core** and **wan** devices using your pod number.  For example, if you are in pod 4, your access switch ip will be **10.1.4.15**  
   
 Step 2:  Complete the \[all:vars\] section in your inventory file.  Enter the values for **ansible_user**, **ansible_ssh_pass**, and **ansible_become_pass**.  
 
@@ -110,7 +110,7 @@ The starting --- and ending ... mark this file as a YAML file.  We can see we ha
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 ### Action 2:  Modify the switches file in the group_vars directory  
 
- Modify the **switches** file and enter the correct IP for the **telemetry_destination_ip** using your pool and pod number.  For example, if you are in pool 2 pod 3, your value for **telemetry_destination_ip** will be "10.2.3.19"  
+ Modify the **switches** file and enter the correct IP for the **telemetry_destination_ip** using your pod number.  For example, if you are in pod 3, your value for **telemetry_destination_ip** will be "10.1.3.19"  
   
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
@@ -132,7 +132,7 @@ You can also explore the **10.#.#.14** file, which maps to our core switch.  You
 
 <b>
 <br>
-Rename the files in the host_vars directory to reflect the IPs in your pool and pod.  For example if you are in pool 1 pod 7, your files should be named 10.1.7.14 and 10.1.7.15.
+Rename the files in the host_vars directory to reflect the IPs in your pod.  For example if you are in pod 7, your files should be named 10.1.7.14 and 10.1.7.15.
 <br>
 </b>
 
@@ -140,8 +140,8 @@ You can accomplish by right-clicking the file name in VSCode and selecting **Ren
 
 ```
 cd ~/ansible_lab_v1/host_vars
-mv 10.#.#.14 10.1.7.14
-mv 10.#.#.15 10.1.7.15
+mv 10.1.#.14 10.1.7.14
+mv 10.1.#.15 10.1.7.15
 ```  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 
@@ -369,7 +369,7 @@ In this section of the lab, we will deploy a base configuration to our topology.
 
 ![json](./images/pod_diagram.png?raw=true "Import JSON")  
 
-We'll use Ansible playbooks to push the base configuration templates to the core and access switch.  In the interest of time, the wan router has already been configured, but as it is also an IOS-XE device, the techniques in this guide can be used to configure a router.
+We'll use Ansible playbooks to push the base configuration templates to the core and access switch and make a configuration change to the wan router.    
 
 Let's review the [core_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) playbook
 
@@ -530,7 +530,7 @@ In order to get a little bit of exposure to network resource modules, we will us
 ```
 # Modify Hostname on WAN Router
 
-- hosts: router
+- hosts: wan
   connection: ansible.netcommon.network_cli
   gather_facts: no
     
@@ -538,7 +538,7 @@ In order to get a little bit of exposure to network resource modules, we will us
     - name: Modify Router Hostname
       cisco.ios.ios_hostname:
         config:
-          hostname:  # Enter hostname as wan-pool#pod#
+          hostname:  # Enter hostname as wan-pod#
         state: replaced  
 
 ```
@@ -552,7 +552,7 @@ Let's also take the time to explore running an ansible playbook in verbose mode.
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 7:  Run the router_hostname.yaml playbook  
 
-Step 1:  Modify the playbook with a new hostname for the router.  Use your pool number and pod number. For example, if you are in pool 2 pod 1, your new hostname would be wan-21
+Step 1:  Modify the playbook with a new hostname for the router.  Use your pod number. For example, if you are in pod 1, your new hostname would be wan-1
 
 Step 2:  Run the playbook with different verbosity options to see what is returned.  Due to the Idempotency of the resource module, only your first run should result in a change to the configuration on the router.
 

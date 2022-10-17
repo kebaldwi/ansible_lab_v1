@@ -1,7 +1,7 @@
 ---
 # Modify Hostname on WAN Router
 
-- hosts: router
+- hosts: wan
   connection: ansible.netcommon.network_cli
   gather_facts: no
     
@@ -9,5 +9,5 @@
     - name: Modify Router Hostname
       cisco.ios.ios_hostname:
         config:
-          hostname:  # Enter hostname as wan-pool#pod#
+          hostname:  # Enter hostname as wan-pod#
         state: replaced  
