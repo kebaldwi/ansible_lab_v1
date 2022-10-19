@@ -20,6 +20,7 @@
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 
     - name: MDT Config Render
+      when: inventory_hostname in groups['access']
       ansible.builtin.template:
         src: "~/ansible_lab_v1/templates/telemetry_config.j2"
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}_MDT.config"

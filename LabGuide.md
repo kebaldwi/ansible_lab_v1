@@ -286,6 +286,7 @@ Let's take a look at [render_configurations.yaml](render_configurations.yaml).
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 
     - name: MDT Config Render
+      when: inventory_hostname in groups['access']
       ansible.builtin.template:
         src: "~/ansible_lab_v1/templates/telemetry_config.j2"
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}_MDT.config"
@@ -295,7 +296,7 @@ Let's focus on the tasks section of the playbook.
 
 There are 3 tasks that are very similar.  Each uses the [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html) module to render configuration based on the specified Jinja2 template.
 
-The first task, named Core Config Render, will render a config based on the template called [core_config.j2](templates/core_config.j2).  The rendered configuration will be written to a file named after the host in the review_configs directory, such that the host 10.2.6.14, will result in a file called **10.2.6.14.config**.  There is a new parameter in this task that we haven't seen before:  **when**.    
+The first task, named Core Config Render, will render a config based on the template called [core_config.j2](templates/core_config.j2).  The rendered configuration will be written to a file named after the host in the review_configs directory, such that the host 10.1.6.14, will result in a file called **10.1.6.14.config**.  There is a new parameter in this task that we haven't seen before:  **when**.    
 
 The **when** parameter allows us to add a condition for when this task will run.  In this case, we only want to render the Core configuration for hosts in the group **core**.  **When** allows us to specify a comprehensive host group for the playbook while still limiting each task to only the hosts to which it should apply.  Host group is only one of the conditions that can be used in a when statement.
 
@@ -307,7 +308,7 @@ The **when** parameter allows us to add a condition for when this task will run.
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 ```   
 
-The next task does the same for the access switch group.
+The next two tasks do the same for the access switch group.  The first task renders the base config using the [access_config.j2](templates/access_config.j2) template, and the final task renders the [telemetry_config.j2](templates/telemetry_config.j2) template.
 
 ```
     - name: Access Config Render
@@ -316,11 +317,8 @@ The next task does the same for the access switch group.
         src: "~/ansible_lab_v1/templates/access_config.j2"
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 
-```   
-The last task omits the **when** statement as we use a single template [telemetry_config.j2](templates/telemetry_config.j2) for all switches.  
-
-```
     - name: MDT Config Render
+      when: inventory_hostname in groups['access']
       ansible.builtin.template:
         src: "~/ansible_lab_v1/templates/telemetry_config.j2"
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}_MDT.config"
@@ -340,7 +338,7 @@ ansible-playbook -i inventory_pod.ini Task_0_Fact_Finding/render_configurations.
 ```  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#   
 
-After a successful run of this playbook, we should see four new files in the review_configs directory.  Take a moment to review the rendered configurations.  As you can see, variables defined in the Jinja2 template have been replaced with values from both the host_vars and group_vars files.  
+After a successful run of this playbook, we should see three new files in the review_configs directory.  Take a moment to review the rendered configurations.  As you can see, variables defined in the Jinja2 template have been replaced with values from both the host_vars and group_vars files.  
 
 Now we are almost ready to review and run our configuration playbooks, but before that, let's briefly review the concept of Ansible Roles.  
 
