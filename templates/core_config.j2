@@ -46,6 +46,9 @@ ip dhcp pool vlan200
   network {{ vlan200_dhcp_pool }}
   default-router {{ core_vl200_SVI_ip }} 
 
+gnxi
+gnxi server
+
 event manager applet catchall
   event cli pattern ".*" sync no skip no
   action 1 syslog msg "$_cli_msg"
