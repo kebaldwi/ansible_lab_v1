@@ -308,7 +308,7 @@ The **when** parameter allows us to add a condition for when this task will run.
         dest: "~/ansible_lab_v1/review_configs/{{ inventory_hostname }}.config"
 ```   
 
-The next two tasks do the same for the access switch group.  The first task renders the base config using the [access_config.j2](templates/access_config.j2) template, and the final task renders the [telemetry_config.j2](templates/telemetry_config.j2) template.
+The next two tasks do the same for the access switch group.  The first task renders the base config using the [access_config.j2](templates/access_config.j2) template, and the final task renders the [telemetry_config.j2](templates/telemetry_config.j2) template into the Model Driven Telemetry configuration we will need later in the lab.
 
 ```
     - name: Access Config Render
