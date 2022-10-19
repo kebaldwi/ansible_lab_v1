@@ -565,9 +565,9 @@ ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostna
 ```  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
-### Part 4: Finish up by deploying Model Driven Telemetry configurations to our switches using Ansible Playbooks
+### Part 4: Finish up by deploying Model Driven Telemetry configurations to our access switch using Ansible Playbooks
 
-Later in the day, we will be exploring Model Driven Telemetry and using the TIG Stack in order to monitor our network devices.  We will use ansible playbooks and a Jinja2 template to deploy the MDT configuration to our switches so that we will be able to review the telemetry in our Grafana dashboard later. 
+Later in the day, we will be exploring Model Driven Telemetry and using the TIG Stack in order to monitor our network devices.  We will use ansible playbooks and a Jinja2 template to deploy the MDT configuration to our access switch so that we will be able to review the telemetry in our Grafana dashboard later. 
 
 Let's go ahead and run the [switch_MDT_config.yaml](Task_2_Apply_MDT_Configuration/switch_MDT_config.yaml) playbook
 

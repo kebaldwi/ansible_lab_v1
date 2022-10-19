@@ -2,7 +2,7 @@
 # Deploy MDT config to access switch and use genie parser to show diffs in debug
 
 #Specify Host Group to use
-- hosts: switches
+- hosts: access
   gather_facts: no
   connection: ansible.netcommon.network_cli
   roles:
