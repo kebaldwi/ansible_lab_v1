@@ -5,9 +5,6 @@
 {%endfor %}
 exit
 
-interface range GigabitEthernet1/0/1-8
-  load-interval 30
-
 interface Loopback0
   no shut
   ip address {{ core_lo0_ip }} 255.255.255.255
@@ -33,6 +30,9 @@ interface Vlan200
 router ospf {{ ospf_processid }}
   router-id {{ core_lo0_ip }}
   redistribute connected
+
+interface range GigabitEthernet1/0/1-8
+  load-interval 30
 
 ip tcp mss 1280
 ip tcp window-size 212000
