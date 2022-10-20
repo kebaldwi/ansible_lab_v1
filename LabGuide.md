@@ -524,9 +524,9 @@ You have applied a base config to your site and established end-to-end connectiv
 
 ### Part 3: A Quick look at Network Resource Modules and running playbooks with Verbose Options
 
-Ansible [Network Resource Modules](https://docs.ansible.com/ansible/latest/network/user_guide/network_resource_modules.html) allows you to configure subsections of the configuration in a structured way.   To see a list of avaiable network resource modules for Cisco IOS/IOS-XE devices see the [cisco.ios](https://docs.ansible.com/ansible/latest/collections/cisco/ios/index.html) module documentation. 
+Ansible [Network Resource Modules](https://docs.ansible.com/ansible/latest/network/user_guide/network_resource_modules.html) allow you to configure subsections of the configuration in a structured way.   To see a list of avaiable network resource modules for Cisco IOS/IOS-XE devices see the [cisco.ios](https://docs.ansible.com/ansible/latest/collections/cisco/ios/index.html) module documentation. 
 
-The new network resource modules provide some really good benefits, Such as:
+Ansible network resource modules provide some really good benefits, Such as:
 - gather_network_resources returns facts in a structured data format that can be directly used by network resource modules to configure devices,  and there is a corresponding gather subset for every network resource module    
 - Different vendors' network resource modules use the same structure/syntax for the same network resources  
 - Better options for **state** keys   
@@ -547,7 +547,7 @@ In order to get a little bit of exposure to network resource modules, we will us
     - name: Modify Router Hostname
       cisco.ios.ios_hostname:
         config:
-          hostname:  # Enter hostname as wan-pod#
+          hostname: # Enter hostname as wan-pod#
         state: replaced  
 
 ```
