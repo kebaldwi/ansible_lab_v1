@@ -1,4 +1,5 @@
 ---
+core_hostname: core-pod#
 core_lo0_ip: 172.16.1.2
 core_wan_interface_ip: 192.168.1.2
 core_wan_interface_mask: 255.255.255.252

@@ -7,8 +7,7 @@
 {%endfor %}
 exit
 
-interface range GigabitEthernet1/0/1-8
-  load-interval 30
+hostname {{ access_hostname }}
 
 interface {{ vlan100_interface }}
   no shut
@@ -27,6 +26,9 @@ interface {{ trunk_interface }}
   no shut
   description configured by ansible
   switchport mode trunk
+
+interface range GigabitEthernet1/0/1-8
+  load-interval 30
 
 ip tcp mss 1280
 ip http server

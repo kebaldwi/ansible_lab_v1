@@ -39,13 +39,13 @@ Let's take a look at the inventory file.  The inventory file can be in many form
 
 ```
 [access]  
-10.#.#.15 
+10.1.#.15 
 
 [core]  
-10.#.#.14
+10.1.#.14
 
 [wan]  
-10.#.#.13 
+10.1.#.13 
 
 [switches:children]  
 access  
@@ -84,8 +84,8 @@ Let's explore our group_vars and host_vars directories:
 ├──group_vars
 |  └──switches
 ├──host_vars
-|  ├──10.#.#.14
-|  └──10.#.#.15
+|  ├──10.1.#.14
+|  └──10.1.#.15
 
 ```
 
@@ -114,27 +114,24 @@ The starting --- and ending ... mark this file as a YAML file.  We can see we ha
   
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
-In the host_vars directory, we have 2 files.  Each file corresponds to a specific device defined in the inventory file.  This is where we define host-specific variables.  If we explore the file **10.#.#.15**, we see the following:
+In the host_vars directory, we have 2 files.  Each file corresponds to a specific device defined in the inventory file.  This is where we define host-specific variables.  If we explore the file **10.1.#.15**, we see the following:
 
 ```
 ---
+hostname: access-pod#
 vlan100_interface: "GigabitEthernet1/0/1"
 vlan200_interface: "GigabitEthernet1/0/2"
 trunk_interface: "GigabitEthernet1/0/8"
 ...
 ```
-The host that ends with **.15** is the access switch and we can see 3 variables defined.
+The host that ends with **.15** is the access switch and we can see 4 variables defined.
 
-You can also explore the **10.#.#.14** file, which maps to our core switch.  You can see many more variables defined in this file.
+You can also explore the **10.1.#.14** file, which maps to our core switch.  You can see many more variables defined in this file.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
-### Action 3:  Rename the files in the host_vars directory  
+### Action 3:  Rename the files in the host_vars directory and edit the hostname variables    
 
-<b>
-<br>
-Rename the files in the host_vars directory to reflect the IPs in your pod.  For example if you are in pod 7, your files should be named 10.1.7.14 and 10.1.7.15.
-<br>
-</b>
+Step 1:  Rename the files in the host_vars directory to reflect the IPs in your pod.  For example if you are in pod 7, your files should be named 10.1.7.14 and 10.1.7.15.
 
 You can accomplish by right-clicking the file name in VSCode and selecting **Rename** or in the terminal by entering the host_vars directory and using the mv command.  See this example:  
 
@@ -143,6 +140,18 @@ cd ~/ansible_lab_v1/host_vars
 mv 10.1.#.14 10.1.7.14
 mv 10.1.#.15 10.1.7.15
 ```  
+
+Step 2:  Edit the hostvars files in VSCode to update the hostname values to reflect your pod number.  For example, if your pod number is 7, you should change the hostname values to match the following:  
+
+```
+In the file you renamed to 10.1.7.14, the hostname line should read as follows:
+
+core_hostname: core-7
+
+In the file you renamed to 10.1.7.15, the hostname line should read as follows:
+
+access_hostname: access-7
+```
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 
 ### Part 2: Ansible Playbooks & Templates
@@ -203,7 +212,7 @@ The output should look similar to this, but it is ok if the exact details of the
 ![json](./images/ios_facts_screen_1.png?raw=true "Import JSON")  
 ![json](./images/ios_facts_screen_2.png?raw=true "Import JSON")  
 
-As we can see, we've quickly and easily collected some valuable information about our devices.  We have hostnames, serial numbers, code versions and model numbers. This also verifies that we are able to connect to our network devices and our inventory file is correct.
+As we can see, we've quickly and easily collected some valuable information about our devices.  We have hostnames, serial numbers, code versions and model numbers. This also verifies that we are able to connect to our network devices and our inventory file is correctly configured.
 
 Next we will move on to exploring Jinja2 Templates and configuring our network devices using Ansible Playbooks.
 
@@ -219,11 +228,10 @@ This template begins with a **for loop**.  If you recall from our group_vars fil
 {%endfor %}
 exit
 ```
-The next section will configure the access and trunk ports as defined in our [host_vars file](host_vars/10.#.#.15)  for the access switch and some other configuration items that we need.  The variable notation in Jinja2 is the double curly brace ***{{ }}***
+The next section will configure the hostname, access and trunk ports as defined in our [host_vars file](host_vars/10.1.#.15) for the access switch and some other configuration items that we need.  The variable notation in Jinja2 is the double curly brace ***{{ }}***
 
 ```
-interface range GigabitEthernet1/0/1-8
-  load-interval 30
+hostname {{ access_hostname }}
 
 interface {{ vlan100_interface }}
   no shut
@@ -242,6 +250,9 @@ interface {{ trunk_interface }}
   no shut
   description configured by ansible
   switchport mode trunk
+
+interface range GigabitEthernet1/0/1-8
+  load-interval 30
 
 ip tcp mss 1280
 ip http server
