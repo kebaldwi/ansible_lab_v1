@@ -111,7 +111,8 @@ The starting --- and ending ... mark this file as a YAML file.  We can see we ha
 ### Action 2:  Modify the switches file in the group_vars directory  
 
  Modify the **switches** file and enter the correct IP for the **telemetry_destination_ip** using your pod number.  For example, if you are in pod 3, your value for **telemetry_destination_ip** will be "10.1.3.19"  
-  
+
+ Don't forget to save your file!
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
 In the host_vars directory, we have 2 files.  Each file corresponds to a specific device defined in the inventory file.  This is where we define host-specific variables.  If we explore the file **10.1.#.15**, we see the following:
@@ -151,7 +152,9 @@ core_hostname: core-7
 In the file you renamed to 10.1.7.15, the hostname line should read as follows:
 
 access_hostname: access-7
-```
+```  
+  
+Don't forget to save your files after editing!  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 
 ### Part 2: Ansible Playbooks & Templates
@@ -502,6 +505,8 @@ Run the playbook in the VSCode Terminal
 cd ~/ansible_lab_v1/
 ansible-playbook -i inventory_pod.ini Task_1_Apply_Base_Configuration/access_switch_base_config.yaml
 ```  
+
+Hint:  If you get stuck, review the core_switch_base_config.yaml for reference.  
 
 Verification:
 If your playbook has run correctly, The site should have full connectivity and client1 and client2 should be able to reach server1.  
