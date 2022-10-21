@@ -705,4 +705,8 @@ The output should look similar to this.  It's ok if it doesn't match exactly.
 Congratulations! You have finished the Ansible Section of this lab!  Next, let's explore MDT, the TIG stack and the Grafana dashboard!!
 
 
-### 
+### Part 5: Explore MDT config with switch and TIG stack
+
+Now you have switches and router all configured through ansible. Well done! At this step, telemetry is collected through telegraf. Telegraf, data collector, outputs the data into influxDB, time series database. Then grafana visualizes the telemetry data in dashboard. In this lab, we have telegraf, influxDB, and grafana all configured already. There is no configuration change needed in this section. We will go through switch configuration, telegraf configuration, and grafana to explain how they are all tied together.
+
+
