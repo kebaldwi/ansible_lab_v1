@@ -498,12 +498,13 @@ Verification:
 If your playbook has run correctly, The site should have full connectivity and client1 and client2 should be able to reach server1.  
 
 To test this:
+
 1. Open the Chrome Browser from your jumphost.  
 2. Click on the client1-vnc bookmark in the bookmarks bar.  
 ![json](./images/client1vnc_bookmark.png?raw=true "Import JSON") 
 3. Once the VNC window opens, open the Firefox Browser in the VNC window.  
 ![json](./images/firefox.png?raw=true "Import JSON")  
-4.  Once the Firefox Browser opens, click on the server1 bookmark in the bookmarks bar.  
+4. Once the Firefox Browser opens, click on the server1 bookmark in the bookmarks bar.  
 ![json](./images/server1_bookmark.png?raw=true "Import JSON")
   
 Wait a minute or so and if you are successful, you'll see a cool message from a mysterious guy!  Let your proctor know who you saw!
@@ -559,12 +560,14 @@ Step 1:  Modify the playbook with a new hostname for the router.  Use your pod n
 Step 2:  Run the playbook with different verbosity options to see what is returned.  Due to the Idempotency of the resource module, only your first run should result in a change to the configuration on the router.
 
 ```
+
 cd ~/ansible_lab_v1/
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -v
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vv
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vvv
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vvvv
 ```  
+
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
 ### Part 4: Finish up by deploying Model Driven Telemetry configurations to our access switch using Ansible Playbooks
@@ -575,6 +578,7 @@ Let's go ahead and run the [switch_MDT_config.yaml](Task_2_Apply_MDT_Configurati
 
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
+
 ### Action 8:  Run the switch_MDT_configuration.yaml playbook  
 
 Step 1: Review the telemetry_config.j2 template in the templates directory.  We will go over what this config is doing later in the day.  Remember that you specified a value for the variable **telemetry_destination_ip** in the group_vars/switches variable file in the first section of the lab.  Feel free to review the switches variable file.
