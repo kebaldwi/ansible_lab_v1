@@ -1,0 +1,9 @@
+---
+vlans:
+  - 100
+  - 200
+
+ospf_processid: 1
+
+telemetry_destination_ip: "10.1.9.19"
+...
