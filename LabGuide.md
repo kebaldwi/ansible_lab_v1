@@ -558,7 +558,7 @@ To test this:
   
 Wait a minute or so and if you are successful, you'll see a cool message from a mysterious guy!  Let your proctor know who you saw!
 
-NOTE:  If you get stuck, the completed playbook is in the Final_Playbooks folder in your working directory.
+NOTE:  If you get stuck, the completed playbook is in the Final_Files folder in your working directory.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
