@@ -638,7 +638,7 @@ Step 3:  Run the playbook with your preferred level of verbosity and view the ou
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
-Before we finish with Ansible playbooks, let's take a look at using pyATS parsers to glean information from our network devices.   The Ansible module cisco.ios.ios_facts can provide structured data for a subset of network resource modules, but what if you want to collect some data in a structured format that doesn't currently have a network resource module?
+Next, let's take a look at using pyATS parsers to glean information from our network devices.   The Ansible module cisco.ios.ios_facts can provide structured data for a subset of network resource modules, but what if you want to collect some data in a structured format that doesn't currently have a network resource module?
 
 This is where pyATS & Genie can help!  pyATS/Genie supports structured parsers for [hundreds](https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers) of IOS/IOS-XE show commands, with more being added often!  This allows you to get predictable, structured data from your devices that can be used in your playbooks or with native pyATS & Genie.
 
@@ -728,7 +728,7 @@ At the start of the playbook, you can see the [ansible-pyats](https://github.com
           - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
 
  ```
-These data structures might look a bit intimidating, but because we know ahead of time what the exact structure of the returned data will be, it is straightforward to access the exact data points that we are looking for, or use something like the [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html) module to write them out to CSV file and have the exact data that we need from our install base readily available.  Go ahead and run this playbook.
+These data structures might look a bit intimidating, but because we know what the structure of the returned data will be, it is straightforward to access the exact data points that we need. We can also use something like the [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html) module to write our data out to a CSV file and have a custom inventory from our install base readily available to ingest into other systems or provide to auditors or inventory managers.  Go ahead and run this playbook.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 9:  Run the get_switch_info_pyats_parsers.yaml playbook  
