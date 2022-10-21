@@ -526,7 +526,7 @@ Ansible network resource modules provide some really good benefits, Such as:
 
 The only drawback of network resource modules is the limited number of modules availble.  There aren't network resource modules for every configuration that you might need to manage.  
 
-In order to get a little bit of exposure to network resource modules, we will use a simple playbook to change the hostname of our C8kv router.  We will use the [cisco.ios.ios_hostname](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_hostname_module.html) network resource module in the playbook titled [router_hostname.yaml](Task_1.5_Day_N_Config_Change/router_hostname.yaml):
+In order to get a little bit of exposure to network resource modules, we will use a simple playbook that calls the [cisco.ios.ios_hostname](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_hostname_module.html) network resource module to change the hostname of our C8kv router.See the playbook titled [router_hostname.yaml](Task_1.5_Day_N_Config_Change/router_hostname.yaml):
 
 ```
 # Modify Hostname on WAN Router
@@ -547,6 +547,7 @@ In order to get a little bit of exposure to network resource modules, we will us
 This playbook is very straightforward.  We are using the cisco.ios.ios_hostname to modify the hostname on the router.  The only new syntax to highlight here is the final line `state: replaced`.  There are a number of different state options, such as `merged`, which, while not useful for a this hostname module, is used when we just want to add our config to what already exists on the device, or `overridden`, which is a dangerous option that removes all configuration under the purview of the network resource module and replaces it with what is specified in the task.   
 
 Consider a resource module for l3 interfaces, `overridden` would remove all l3 interface configuration from all l3 interfaces and then configure what is specified in the task, whereas `replaced` simply replaces the exact configuration specified in the task.  Review the documentation for more detail on states.
+
 
 Let's also take the time to explore running an ansible playbook in **verbose** mode.  By adding a command line option we can see more and more information.  From a little bit of extra information with **-v** up to debug-level information with **-vvvv**.
 
