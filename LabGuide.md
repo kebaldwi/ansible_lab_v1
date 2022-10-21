@@ -482,7 +482,55 @@ In order to complete the provisioning of our site, we need to configure the acce
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 6:  Complete and Run the access_switch_base_config.yaml playbook  
 
-This playbook, located in the Task_1_Apply_Base_Config directory, is missing a number of parameters.  Using your learning from previous sections, fill in the missing parameters and run the playbook.
+This playbook, located in the Task_1_Apply_Base_Config directory, is missing a number of parameters.  Using your learning from previous sections, replace the comments with the missing parameters and run the playbook.
+
+```
+# Deploy base config to access switch and use genie parser to show diffs in debug
+
+#Specify Host Group to use
+- hosts: #Enter the appropriate host group             <--- Enter the correct host group
+  gather_facts: no
+  connection: #Enter the connection type
+  roles:
+    - ansible-pyats
+
+#Specify Tasks to perform
+  tasks:
+    - name: Prerun Config Collection
+      cisco.ios.ios_command: 
+        commands: show run
+      #Enter the parameter that will save the output to a variable called "prior_config"   <---  Enter the parameter
+
+    - name: Apply Initial Configuration
+      cisco.ios.ios_config:
+        src: "~/ansible_lab_v1/templates/access_config.j2"
+        save_when: #Enter the correct option to save the configuration when this task modifies the config   <--- Enter the option
+
+    - name: Post-Run Config Collection
+      cisco.ios.ios_command: 
+        commands: show run
+      #Enter the parameter that will save the output to a variable called "post_config"  <---  Enter the parameter
+    
+    - name: Show Lines Added to Config
+      #Enter the module name to print the output.  <--- Enter the parameter
+        msg: "{{ prior_config.stdout[0] | genie_config_diff(post_config.stdout[0], mode='add', exclude=exclude_list) }}"
+
+  vars:
+    exclude_list:
+      - (^Using.*)
+      - (Building.*)
+      - (Current.*)
+      - (crypto pki certificate chain.*)
+
+
+
+
+
+
+```
+
+
+
 
 Open the file in VSCode by clicking on it.
 
