@@ -728,7 +728,7 @@ At the start of the playbook, you can see the [ansible-pyats](https://github.com
           - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
 
  ```
-These data structures might look a bit intimidating, but because we know what the structure of the returned data will be, it is straightforward to access the exact data points that we need. We can also use something like the [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html) module to write our data out to a CSV file and have a custom inventory from our install base readily available to ingest into other systems or provide to auditors or inventory managers.  Go ahead and run this playbook.
+These data structures might look a bit intimidating, but because we know what the structure of the returned data will be, it is straightforward to access the exact data points that we need. We can also use the [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html) module or similar to write our data out to a CSV file and have a custom inventory from our install base readily available to ingest into other systems or provide to auditors or managers.  Go ahead and run this playbook.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 9:  Run the get_switch_info_pyats_parsers.yaml playbook  
