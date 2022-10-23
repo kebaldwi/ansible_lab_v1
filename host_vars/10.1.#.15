@@ -1,5 +1,4 @@
 ---
-access_hostname: access-pod#
 vlan100_interface: "GigabitEthernet1/0/1"
 vlan200_interface: "GigabitEthernet1/0/2"
 trunk_interface: "GigabitEthernet1/0/8"

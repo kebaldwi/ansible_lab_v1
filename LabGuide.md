@@ -63,12 +63,15 @@ ansible_become_password=
 Some items to note about our inventory files.  We define a group with the \[groupname\] notation.  To create a group of groups, we can use \[groupname:children\].  We can define variables for a group or a host in the inventory file with the \[groupname:vars\] or \[hostname:vars\] notation.  There is also an implicit group called **all**.  So, \[all:vars\] contains the variables that apply to all devices in the inventory.    
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
-### Action 1:  Complete the inventory   
 
+### Action 1:  Complete the inventory  
+  
 
 Step 1:  Modify the **inventory_pod.ini** file and enter the correct IPs for the **access**, **core** and **wan** devices using your pod number.  For example, if you are in pod 4, your access switch ip will be **10.1.4.15**  
   
 Step 2:  Complete the \[all:vars\] section in your inventory file.  Enter the values for **ansible_user**, **ansible_ssh_pass**, and **ansible_become_pass**.  
+
+Don't forget to save your files after editing!  
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
@@ -108,6 +111,7 @@ telemetry_destination_ip: "10.#.#.19"
 The starting --- and ending ... mark this file as a YAML file.  We can see we have a variable called **vlans**, which is a list of 2 vlan numbers, a variable called **ospf_processid**, and a third variable:  **telemetery_destination_ip**.  These variables will apply to all devices in the group **switches**.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
+
 ### Action 2:  Modify the switches file in the group_vars directory  
 
  Modify the **switches** file and enter the correct IP for the **telemetry_destination_ip** using your pod number.  For example, if you are in pod 3, your value for **telemetry_destination_ip** will be "10.1.3.19"  
@@ -119,13 +123,12 @@ In the host_vars directory, we have 2 files.  Each file corresponds to a specifi
 
 ```
 ---
-hostname: access-pod#
 vlan100_interface: "GigabitEthernet1/0/1"
 vlan200_interface: "GigabitEthernet1/0/2"
 trunk_interface: "GigabitEthernet1/0/8"
 ...
 ```
-The host that ends with **.15** is the access switch and we can see 4 variables defined.
+The host that ends with **.15** is the access switch and we can see 3 variables defined.
 
 You can also explore the **10.1.#.14** file, which maps to our core switch.  You can see many more variables defined in this file.
 
@@ -142,19 +145,6 @@ mv 10.1.#.14 10.1.7.14
 mv 10.1.#.15 10.1.7.15
 ```  
 
-Step 2:  Edit the hostvars files in VSCode to update the hostname values to reflect your pod number.  For example, if your pod number is 7, you should change the hostname values to match the following:  
-
-```
-In the file you renamed to 10.1.7.14, the hostname line should read as follows:
-
-core_hostname: core-7
-
-In the file you renamed to 10.1.7.15, the hostname line should read as follows:
-
-access_hostname: access-7
-```  
-  
-Don't forget to save your files after editing!  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 
 ### Part 2: Ansible Playbooks & Templates
@@ -231,10 +221,9 @@ This template begins with a **for loop**.  If you recall from our group_vars fil
 {%endfor %}
 exit
 ```
-The next section will configure the hostname, access and trunk ports as defined in our [host_vars file](host_vars/10.1.#.15) for the access switch and some other configuration items that we need.  The variable notation in Jinja2 is the double curly brace ***{{ }}***
+The next section will configure the access and trunk ports as defined in our [host_vars file](host_vars/10.1.#.15) for the access switch and some other configuration items that we need.  The variable notation in Jinja2 is the double curly brace ***{{ }}***
 
 ```
-hostname {{ access_hostname }}
 
 interface {{ vlan100_interface }}
   no shut
@@ -360,9 +349,9 @@ Now we are almost ready to review and run our configuration playbooks, but befor
 
 Ansible Roles allow for the modularization and re-use of Ansible tasks, variables, handlers and other dependencies that can be loaded into a playbook.  See the documentation on [Ansible Roles](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html).  For our work today, we will be using the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role so that we can make use of the pyats_parse_command module and genie_config_diff filter when running our configuration playbooks.  
 
-pyATS is a powerful framework for automated testing and the de-facto test framework for internal Cisco Engineers.  For a more comprehensive introduction to pyATS, see the [Cisco pyATS Documentation](https://developer.cisco.com/docs/pyats/)  
+pyATS is a powerful framework for automated testing and the de-facto test framework for internal Cisco Engineers.  For a more comprehensive introduction to pyATS, see the [Cisco pyATS Documentation](https://developer.cisco.com/docs/pyats/).  pyATS is not limited to use with Ansible and can be a fantastic way to run automated tests on your network or lab as part of a CI/CD Pipeline or to just make change validation faster and more automated.  A deep dive into pyATS is outside the scope of this workshop, but please explore the documentation linked above to learn more!
 
-Roles can be installed by running `ansible-galaxy install role.name` for roles in [Ansible Galaxy](https://galaxy.ansible.com/), where collections and roles are published for use by vendors (including Cisco and most other major vendors) and the Ansible Community at large. A new role can be created with the proper directory structure by running `ansible-galaxy init mynewrole`.  Custom roles can also simply be copied into the roles directory.  As long as the role directory can be found in the roles_path that we reviewed earlier as part of the ansible.cfg file, it can be used in your playbooks.
+Roles can be installed by running `ansible-galaxy install role.name` for roles in [Ansible Galaxy](https://galaxy.ansible.com/), where collections and roles are published for use by vendors (including Cisco and most other major vendors) and the Ansible Community at large. A new role can be created with the proper directory structure by running `ansible-galaxy init mynewrole`.  Custom roles can also simply be copied into the roles directory.  As long as the roles directory can be found in the roles_path that we reviewed earlier as part of the ansible.cfg file, it can be used in your playbooks.
 
 Roles can be referenced in a playbook using the **roles** option.  See this example from our playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml):  
 
@@ -373,7 +362,7 @@ Roles can be referenced in a playbook using the **roles** option.  See this exam
   roles:
     - ansible-pyats  
 ```
-If we review our lab directory structure, we can see that there is a roles directory.  Within that roles directory there is a directory called **ansible-pyats**.   A deep dive into roles is beyond the scope of this session, but as you move further into your Ansible journey, you may find that roles bring some highly beneficial re-use and modularity to your Ansible practice.  
+If we review our lab directory structure, we can see that there is a roles directory.  Within that roles directory there is a directory called **ansible-pyats**.   A deep dive into roles is beyond the scope of this session, but as you move further along in your Ansible journey, you may find that roles bring some highly beneficial re-use and modularity to your Ansible practice.  
 
 ### Part 3: Using Ansible Playbooks to Apply Configuration
 
@@ -435,7 +424,7 @@ The next new item is the **register** parameter.  This simply tells Ansible to s
       register: prior_config
 
 ```
-The second task is where we actually deploy our configuration template to our network device using the [cisco.ios.ios_config](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html).  As the name implies, the cisco.ios.ios_config module is used to modify the configuration on a Cisco IOS/IOS-XE device.  Note that the **src** parameter allows us to reference the previously discussed Jinja2 template which contains the actual configuration we want to send.  
+The second task is where we actually deploy our configuration template to our network device using [cisco.ios.ios_config](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html).  As the name implies, the cisco.ios.ios_config module is used to modify the configuration on a Cisco IOS/IOS-XE device.  Note that the **src** parameter allows us to reference the previously discussed Jinja2 template which contains the configuration we want to send.  
 
 The cisco.ios.ios_config module is powerful and flexible.  The usage here is only one way of sending configuration to network devices.  Please review the documentation linked above for more options and examples.  
 
@@ -457,7 +446,7 @@ The final two tasks in this playbook, in conjunction with the first task, will a
       register: post_config
 ```
 
-Then we make use of the **debug** module as referenced earlier to display information on our configuration change.  To provide more detail, the task, **Show Lines Added to Config**, uses the filter **genie_config_diff** to compare the running config taken prior to the configuration change to the post-change configuration.  The option `mode='add'` limits the output to lines added to the config (meaning we ignore any lines that were removed) and the `exclude=exclude_list` option will ignore any diffs in configuration that match the **exclude_list** specified in the **vars** section at the bottom of the playbook.  This is done to limit irrelevant output or output that might have changed simply based on the time difference between the two tasks.
+Then we make use of the **debug** module as referenced earlier to display information on our configuration change.  To provide more detail, the task, **Show Lines Added to Config**, uses the filter **genie_config_diff** to compare the running config taken prior to the configuration change to the post-change configuration.  The option `mode='add'` limits the output to lines added to the config (meaning we ignore any lines that were removed) and the `exclude=exclude_list` option will ignore any diffs in configuration that match the **exclude_list** specified in the **vars** section at the bottom of the playbook.  This is done to limit irrelevant output or config lines that might have changed simply based on the time difference between when the two tasks were run.
 
 ```
     - name: Show Lines Added to Config
@@ -493,11 +482,59 @@ In order to complete the provisioning of our site, we need to configure the acce
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 6:  Complete and Run the access_switch_base_config.yaml playbook  
 
-This playbook, located in the Task_1_Apply_Base_Config directory is missing a number of parameters.  Using your learning from previous sections, fill in the missing parameters and run the playbook.
+This playbook, located in the Task_1_Apply_Base_Config directory, is missing a number of parameters.  Using your learning from previous sections, replace the comments with the missing parameters and run the playbook.
+
+```
+# Deploy base config to access switch and use genie parser to show diffs in debug
+
+#Specify Host Group to use
+- hosts: #Enter the appropriate host group             <--- Enter the correct host group
+  gather_facts: no
+  connection: #Enter the connection type
+  roles:
+    - ansible-pyats
+
+#Specify Tasks to perform
+  tasks:
+    - name: Prerun Config Collection
+      cisco.ios.ios_command: 
+        commands: show run
+      #Enter the parameter that will save the output to a variable called "prior_config"   <---  Enter the parameter
+
+    - name: Apply Initial Configuration
+      cisco.ios.ios_config:
+        src: "~/ansible_lab_v1/templates/access_config.j2"
+        save_when: #Enter the correct option to save the configuration when this task modifies the config   <--- Enter the option
+
+    - name: Post-Run Config Collection
+      cisco.ios.ios_command: 
+        commands: show run
+      #Enter the parameter that will save the output to a variable called "post_config"  <---  Enter the parameter
+    
+    - name: Show Lines Added to Config
+      #Enter the module name to print the output.  <--- Enter the parameter
+        msg: "{{ prior_config.stdout[0] | genie_config_diff(post_config.stdout[0], mode='add', exclude=exclude_list) }}"
+
+  vars:
+    exclude_list:
+      - (^Using.*)
+      - (Building.*)
+      - (Current.*)
+      - (crypto pki certificate chain.*)
+
+
+
+
+
+
+```
+
+
+
 
 Open the file in VSCode by clicking on it.
 
-If you get stuck, the completed playbook is in the Final_Playbooks folder in your working directory.
+Hint:  Review the core_switch_base_config.yaml for reference if needed.
 
 Run the playbook in the VSCode Terminal
 
@@ -505,23 +542,23 @@ Run the playbook in the VSCode Terminal
 cd ~/ansible_lab_v1/
 ansible-playbook -i inventory_pod.ini Task_1_Apply_Base_Configuration/access_switch_base_config.yaml
 ```  
-
-Hint:  If you get stuck, review the core_switch_base_config.yaml for reference.  
-
+  
 Verification:
 If your playbook has run correctly, The site should have full connectivity and client1 and client2 should be able to reach server1.  
 
 To test this:
+
 1. Open the Chrome Browser from your jumphost.  
 2. Click on the client1-vnc bookmark in the bookmarks bar.  
 ![json](./images/client1vnc_bookmark.png?raw=true "Import JSON") 
 3. Once the VNC window opens, open the Firefox Browser in the VNC window.  
 ![json](./images/firefox.png?raw=true "Import JSON")  
-4.  Once the Firefox Browser opens, click on the server1 bookmark in the bookmarks bar.  
+4. Once the Firefox Browser opens, click on the server1 bookmark in the bookmarks bar.  
 ![json](./images/server1_bookmark.png?raw=true "Import JSON")
   
 Wait a minute or so and if you are successful, you'll see a cool message from a mysterious guy!  Let your proctor know who you saw!
 
+NOTE:  If you get stuck, the completed playbook is in the Final_Files folder in your working directory.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
@@ -537,9 +574,9 @@ Ansible network resource modules provide some really good benefits, Such as:
 - Better options for **state** keys   
 - More intuitive and logical structure for configuration with nested structures where it makes sense  
 
-The only down side of network resource modules is the limited number of modules availble.  There aren't network resource modules for every configuration that you might need to manage.  
+The only drawback of network resource modules is the limited number of modules availble.  There aren't network resource modules for every configuration that you might need to manage.  
 
-In order to get a little bit of exposure to network resource modules, we will use a simple playbook to change the hostname of our C8kv router.  We will use the [cisco.ios.ios_hostname](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_hostname_module.html) network resource module in the playbook titled [router_hostname.yaml](Task_1.5_Day_N_Config_Change/router_hostname.yaml):
+In order to get a little bit of exposure to network resource modules, we will use a simple playbook that calls the [cisco.ios.ios_hostname](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_hostname_module.html) network resource module to change the hostname of our C8kv router.See the playbook titled [router_hostname.yaml](Task_1.5_Day_N_Config_Change/router_hostname.yaml):
 
 ```
 # Modify Hostname on WAN Router
@@ -557,26 +594,29 @@ In order to get a little bit of exposure to network resource modules, we will us
 
 ```
 
-This playbook is very straightforward.  We are using the cisco.ios.ios_hostname to modify the hostname on the router.  The only thing to discuss here is the final line `state: replaced`.  There are a number of different state options, such as `merged`, which, while not useful for a this hostname module, is used when we just want to add our config to what already exists on the device, or `overridden`, which is a dangerous option that removes all configuration under the purview of the network resource module and replaces it with what is specified in the task.   
+This playbook is very straightforward.  We are using the cisco.ios.ios_hostname to modify the hostname on the router.  The only new syntax to highlight here is the final line `state: replaced`.  There are a number of different state options, such as `merged`, which, while not useful for a this hostname module, is used when we just want to add our config to what already exists on the device, or `overridden`, which is a dangerous option that removes all configuration under the purview of the network resource module and replaces it with what is specified in the task.   
 
 Consider a resource module for l3 interfaces, `overridden` would remove all l3 interface configuration from all l3 interfaces and then configure what is specified in the task, whereas `replaced` simply replaces the exact configuration specified in the task.  Review the documentation for more detail on states.
 
-Let's also take the time to explore running an ansible playbook in verbose mode.  By adding a command line option we can see more and more information.  From a little bit of extra information with **-v** up to debug-level information with **-vvvv**.
+
+Let's also take the time to explore running an ansible playbook in **verbose** mode.  By adding a command line option we can see more and more information.  From a little bit of extra information with **-v** up to debug-level information with **-vvvv**.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 7:  Run the router_hostname.yaml playbook  
 
-Step 1:  Modify the playbook with a new hostname for the router.  Use your pod number. For example, if you are in pod 1, your new hostname would be wan-1
+Step 1:  Modify the playbook with a new hostname for the router.  Use your pod number. For example, if you are in pod 1, your new hostname would be wan-1.  Don't forget to save after modifying your playbook.
 
 Step 2:  Run the playbook with different verbosity options to see what is returned.  Due to the Idempotency of the resource module, only your first run should result in a change to the configuration on the router.
 
 ```
+
 cd ~/ansible_lab_v1/
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -v
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vv
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vvv
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vvvv
 ```  
+
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
 ### Part 4: Finish up by deploying Model Driven Telemetry configurations to our access switch using Ansible Playbooks
@@ -586,19 +626,19 @@ Later in the day, we will be exploring Model Driven Telemetry and using the TIG 
 Let's go ahead and run the [switch_MDT_config.yaml](Task_2_Apply_MDT_Configuration/switch_MDT_config.yaml) playbook
 
 
-
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
+
 ### Action 8:  Run the switch_MDT_configuration.yaml playbook  
 
 Step 1: Review the telemetry_config.j2 template in the templates directory.  We will go over what this config is doing later in the day.  Remember that you specified a value for the variable **telemetry_destination_ip** in the group_vars/switches variable file in the first section of the lab.  Feel free to review the switches variable file.
 
 Step 2:  Review the switch_MDT_configuration.yaml playbook in the Task_2_Apply_MDT_Configuration directory.   You'll note this playbook is almost identical to the playbooks we ran to deploy the base configuration in earlier sections.   
 
-Step 3:  Run the playbook with your preferred level of verbosity and view the output.  There should be no failed tasks.  The playbook should successfully add the telemetry configuration to the access and core switches.  Review the configuration lines added in the **Show Lines Added to Config** output.
+Step 3:  Run the playbook with your preferred level of verbosity and view the output.  There should be no failed tasks.  The playbook should successfully add the telemetry configuration to the access switch.  Review the configuration lines added in the **Show Lines Added to Config** output.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
-Before we finish with Ansible playbooks, let's take a look at using pyATS parsers to glean information from our network devices.   Ansible module cisco.ios.ios_facts can provide structured data for a subset of network resource modules, but what if you want to glean some data in a structured format that doesn't currently have a network resource module?
+Next, let's take a look at using pyATS parsers to glean information from our network devices.   The Ansible module cisco.ios.ios_facts can provide structured data for a subset of network resource modules, but what if you want to collect some data in a structured format that doesn't currently have a network resource module?
 
 This is where pyATS & Genie can help!  pyATS/Genie supports structured parsers for [hundreds](https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers) of IOS/IOS-XE show commands, with more being added often!  This allows you to get predictable, structured data from your devices that can be used in your playbooks or with native pyATS & Genie.
 
@@ -652,7 +692,7 @@ At the start of the playbook, you can see the [ansible-pyats](https://github.com
     - ansible-pyats
 ```
 
- In the tasks section you can see a number of **pyats_parse_command** tasks that register their output to variables.  The **pyats_parse_command** module takes an argument of a ios/ios-xe command and uses the parser library to convert that output into a structured data format that is documented in the parser library linked above.
+ In the tasks section you can see a number of **pyats_parse_command** tasks that register their output to variables.  The **pyats_parse_command** module takes an argument of a ios/ios-xe command and uses the parser library to convert the output returned from the devices into a structured data format that is documented in the parser library linked above.
 
  ```
    tasks:
@@ -688,7 +728,7 @@ At the start of the playbook, you can see the [ansible-pyats](https://github.com
           - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
 
  ```
-These outputs might look a bit intimidating, but because we know ahead of time what the exact structure of the returned data will be, it is straightforward to access the exact data points that we are looking for, or use something like the [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html) module to write them out to CSV and have the exact data that we need from our install base readily available.  Go ahead and run this playbook.
+These data structures might look a bit intimidating, but because we know what the structure of the returned data will be, it is straightforward to access the exact data points that we need. We can also use the [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html) module or similar to write our data out to a CSV file and have a custom inventory from our install base readily available to ingest into other systems or provide to auditors or managers.  Go ahead and run this playbook.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 ### Action 9:  Run the get_switch_info_pyats_parsers.yaml playbook  

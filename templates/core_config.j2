@@ -5,8 +5,6 @@
 {%endfor %}
 exit
 
-hostname {{ core_hostname }}
-
 interface Loopback0
   no shut
   ip address {{ core_lo0_ip }} 255.255.255.255
