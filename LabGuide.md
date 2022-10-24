@@ -744,9 +744,14 @@ The output should look similar to this.  It's ok if it doesn't match exactly.
 
 Congratulations! You have finished the Ansible Section of this lab!  Next, let's explore MDT, the TIG stack and the Grafana dashboard!!
 
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
 ### Part 5: Explore MDT config with switch and TIG stack
 
-Now you have switches and router all configured through ansible. Well done! At this step, telemetry is collected through telegraf. Telegraf, data collector, outputs the data into influxDB, time series database. Then grafana visualizes the telemetry data in dashboard. In this lab, we have telegraf, influxDB, and grafana all configured already. There is no configuration change needed in this section. We will go through switch configuration, telegraf configuration, and grafana to explain how they are all tied together.
+Now you have switches and router all configured through ansible. Well done! At this moment, telemetry has been collected through telegraf. Telegraf, data collector, outputs the data into influxDB, time series database. Then grafana visualizes the telemetry data in dashboard. In this lab, we have telegraf, influxDB, and grafana all configured already. There is no configuration change needed in this section. We will go through switch configuration, telegraf configuration, and grafana to explain how they are all tied together. Here is high level flow how the telemetry is collected through the TIG stack.
+
+![json](./images/tig.png?raw=true "Import JSON")
+
+There are three ways we use to collect the telemetry from the switches. For access switch, we mainly use gRPC dial-out method. You have used ansible playbook in the last section to configure the access switch to send telemetry to telegraf. For core switch, we use gNMI dial-in method. The core switch itself only has two commands required. Most of configuration specifying the yang xpath is done through telegraf configuration.
 
 
