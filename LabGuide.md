@@ -377,7 +377,7 @@ In this section of the lab, we will deploy a base configuration to our topology.
 
 ![json](./images/pod_diagram.png?raw=true "Import JSON")  
 
-We'll use Ansible playbooks to push the base configuration templates to the core and access switch and make a configuration change to the wan router.    
+We'll use Ansible playbooks to push the configuration templates to the core and access switch and make a configuration change to the wan router.      
 
 Let's review the [core_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) playbook
 
