@@ -10,11 +10,7 @@ We'll start by reviewing some of the important files for Ansible.  First we'll c
 
 ![json](./images/ansible_cfg.png?raw=true "Import JSON")  
 
-See the [Ansible documentation](https://docs.ansible.com/ansible/latest/reference_appendices/config.html) for details.  There are many settings that can be modified.  To generate an ansible.cfg file with base options, you can run the following commands.  No need to do this for our lab:  
-`ansible-config init --disabled > example_ansible.cfg`
-
-To generate an ansible.cfg file with existing plugins, run:  
-`ansible-config init --disabled -t all > example_ansible_all.cfg`
+See the [Ansible config documentation](https://docs.ansible.com/ansible/latest/reference_appendices/config.html) for more details.  There are many settings that can be modified.  
 
 In our ansible.cfg, we are taking all defaults except for a few settings:
 
