@@ -750,7 +750,7 @@ Step 3:  Run the playbook with your preferred level of verbosity and view the ou
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 
-Congratulations! You have finished the Ansible Section of this lab!  Stop here! We'll explore MDT, the TIG stack and the Grafana dashboard!!
+Congratulations! You have finished the Ansible Section of this lab! Stand by, we'll have a live discussion on MDT and the configuration we just deployed, the TIG stack and the Grafana dashboard!!  After that, you can continue on with the lab and explore on your pod.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#    
 ### Part 5: Explore MDT config with switch and TIG stack
