@@ -140,7 +140,7 @@ The host that ends with **.15** is the access switch and we can see 3 variables 
 You can also explore the **10.1.#.14** file, which maps to our core switch.  You can see many more variables defined in this file.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
-### Action 3:  Rename the files in the host_vars directory and edit the hostname variables    
+### Action 3:  Rename the files in the host_vars directory    
 
 Step 1:  Rename the files in the host_vars directory to reflect the IPs in your pod.  For example if you are in pod 7, your files should be named 10.1.7.14 and 10.1.7.15.
 
