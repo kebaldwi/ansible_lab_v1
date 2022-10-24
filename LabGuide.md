@@ -14,6 +14,13 @@ To generate an ansible.cfg file with existing plugins, run:
 
 In our ansible.cfg, we are taking all defaults except for a few settings:
 
+```
+[defaults]
+inventory = inventory_pod.ini
+host_key_checking = False
+roles_path=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:/home/cisco/ansible_lab_v1/roles
+```
+
 1. Specifying the inventory file name.  By default, if an inventory file is not specified with the *ansible-playbook playbook_name -i inventory-file_name* switch, the inventory file name specified in the ansible.cfg file will be used.  We are modifying this setting to our inventory file name, inventory_pod.ini with this line:  
 `inventory = inventory_pod.ini`  
 
