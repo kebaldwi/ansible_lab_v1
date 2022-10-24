@@ -453,7 +453,7 @@ The final two tasks in this playbook, in conjunction with the first task, will a
       register: post_config
 ```
 
-Then we make use of the **debug** module as referenced earlier to display information on our configuration change.  To provide more detail, the task, **Show Lines Added to Config**, uses the filter **genie_config_diff** to compare the running config taken prior to the configuration change to the post-change configuration.  The option `mode='add'` limits the output to lines added to the config (meaning we ignore any lines that were removed) and the `exclude=exclude_list` option will ignore any diffs in configuration that match the **exclude_list** specified in the **vars** section at the bottom of the playbook.  This is done to limit irrelevant output or config lines that might have changed simply based on the time difference between when the two tasks were run.
+Then we make use of the **debug** module as referenced earlier to display information on our configuration change.  To provide more detail, the task, **Show Lines Added to Config**, uses the filter **genie_config_diff** to compare the running config taken prior to the configuration change to the post-change configuration.  The option `mode='add'` limits the output to lines added to the config (meaning we ignore any lines that were removed) and the `exclude=exclude_list` option will ignore any diffs in the configuration that match the **exclude_list** specified in the **vars** section at the bottom of the playbook.  This is done to limit irrelevant output or config lines that might have changed simply based on the time difference between when the two tasks were run.
 
 ```
     - name: Show Lines Added to Config
