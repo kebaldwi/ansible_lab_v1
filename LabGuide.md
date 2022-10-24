@@ -581,7 +581,7 @@ Ansible network resource modules provide some really good benefits, Such as:
 - Better options for **state** keys   
 - More intuitive and logical structure for configuration with nested structures where it makes sense  
 
-The only drawback of network resource modules is the limited number of modules availble.  There aren't network resource modules for every configuration that you might need to manage.  
+The only drawback of network resource modules is the limited number of them availble.  There aren't network resource modules for every configuration that you might need to manage.  
 
 In order to get a little bit of exposure to network resource modules, we will use a simple playbook that calls the [cisco.ios.ios_hostname](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_hostname_module.html) network resource module to change the hostname of our C8kv router.See the playbook titled [router_hostname.yaml](Task_1.5_Day_N_Config_Change/router_hostname.yaml):
 
@@ -601,7 +601,7 @@ In order to get a little bit of exposure to network resource modules, we will us
 
 ```
 
-This playbook is very straightforward.  We are using the cisco.ios.ios_hostname to modify the hostname on the router.  The only new syntax to highlight here is the final line `state: replaced`.  There are a number of different state options, such as `merged`, which, while not useful for a this hostname module, is used when we just want to add our config to what already exists on the device, or `overridden`, which is a dangerous option that removes all configuration under the purview of the network resource module and replaces it with what is specified in the task.   
+This playbook is very straightforward.  We are using cisco.ios.ios_hostname to modify the hostname on the router.  The only new syntax to highlight here is the final line `state: replaced`.  There are a number of different state options, such as `merged`, which, while not useful for a this hostname module, is used when we just want to add our config to what already exists on the device, or `overridden`, which is a dangerous option that removes all configuration under the purview of the network resource module and replaces it with what is specified in the task.   
 
 Consider a resource module for l3 interfaces, `overridden` would remove all l3 interface configuration from all l3 interfaces and then configure what is specified in the task, whereas `replaced` simply replaces the exact configuration specified in the task.  Review the documentation for more detail on states.
 
@@ -649,7 +649,7 @@ Next, let's take a look at using pyATS parsers to glean information from our net
 
 This is where pyATS & Genie can help!  pyATS/Genie supports structured parsers for [hundreds](https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers) of IOS/IOS-XE show commands, with more being added often!  This allows you to get predictable, structured data from your devices that can be used in your playbooks or with native pyATS & Genie.
 
-Let's explore this reviewing the playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml).
+Let's explore this by reviewing the playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml).
 
 ```
 # use pyATS parsers to get structured data back from devices and display in debug
