@@ -689,7 +689,7 @@ Let's explore this by reviewing the playbook [get_switch_info_pyats_parsers.yaml
           - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
 ```
 
-At the start of the playbook, you can see the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role being called.  We covered roles and the ansible-pyats role previously.
+At the start of the playbook, you can see the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role being called.  We covered roles and the ansible-pyats role in a previous section.
 
 ```
 - hosts: switches
