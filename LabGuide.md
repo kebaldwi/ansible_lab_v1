@@ -123,7 +123,7 @@ The starting --- and ending ... mark this file as a YAML file.  We can see we ha
 
  Modify the **switches** file and enter the correct IP for the **telemetry_destination_ip** using your pod number.  For example, if you are in pod 3, your value for **telemetry_destination_ip** will be "10.1.3.19"  
 
- Don't forget to save your file!
+ Don't forget to save your file!  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
 In the host_vars directory, we have 2 files.  Each file corresponds to a specific device defined in the inventory file.  This is where we define host-specific variables.  If we explore the file **10.1.#.15**, we see the following:
