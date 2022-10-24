@@ -420,7 +420,7 @@ At the start of the playbook we see familiar statements that we can interpret to
 
 The first task contains a module we haven't seen before:  **cisco.ios.ios_command**.  The [cisco.ios.ios_command](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_command_module.html) module executes a command or list of commands on a cisco device.  Note, the **cisco.ios.ios_command** module isn't used to make configuration changes on network devices.  
 
-In this case, we're using the module to execute a show run on the device and get back the output.  Note that there a number of different ways to get the configuration from a device, you may have come across other options during your Ansible practice.  
+In this case, we're using the module to execute a show run on the device and get back the output.  Note that there are a number of different ways to get the configuration from a device, you may have come across other options during your Ansible practice.  
 
 The next new item is the **register** parameter.  This simply tells Ansible to save the result of the task to a variable that is, in this case, called **prior_config** and can be referenced later.
 
