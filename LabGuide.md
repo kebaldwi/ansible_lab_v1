@@ -6,7 +6,7 @@
 
 #### Explore ansible.cfg file
 
-The ansible configuration file contains important Ansible settings.  There are a few ways to identify the ansible configuration that will be used.  See the [Ansible documentation](https://docs.ansible.com/ansible/latest/reference_appendices/config.html) for details.  There are many settings that can be modified.  To generate an ansible.cfg file with base options, run:  
+The ansible configuration file contains important Ansible settings.  There are a few ways to identify the ansible configuration that will be used.  See the [Ansible documentation](https://docs.ansible.com/ansible/latest/reference_appendices/config.html) for details.  There are many settings that can be modified.  To generate an ansible.cfg file with base options, you can run the following commands.  No need to do this for our lab:  
 `ansible-config init --disabled > example_ansible.cfg`
 
 To generate an ansible.cfg file with existing plugins, run:  
