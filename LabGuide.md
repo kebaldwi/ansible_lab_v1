@@ -163,7 +163,7 @@ In order to explore playbook structure, we will view and run the playbook titled
 The first section of the playbook contains the following:
 
 **hosts**:  The hosts this playbook applies to.  Possible values here are a single host, a host group or all.  
-**connection**: What type of connection should be used See the [documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ***ansible.netcommon.network_cli*** is used.  
+**connection**: What type of connection should be used; See the [documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ***ansible.netcommon.network_cli*** is used.  
 **gather_facts**: A yes or no option that tells ansible whether to run the gather_facts module on the hosts.  Since this module is optimized for servers, we don't use it. Instead we will use the cisco.ios.ios_facts module. 
 
 ```
