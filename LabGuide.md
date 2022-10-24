@@ -37,7 +37,7 @@ roles_path=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:/home/ci
 
   For security reasons, we likely wouldn't do this in production.  
 
-3. Defining our roles path.  This allows us the flexibility of telling ansible where our roles are installed so that they do not need to be in the same directory as our playbooks.
+3. Defining our roles path.  This allows us the flexibility of telling ansible where our roles are installed so that they do not need to be in the same directory as our playbooks.  We will cover the definition and use of roles later in the lab.  
 `roles_path=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:/home/cisco/ansible_lab_v1/roles`
 
 #### Explore the Inventory file
