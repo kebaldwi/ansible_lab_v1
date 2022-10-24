@@ -144,7 +144,7 @@ You can also explore the **10.1.#.14** file, which maps to our core switch.  You
 
 Step 1:  Rename the files in the host_vars directory to reflect the IPs in your pod.  For example if you are in pod 7, your files should be named 10.1.7.14 and 10.1.7.15.
 
-You can accomplish by right-clicking the file name in VSCode and selecting **Rename** or in the terminal by entering the host_vars directory and using the mv command.  See this example:  
+You can accomplish by right-clicking the file name in VSCode and selecting **Rename** or in the terminal by entering the host_vars directory and using the **mv** command.  See this example:  
 
 ```
 cd ~/ansible_lab_v1/host_vars
