@@ -6,15 +6,22 @@
 
 #### Explore ansible.cfg file
 
-The ansible configuration file contains important Ansible settings.  There are a few ways to identify the ansible configuration that will be used.  See the [Ansible documentation](https://docs.ansible.com/ansible/latest/reference_appendices/config.html) for details.  There are many settings that can be modified.  To generate an ansible.cfg file with base options, run:  
-`ansible-config init --disabled > example_ansible.cfg`
+We'll start by reviewing some of the important files for Ansible.  First we'll cover the ansible configuration file `ansible.cfg`. The ansible configuration file contains important Ansible settings that control how Ansible operates.  There are a few ways to identify the ansible configuration that will be used.  A simple way is to run the `ansible --version` command in the terminal. Here is an example of the output of that command:  
 
-To generate an ansible.cfg file with existing plugins, run:  
-`ansible-config init --disabled -t all > example_ansible_all.cfg`
+![json](./images/ansible_cfg.png?raw=true "Import JSON")  
+
+See the [Ansible config documentation](https://docs.ansible.com/ansible/latest/reference_appendices/config.html) for more details.  There are many settings that can be adjusted based on the needs of your deployment.  
 
 In our ansible.cfg, we are taking all defaults except for a few settings:
 
-1. Specifying the inventory file name.  By default, if an inventory file is not specified with the *ansible-playbook playbook_name -i inventory-file_name* switch, the inventory file name specified in the ansible.cfg file will be used.  We are modifying this setting to our inventory file name, inventory_pod.ini with this line:  
+```
+[defaults]
+inventory = inventory_pod.ini
+host_key_checking = False
+roles_path=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:/home/cisco/ansible_lab_v1/roles
+```
+
+1. Specifying the inventory file name.  By default, if an inventory file is not specified with the *ansible-playbook -i inventory-file_name* option, the inventory file name specified in the ansible.cfg file will be used.  We are modifying this setting to our inventory file name, inventory_pod.ini with this line:  
 `inventory = inventory_pod.ini`  
 
 2. Disabling strict host key checking.  When we SSH to a device for the first time, we will be asked if we trust the ssh key of the host.  If we choose yes, the ssh key for the host will be added to our known-hosts file.  
@@ -30,7 +37,7 @@ In our ansible.cfg, we are taking all defaults except for a few settings:
 
   For security reasons, we likely wouldn't do this in production.  
 
-3. Defining our roles path.  This allows us the flexibility of telling ansible where our roles are installed so that they do not need to be in the same directory as our playbooks.
+3. Defining our roles path.  This allows us the flexibility of telling ansible where our roles are installed so that they do not need to be in the same directory as our playbooks.  We will cover the definition and use of roles later in the lab.  
 `roles_path=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:/home/cisco/ansible_lab_v1/roles`
 
 #### Explore the Inventory file
@@ -104,7 +111,7 @@ vlans:
 
 ospf_processid: 1
 
-telemetry_destination_ip: "10.#.#.19"
+telemetry_destination_ip: "10.1.#.19"
 ...
 ```
 
@@ -116,7 +123,7 @@ The starting --- and ending ... mark this file as a YAML file.  We can see we ha
 
  Modify the **switches** file and enter the correct IP for the **telemetry_destination_ip** using your pod number.  For example, if you are in pod 3, your value for **telemetry_destination_ip** will be "10.1.3.19"  
 
- Don't forget to save your file!
+ Don't forget to save your file!  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
 In the host_vars directory, we have 2 files.  Each file corresponds to a specific device defined in the inventory file.  This is where we define host-specific variables.  If we explore the file **10.1.#.15**, we see the following:
@@ -133,11 +140,11 @@ The host that ends with **.15** is the access switch and we can see 3 variables 
 You can also explore the **10.1.#.14** file, which maps to our core switch.  You can see many more variables defined in this file.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
-### Action 3:  Rename the files in the host_vars directory and edit the hostname variables    
+### Action 3:  Rename the files in the host_vars directory    
 
 Step 1:  Rename the files in the host_vars directory to reflect the IPs in your pod.  For example if you are in pod 7, your files should be named 10.1.7.14 and 10.1.7.15.
 
-You can accomplish by right-clicking the file name in VSCode and selecting **Rename** or in the terminal by entering the host_vars directory and using the mv command.  See this example:  
+You can accomplish by right-clicking the file name in VSCode and selecting **Rename** or in the terminal by entering the host_vars directory and using the **mv** command.  See this example:  
 
 ```
 cd ~/ansible_lab_v1/host_vars
@@ -156,7 +163,7 @@ In order to explore playbook structure, we will view and run the playbook titled
 The first section of the playbook contains the following:
 
 **hosts**:  The hosts this playbook applies to.  Possible values here are a single host, a host group or all.  
-**connection**: What type of connection should be used See the [documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ***ansible.netcommon.network_cli*** is used.  
+**connection**: What type of connection should be used; See the [documentation](https://docs.ansible.com/ansible/latest/network/user_guide/platform_ios.html#connections-available) for more details.  For Cisco devices, ***ansible.netcommon.network_cli*** is used.  
 **gather_facts**: A yes or no option that tells ansible whether to run the gather_facts module on the hosts.  Since this module is optimized for servers, we don't use it. Instead we will use the cisco.ios.ios_facts module. 
 
 ```
@@ -370,7 +377,7 @@ In this section of the lab, we will deploy a base configuration to our topology.
 
 ![json](./images/pod_diagram.png?raw=true "Import JSON")  
 
-We'll use Ansible playbooks to push the base configuration templates to the core and access switch and make a configuration change to the wan router.    
+We'll use Ansible playbooks to push the configuration templates to the core and access switch and make a configuration change to the wan router.      
 
 Let's review the [core_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) playbook
 
@@ -413,7 +420,7 @@ At the start of the playbook we see familiar statements that we can interpret to
 
 The first task contains a module we haven't seen before:  **cisco.ios.ios_command**.  The [cisco.ios.ios_command](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_command_module.html) module executes a command or list of commands on a cisco device.  Note, the **cisco.ios.ios_command** module isn't used to make configuration changes on network devices.  
 
-In this case, we're using the module to execute a show run on the device and get back the output.  Note that there a number of different ways to get the configuration from a device, you may have come across other options during your Ansible practice.  
+In this case, we're using the module to execute a show run on the device and get back the output.  Note that there are a number of different ways to get the configuration from a device, you may have come across other options during your Ansible practice.  
 
 The next new item is the **register** parameter.  This simply tells Ansible to save the result of the task to a variable that is, in this case, called **prior_config** and can be referenced later.
 
@@ -446,7 +453,7 @@ The final two tasks in this playbook, in conjunction with the first task, will a
       register: post_config
 ```
 
-Then we make use of the **debug** module as referenced earlier to display information on our configuration change.  To provide more detail, the task, **Show Lines Added to Config**, uses the filter **genie_config_diff** to compare the running config taken prior to the configuration change to the post-change configuration.  The option `mode='add'` limits the output to lines added to the config (meaning we ignore any lines that were removed) and the `exclude=exclude_list` option will ignore any diffs in configuration that match the **exclude_list** specified in the **vars** section at the bottom of the playbook.  This is done to limit irrelevant output or config lines that might have changed simply based on the time difference between when the two tasks were run.
+Then we make use of the **debug** module as referenced earlier to display information on our configuration change.  To provide more detail, the task, **Show Lines Added to Config**, uses the filter **genie_config_diff** to compare the running config taken prior to the configuration change to the post-change configuration.  The option `mode='add'` limits the output to lines added to the config (meaning we ignore any lines that were removed) and the `exclude=exclude_list` option will ignore any diffs in the configuration that match the **exclude_list** specified in the **vars** section at the bottom of the playbook.  This is done to limit irrelevant output or config lines that might have changed simply based on the time difference between when the two tasks were run.
 
 ```
     - name: Show Lines Added to Config
@@ -574,7 +581,7 @@ Ansible network resource modules provide some really good benefits, Such as:
 - Better options for **state** keys   
 - More intuitive and logical structure for configuration with nested structures where it makes sense  
 
-The only drawback of network resource modules is the limited number of modules availble.  There aren't network resource modules for every configuration that you might need to manage.  
+The only drawback of network resource modules is the limited number of them availble.  There aren't network resource modules for every configuration that you might need to manage.  
 
 In order to get a little bit of exposure to network resource modules, we will use a simple playbook that calls the [cisco.ios.ios_hostname](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_hostname_module.html) network resource module to change the hostname of our C8kv router.See the playbook titled [router_hostname.yaml](Task_1.5_Day_N_Config_Change/router_hostname.yaml):
 
@@ -594,7 +601,7 @@ In order to get a little bit of exposure to network resource modules, we will us
 
 ```
 
-This playbook is very straightforward.  We are using the cisco.ios.ios_hostname to modify the hostname on the router.  The only new syntax to highlight here is the final line `state: replaced`.  There are a number of different state options, such as `merged`, which, while not useful for a this hostname module, is used when we just want to add our config to what already exists on the device, or `overridden`, which is a dangerous option that removes all configuration under the purview of the network resource module and replaces it with what is specified in the task.   
+This playbook is very straightforward.  We are using cisco.ios.ios_hostname to modify the hostname on the router.  The only new syntax to highlight here is the final line `state: replaced`.  There are a number of different state options, such as `merged`, which, while not useful for a this hostname module, is used when we just want to add our config to what already exists on the device, or `overridden`, which is a dangerous option that removes all configuration under the purview of the network resource module and replaces it with what is specified in the task.   
 
 Consider a resource module for l3 interfaces, `overridden` would remove all l3 interface configuration from all l3 interfaces and then configure what is specified in the task, whereas `replaced` simply replaces the exact configuration specified in the task.  Review the documentation for more detail on states.
 
@@ -619,30 +626,13 @@ ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostna
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
-### Part 4: Finish up by deploying Model Driven Telemetry configurations to our access switch using Ansible Playbooks
-
-Later in the day, we will be exploring Model Driven Telemetry and using the TIG Stack in order to monitor our network devices.  We will use ansible playbooks and a Jinja2 template to deploy the MDT configuration to our access switch so that we will be able to review the telemetry in our Grafana dashboard later. 
-
-Let's go ahead and run the [switch_MDT_config.yaml](Task_2_Apply_MDT_Configuration/switch_MDT_config.yaml) playbook
-
-
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
-
-### Action 8:  Run the switch_MDT_configuration.yaml playbook  
-
-Step 1: Review the telemetry_config.j2 template in the templates directory.  We will go over what this config is doing later in the day.  Remember that you specified a value for the variable **telemetry_destination_ip** in the group_vars/switches variable file in the first section of the lab.  Feel free to review the switches variable file.
-
-Step 2:  Review the switch_MDT_configuration.yaml playbook in the Task_2_Apply_MDT_Configuration directory.   You'll note this playbook is almost identical to the playbooks we ran to deploy the base configuration in earlier sections.   
-
-Step 3:  Run the playbook with your preferred level of verbosity and view the output.  There should be no failed tasks.  The playbook should successfully add the telemetry configuration to the access switch.  Review the configuration lines added in the **Show Lines Added to Config** output.
-
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+### Part 4:  Using pyATS parsers with Ansible
 
 Next, let's take a look at using pyATS parsers to glean information from our network devices.   The Ansible module cisco.ios.ios_facts can provide structured data for a subset of network resource modules, but what if you want to collect some data in a structured format that doesn't currently have a network resource module?
 
 This is where pyATS & Genie can help!  pyATS/Genie supports structured parsers for [hundreds](https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers) of IOS/IOS-XE show commands, with more being added often!  This allows you to get predictable, structured data from your devices that can be used in your playbooks or with native pyATS & Genie.
 
-Let's explore this reviewing the playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml).
+Let's explore this by reviewing the playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml).
 
 ```
 # use pyATS parsers to get structured data back from devices and display in debug
@@ -682,7 +672,7 @@ Let's explore this reviewing the playbook [get_switch_info_pyats_parsers.yaml](T
           - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
 ```
 
-At the start of the playbook, you can see the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role being called.  We covered roles and the ansible-pyats role previously.
+At the start of the playbook, you can see the [ansible-pyats](https://github.com/CiscoDevNet/ansible-pyats) role being called.  We covered roles and the ansible-pyats role in a previous section.
 
 ```
 - hosts: switches
@@ -731,7 +721,7 @@ At the start of the playbook, you can see the [ansible-pyats](https://github.com
 These data structures might look a bit intimidating, but because we know what the structure of the returned data will be, it is straightforward to access the exact data points that we need. We can also use the [ansible.builtin.copy](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html) module or similar to write our data out to a CSV file and have a custom inventory from our install base readily available to ingest into other systems or provide to auditors or managers.  Go ahead and run this playbook.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
-### Action 9:  Run the get_switch_info_pyats_parsers.yaml playbook  
+### Action 8:  Run the get_switch_info_pyats_parsers.yaml playbook  
 
 Run the playbook and view the output.  There should be no failed tasks.  The playbook should run successfully and provide the information specified in the **Display Switch Info** task for both switches.
 
@@ -740,11 +730,27 @@ The output should look similar to this.  It's ok if it doesn't match exactly.
 ![json](./images/get_switch_info_1.png?raw=true "Import JSON")  
 ![json](./images/get_switch_info_2.png?raw=true "Import JSON") 
 
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
 
-Congratulations! You have finished the Ansible Section of this lab!  Next, let's explore MDT, the TIG stack and the Grafana dashboard!!
+### Part 5: Finish up by deploying Model Driven Telemetry configurations to our access switch using Ansible Playbooks
 
-\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+In the next section, we will be exploring Model Driven Telemetry and using the TIG Stack in order to monitor our network devices.  We will use an ansible playbook with a Jinja2 template to deploy the MDT configuration to our access switch so that we will be able to review the telemetry in our Grafana dashboard later. 
+
+Let's go ahead and run the [switch_MDT_config.yaml](Task_2_Apply_MDT_Configuration/switch_MDT_config.yaml) playbook
+
+
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#   
+### Action 9:  Run the switch_MDT_configuration.yaml playbook  
+
+Step 1: Review the telemetry_config.j2 template in the templates directory.  We will go over what this config is doing later in the day.  Remember that you specified a value for the variable **telemetry_destination_ip** in the group_vars/switches variable file in the first section of the lab.  Feel free to review the switches variable file.
+
+Step 2:  Review the switch_MDT_configuration.yaml playbook in the Task_2_Apply_MDT_Configuration directory.   You'll note this playbook is almost identical to the playbooks we ran to deploy the base configuration in earlier sections.   
+
+Step 3:  Run the playbook with your preferred level of verbosity and view the output.  There should be no failed tasks.  The playbook should successfully add the telemetry configuration to the access switch.  Review the configuration lines added in the **Show Lines Added to Config** output.
+
+\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#  
+
+Congratulations! You have finished the Ansible Section of this lab! Stand by, we'll have a live discussion on MDT and the configuration we just deployed, the TIG stack and the Grafana dashboard!!  After that, you can continue on with the lab and explore on your pod.
 
 ### Part 6: Explore MDT config with switch and TIG stack
 
