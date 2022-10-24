@@ -10,7 +10,7 @@ We'll start by reviewing some of the important files for Ansible.  First we'll c
 
 ![json](./images/ansible_cfg.png?raw=true "Import JSON")  
 
-See the [Ansible config documentation](https://docs.ansible.com/ansible/latest/reference_appendices/config.html) for more details.  There are many settings that can be modified.  
+See the [Ansible config documentation](https://docs.ansible.com/ansible/latest/reference_appendices/config.html) for more details.  There are many settings that can be adjusted based on the needs of your deployment.  
 
 In our ansible.cfg, we are taking all defaults except for a few settings:
 
