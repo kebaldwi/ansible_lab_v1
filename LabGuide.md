@@ -111,7 +111,7 @@ vlans:
 
 ospf_processid: 1
 
-telemetry_destination_ip: "10.#.#.19"
+telemetry_destination_ip: "10.1.#.19"
 ...
 ```
 
