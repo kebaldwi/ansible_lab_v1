@@ -221,7 +221,8 @@ Next we will move on to exploring Jinja2 Templates and configuring our network d
 
 Jinja2 Templates are a dynamic way to apply standard configurations to multiple devices using variables.   To read more about using Jinja2 templates in Ansible, see the [documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html).  Templates are usually found in the [templates](templates) directory under our ansible playbook working directory.  Let's review the [access_config.j2](templates/access_config.j2) template, which as the name suggests, is the template for our access switch.
 
-This template begins with a **for loop**.  If you recall from our group_vars file [switches](group_vars/switches), we have a variable called vlans, which is a list of vlan numbers.  The for loop in our template will iterate through the list of vlans and run the commmand vlan \<number\> for each vlan in the list and then exit out of vlan config mode.
+This template begins with a **for loop**.  If you recall from our group_vars file [switches](group_vars/switches), we have a variable called vlans, which is a list of vlan numbers.  The for loop in our template will iterate through the list of vlans and run the commmand vlan \<number\> for each vlan in the list and then exit out of vlan config mode.  The variable notation in Jinja2 is the double curly brace ***{{ }}***  
+
 
 ```
 {% for vlan in vlans%}
@@ -229,8 +230,7 @@ This template begins with a **for loop**.  If you recall from our group_vars fil
 {%endfor %}
 exit
 ```
-The next section will configure the access and trunk ports as defined in our [host_vars file](host_vars/10.1.#.15) for the access switch and some other configuration items that we need.  The variable notation in Jinja2 is the double curly brace ***{{ }}***
-
+The next section will configure the access and trunk ports as defined in our [host_vars file](host_vars/10.1.#.15) for the access switch and some other configuration items that we need.  
 ```
 
 interface {{ vlan100_interface }}
