@@ -1,4 +1,4 @@
-## Accessing the Lab
+## Accessing the Lab - Under Construction -- Will fix screenshots later
 
 Log into dCloud with your CCO ID
 
