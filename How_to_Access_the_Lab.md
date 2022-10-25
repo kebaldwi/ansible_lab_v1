@@ -8,7 +8,7 @@ Go to My Hub -> Sessions and look for the shared Session.
 Click on the green "View" Button to open the session.  
 NOTE:  You may have to change the dCloud Location to view the shared session.
 
-![json](./images/dcloud_session.png?raw=true "Import JSON")  
+![json](./images/dcloud_session_1.png?raw=true "Import JSON")  
 
 Once in the topology view, click the down arrow next WKST\<pod number\>.  
 For Example, if you have been assigned pod 1:  
