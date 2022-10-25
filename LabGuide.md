@@ -7,7 +7,7 @@ For how to access the lab, please go to [Lab Access Guide](LabAccess.md) for the
 
 #### Explore ansible.cfg file
 
-We'll start by reviewing some of the important files for Ansible.  First we'll cover the ansible configuration file `ansible.cfg`. The ansible configuration file contains important Ansible settings that control how Ansible operates.  There are a few ways to identify the ansible configuration that will be used.  A simple way is to run the `ansible --version` command in the terminal. Here is an example of the output of that command:  
+We'll start by reviewing some of the important files for Ansible.  First we'll cover the ansible configuration file `ansible.cfg`, located in the ansible_lab_v1 directory. The ansible configuration file contains important Ansible settings that control how Ansible operates.  There are a few ways to identify the ansible configuration that will be used.  A simple way is to run the `ansible --version` command in the terminal. Here is an example of the output of that command:  
 
 ![json](./images/ansible_cfg.png?raw=true "Import JSON")  
 
@@ -43,7 +43,7 @@ roles_path=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:/home/ci
 
 #### Explore the Inventory file
 
-Let's take a look at the inventory file.  The inventory file can be in many formats, but is generally either in ini or YAML format.  See the [Ansible Documentation](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html) on inventories.  Our Inventory file is in ini format. 
+Let's take a look at the inventory file, **inventory_pod.ini** in the ansible_lab_v1 directory.  The inventory file can be in many formats, but is generally either in ini or YAML format.  See the [Ansible Documentation](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html) on inventories.  Our Inventory file is in ini format. 
 
 ```
 [access]  
@@ -221,7 +221,8 @@ Next we will move on to exploring Jinja2 Templates and configuring our network d
 
 Jinja2 Templates are a dynamic way to apply standard configurations to multiple devices using variables.   To read more about using Jinja2 templates in Ansible, see the [documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html).  Templates are usually found in the [templates](templates) directory under our ansible playbook working directory.  Let's review the [access_config.j2](templates/access_config.j2) template, which as the name suggests, is the template for our access switch.
 
-This template begins with a **for loop**.  If you recall from our group_vars file [switches](group_vars/switches), we have a variable called vlans, which is a list of vlan numbers.  The for loop in our template will iterate through the list of vlans and run the commmand vlan \<number\> for each vlan in the list and then exit out of vlan config mode.
+This template begins with a **for loop**.  If you recall from our group_vars file [switches](group_vars/switches), we have a variable called vlans, which is a list of vlan numbers.  The for loop in our template will iterate through the list of vlans and run the commmand vlan \<number\> for each vlan in the list and then exit out of vlan config mode.  The variable notation in Jinja2 is the double curly brace ***{{ }}***  
+
 
 ```
 {% for vlan in vlans%}
@@ -229,8 +230,7 @@ This template begins with a **for loop**.  If you recall from our group_vars fil
 {%endfor %}
 exit
 ```
-The next section will configure the access and trunk ports as defined in our [host_vars file](host_vars/10.1.#.15) for the access switch and some other configuration items that we need.  The variable notation in Jinja2 is the double curly brace ***{{ }}***
-
+The next section will configure the access and trunk ports as defined in our [host_vars file](host_vars/10.1.#.15) for the access switch and some other configuration items that we need.  
 ```
 
 interface {{ vlan100_interface }}
@@ -271,7 +271,7 @@ NOTE:  A great resource for learning more about Jinja2 Templating is [Przemek Ro
 
 We can see what the final CLI configuration will be by running the playbook: [render_configurations.yaml](render_configurations.yaml).
 
-The playbook render_configurations.yaml will take the configuration templates and values from the host and group vars we defined and generate the CLI configuration that will pushed to the switches for us to review.  This step is not necessary as the config will be rendered on the fly by our configuration playbooks, but will allow us to get a preview of our complete configuration that will be pushed to the network devices prior to running the playbooks that will configure the switches.
+The playbook **render_configurations.yaml** will take the configuration templates and values from the host and group vars we defined and generate the CLI configuration that will pushed to the switches for us to review.  This step is not necessary as the config will be rendered on the fly by our configuration playbooks, but will allow us to get a preview of our complete configuration that will be pushed to the network devices prior to running the playbooks that will configure the switches.
 
 Let's take a look at [render_configurations.yaml](render_configurations.yaml).
 
@@ -359,7 +359,7 @@ Ansible Roles allow for the modularization and re-use of Ansible tasks, variable
 
 pyATS is a powerful framework for automated testing and the de-facto test framework for internal Cisco Engineers.  For a more comprehensive introduction to pyATS, see the [Cisco pyATS Documentation](https://developer.cisco.com/docs/pyats/).  pyATS is not limited to use with Ansible and can be a fantastic way to run automated tests on your network or lab as part of a CI/CD Pipeline or to just make change validation faster and more automated.  A deep dive into pyATS is outside the scope of this workshop, but please explore the documentation linked above to learn more!
 
-Roles can be installed by running `ansible-galaxy install role.name` for roles in [Ansible Galaxy](https://galaxy.ansible.com/), where collections and roles are published for use by vendors (including Cisco and most other major vendors) and the Ansible Community at large. A new role can be created with the proper directory structure by running `ansible-galaxy init mynewrole`.  Custom roles can also simply be copied into the roles directory.  As long as the roles directory can be found in the roles_path that we reviewed earlier as part of the ansible.cfg file, it can be used in your playbooks.
+Roles can be installed by running `ansible-galaxy install role.name` for roles in [Ansible Galaxy](https://galaxy.ansible.com/), where collections and roles are published by vendors (including Cisco and most other major vendors) and the Ansible Community at large for use by anyone. A new role can be created with the proper directory structure by running `ansible-galaxy init mynewrole`.  Custom roles can also simply be copied into the roles directory.  As long as the roles directory can be found in the roles_path that we reviewed earlier as part of the ansible.cfg file, it can be used in your playbooks.
 
 Roles can be referenced in a playbook using the **roles** option.  See this example from our playbook [get_switch_info_pyats_parsers.yaml](Task_0_Fact_Finding/get_switch_info_pyats_parsers.yaml):  
 
@@ -380,7 +380,7 @@ In this section of the lab, we will deploy a base configuration to our topology.
 
 We'll use Ansible playbooks to push the configuration templates to the core and access switch and make a configuration change to the wan router.      
 
-Let's review the [core_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) playbook
+Let's review the [core_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) playbook:  
 
 ```
 - hosts: core
@@ -432,11 +432,11 @@ The next new item is the **register** parameter.  This simply tells Ansible to s
       register: prior_config
 
 ```
-The second task is where we actually deploy our configuration template to our network device using [cisco.ios.ios_config](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html).  As the name implies, the cisco.ios.ios_config module is used to modify the configuration on a Cisco IOS/IOS-XE device.  Note that the **src** parameter allows us to reference the previously discussed Jinja2 template which contains the configuration we want to send.  
+The second task deploys our configuration template to our network device using [cisco.ios.ios_config](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html).  As the name implies, the cisco.ios.ios_config module is used to modify the configuration on a Cisco IOS/IOS-XE device.  Note that the **src** parameter allows us to reference the previously discussed Jinja2 template which contains the configuration we want to send.  
 
-The cisco.ios.ios_config module is powerful and flexible.  The usage here is only one way of sending configuration to network devices.  Please review the documentation linked above for more options and examples.  
+The cisco.ios.ios_config module is powerful and flexible.  The usage here is only one way of deploying configuration to network devices.  Please review the documentation linked above for more options and examples.  
 
-The final parameter in the task is **save_when**.  This parameter controls under what circumstances the task will save the running-config, the option **changed** will only do so if the task results in a change to the running configuration, other options can be explored in the documentation.
+The final parameter in the task is **save_when**.  This parameter controls under what circumstances the task will save the running-config, the option **changed** will only do so if the task itself results in a change to the running configuration, other options can be explored in the documentation.
 
 ```
     - name: Apply Initial Configuration
@@ -535,10 +535,7 @@ This playbook, located in the Task_1_Apply_Base_Config directory, is missing a n
 
 
 
-```
-
-
-
+```   
 
 Open the file in VSCode by clicking on it.
 
