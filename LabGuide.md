@@ -380,7 +380,7 @@ In this section of the lab, we will deploy a base configuration to our topology.
 
 We'll use Ansible playbooks to push the configuration templates to the core and access switch and make a configuration change to the wan router.      
 
-Let's review the [core_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) playbook
+Let's review the [core_switch_base_config.yaml](./Task_1_Apply_Base_Configuration/core_switch_base_config.yaml) playbook:  
 
 ```
 - hosts: core
@@ -432,11 +432,11 @@ The next new item is the **register** parameter.  This simply tells Ansible to s
       register: prior_config
 
 ```
-The second task is where we actually deploy our configuration template to our network device using [cisco.ios.ios_config](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html).  As the name implies, the cisco.ios.ios_config module is used to modify the configuration on a Cisco IOS/IOS-XE device.  Note that the **src** parameter allows us to reference the previously discussed Jinja2 template which contains the configuration we want to send.  
+The second task deploys our configuration template to our network device using [cisco.ios.ios_config](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html).  As the name implies, the cisco.ios.ios_config module is used to modify the configuration on a Cisco IOS/IOS-XE device.  Note that the **src** parameter allows us to reference the previously discussed Jinja2 template which contains the configuration we want to send.  
 
-The cisco.ios.ios_config module is powerful and flexible.  The usage here is only one way of sending configuration to network devices.  Please review the documentation linked above for more options and examples.  
+The cisco.ios.ios_config module is powerful and flexible.  The usage here is only one way of deploying configuration to network devices.  Please review the documentation linked above for more options and examples.  
 
-The final parameter in the task is **save_when**.  This parameter controls under what circumstances the task will save the running-config, the option **changed** will only do so if the task results in a change to the running configuration, other options can be explored in the documentation.
+The final parameter in the task is **save_when**.  This parameter controls under what circumstances the task will save the running-config, the option **changed** will only do so if the task itself results in a change to the running configuration, other options can be explored in the documentation.
 
 ```
     - name: Apply Initial Configuration
@@ -535,10 +535,7 @@ This playbook, located in the Task_1_Apply_Base_Config directory, is missing a n
 
 
 
-```
-
-
-
+```   
 
 Open the file in VSCode by clicking on it.
 
