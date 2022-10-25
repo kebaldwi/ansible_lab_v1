@@ -271,7 +271,7 @@ NOTE:  A great resource for learning more about Jinja2 Templating is [Przemek Ro
 
 We can see what the final CLI configuration will be by running the playbook: [render_configurations.yaml](render_configurations.yaml).
 
-The playbook render_configurations.yaml will take the configuration templates and values from the host and group vars we defined and generate the CLI configuration that will pushed to the switches for us to review.  This step is not necessary as the config will be rendered on the fly by our configuration playbooks, but will allow us to get a preview of our complete configuration that will be pushed to the network devices prior to running the playbooks that will configure the switches.
+The playbook **render_configurations.yaml** will take the configuration templates and values from the host and group vars we defined and generate the CLI configuration that will pushed to the switches for us to review.  This step is not necessary as the config will be rendered on the fly by our configuration playbooks, but will allow us to get a preview of our complete configuration that will be pushed to the network devices prior to running the playbooks that will configure the switches.
 
 Let's take a look at [render_configurations.yaml](render_configurations.yaml).
 
