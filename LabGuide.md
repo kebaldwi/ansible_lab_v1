@@ -7,7 +7,7 @@ For how to access the lab, please go to [Lab Access Guide](LabAccess.md) for the
 
 #### Explore ansible.cfg file
 
-We'll start by reviewing some of the important files for Ansible.  First we'll cover the ansible configuration file `ansible.cfg`. The ansible configuration file contains important Ansible settings that control how Ansible operates.  There are a few ways to identify the ansible configuration that will be used.  A simple way is to run the `ansible --version` command in the terminal. Here is an example of the output of that command:  
+We'll start by reviewing some of the important files for Ansible.  First we'll cover the ansible configuration file `ansible.cfg`, located in the ansible_lab_v1 directory. The ansible configuration file contains important Ansible settings that control how Ansible operates.  There are a few ways to identify the ansible configuration that will be used.  A simple way is to run the `ansible --version` command in the terminal. Here is an example of the output of that command:  
 
 ![json](./images/ansible_cfg.png?raw=true "Import JSON")  
 
@@ -43,7 +43,7 @@ roles_path=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:/home/ci
 
 #### Explore the Inventory file
 
-Let's take a look at the inventory file.  The inventory file can be in many formats, but is generally either in ini or YAML format.  See the [Ansible Documentation](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html) on inventories.  Our Inventory file is in ini format. 
+Let's take a look at the inventory file, **inventory_pod.ini** in the ansible_lab_v1 directory.  The inventory file can be in many formats, but is generally either in ini or YAML format.  See the [Ansible Documentation](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html) on inventories.  Our Inventory file is in ini format. 
 
 ```
 [access]  
