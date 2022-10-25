@@ -1,6 +1,7 @@
 
 ## Ansible Lab Guide  -- Under Construction!!!
 
+For how to access the lab, please go to [Lab Access Guide](LabAccess.md) for the details.
 
 ### Part 1: Ansible Setup Exploration
 
@@ -760,7 +761,15 @@ Now you have switches and router all configured through ansible. Well done! At t
 
 There are three ways we use to collect the telemetry from the switches. 
 * gRPC: We use gRPC dial-out method on "access" switch. You have executed ansible playbook in the last section of the lab to configure the access switch to send telemetry to telegraf. 
-* gNMI: We use gNMI dial-in method on "core" switch. The "core" switch itself only has two commands required for insecure mode setup in this lab. 
+* gNMI: We use gNMI dial-in method on "core" switch. Most of gNMI configuration specifying the yang xpath is done through telegraf. If you compare gNMI configuration to gRPC configuration, we move all the xpath specification from switch side to telegraf side.
+* snmp: We also uses snmp in this lab to pull product ID (PID) and interface operational status on "access" switch. This will show you how flexible TIG stack is to support mix types of telemetry.
+
+In the next sections, we will go through the switch, telegraf, influxDB, and grafana configurations individually.
+
+
+### Switch Configuration On Telemetry
+#### gNMI
+gNMI configuration in switch is pretty straightforward. Since it's dial-in method to pull the telemetry from the switch, its most configuration lives in the collector which is telegraf in our lab. If you ssh through putty to the "core" switch from your windows jumphost. You will see the "core" switch has two commands configured for gNMI insecure mode. 
 ```
 gnxi
 gnxi server
@@ -772,15 +781,23 @@ gnxi secure-init
 gnxi secure-server
 gnxi secure-port 9339
 ```
-You can refer to this [link](https://github.com/jeremycohoe/cisco-ios-xe-programmability-lab-module-5-gnmi) for detailed steps on how to get gNMI secure mode set up. 
-Most of gNMI configuration specifying the yang xpath is done through telegraf. If you compare gNMI configuration to gRPC configuration, we move all the xpath specification from switch side to telegraf side.
-* snmp: We also uses snmp in this lab to pull product ID (PID) and interface operational status on "access" switch. This will show you how flexible TIG stack is to support mix types of telemetry.
+You can refer to this [link](https://github.com/jeremycohoe/cisco-ios-xe-programmability-lab-module-5-gnmi) for detailed steps on how to get gNMI secure mode set up.
 
-In the next sections, we will go through the switch, telegraf, influxDB, and grafana configurations individually.
+#### gRPC
+Next, we will spend time to focus on gRPC configuration in the "access" switch. If you recall, the last ansible playbook for telemetry you executed has configured "access" switch for gRPC. You can either ssh to access switch through windows jumphost to check the configuration. You can also use Visual Code to view the [telemetry config jinja2 template](templates/telemetry_config.j2).
 
-
-### Switch Configuration On Telemetry
-In this section we will spend most of time to focus on gRPC configuration in the "access" switch. 
+Below is the telemetry subscription 
+```
+! CPU
+telemetry ietf subscription 3301
+ encoding encode-kvgpb
+ filter xpath /process-cpu-ios-xe-oper:cpu-usage/cpu-utilization/five-seconds
+ source-vrf Mgmt-vrf
+ source-address 10.0.0.15
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address {{ telemetry_destination_ip }} 57500 protocol grpc-tcp
+```
 
 ### Telegraf Configuration
 
