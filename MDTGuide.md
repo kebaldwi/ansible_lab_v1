@@ -357,7 +357,38 @@ We won't dive into the details. But the configuration below help rename tags and
 InfluDB is a popular time series database. It's suitable for storing streaming data collected from IoT devices and network devices. Fortunately we don't need to configure InfluxDB database in much details like telegraf. The initilization of the lab creates the logins, database, and token for authentication. That's all we need. Please refer to [influxDB doc](https://docs.influxdata.com/influxdb/v2.4/get-started/) to learn more about this time series database. Another popular database for storing streaming data is [Prometheus](https://prometheus.io/), very popular for network monoitoring.
 
 ### Grafana Configuration
-[Grafana](https://grafana.com/) is really popular dashboard tool to visualize telemetry data. It's widely used in many areas. It provides on premise type of install in docker and VM. Also it provides cloud option for ease of use. 
+[Grafana](https://grafana.com/) is really popular dashboard tool to visualize telemetry data. It's widely used in many areas. It provides on premise type of install such as docker and VM. Also it provides cloud option for ease of use.
+
+#### Action 3: Examine Grafana Dashboard
+Please go to windows jumphost chrome browser. Click the bookmark for Grafana and login to it. You will see a dashboard for our lab when you logged in like below. Since you executed telemetry ansible playbook early on, we should see some telemetry data displayed in the dashboard already for core and access switches. 
+
+![json](./images/grafana-home-1.png?raw=true "Import JSON")
+
+You have _"Device"_ drop down menu in top left corner to select which device you want to view in the dashboard. core switch has telemetry collected through gNMI. access switch has telemetry collected through mix of gRPC and snmp. You can see _"Serial Number"_, _"PID"_, _"Version"_, _"Up Time"_, _"ARP"_, _"Routes"_, _"CPU"_, _"Memory"_, _"Interfaces"_, and _"Topology"_ information. All these sections are called panels inside grafana dashboard. These panels have different style you can customize with. Table view, gragh view, gauge view, etc. The _"Topology"_ panel is enabled by a grafana plugin called "flowcharting". You can check this [link](https://grafana.com/grafana/plugins/agenty-flowcharting-panel/) for more details. In topology panel, you should see some numbers by tx or rx of interfaces. These numbers indicate the throughput through the interfaces in tx or rx direction. Most links (except the link between wan and server1) have colors. Green means link is up and operational. Red means link is down. Now let's do couple of tests.
+
+First, we will need to generate some traffic. Please go to windows jumphost. Open chrome browser and click _"client1_vnc"_ or _"client2_vnc"_. You will see linux desktop shown up. Click _"iperf3"_ icon on the desktop. Assume you already deployed all the ansible playbooks. This iperf3 script should generate traffic from the client1 or client2 to server1 depending on which client you use. The script generates traffic for 2 mins and stops. The example below is for client1 but it is same for client2 vnc.
+![json](./images/client-iperf3.png?raw=true "Import JSON")
+
+Observe the _"Interfaces"_ panel and _"Topology"_ panel to see the changes. You should see a symetric trending lines in _"Interfaces"_ panel no matter you choose access or core switch. The _"Topology"_ panel will also display the throughput numbers for specific interfaces.
+
+![json](./images/grafana-traffic.png?raw=true "Import JSON")
+
+Now you have seen the traffic reflected on the dashboard through different panels. Let's do another test. ssh to access switch through windows jumphost. Shut down interface Gi1/0/1 or Gi1/0/2 which is connected to client1 and client2. Observe the link color change. You should the link you shut down turns red. Feel free to no shut the links.
+
+![json](./images/grafana-link-shut.png?raw=true "Import JSON")
+
+So far you have seen some power of the dashboard. Wondering what's behind the panel? Let's look at how grafana queries influxDB on the backend.
+
+Let's use our favorite cpu metrics. Click on name "CPU" in the panel like screenshot below. Click "Edit". 
+![json](./images/grafana-cpu-1.png?raw=true "Import JSON")
+
+You will see panel edit page shown up. 
+
+![json](./images/grafana-cpu-2.png?raw=true "Import JSON")
+
+In this page, you will define the magic. We have data source as "InfluxDB". That's the data source grafana queries against. Down below you have flux query section. This is where you write your database query. The language used in influxDB 2.x is called Flux. It used to be SQL query in 1.x version. 2.x switches to Flux language which is even more powerful and flexible query language designed for time series database. The top statement means query from bucket (database) called "telemetry". Second statement states the time range to display the data. These are default variables fed by panel time range selection. Third line is how we define the data. "filter" function (fn) is a way to select the interested data based on the conditions defined. In this example, measurement name is "cpu". field name is "five_seconds", and tag name is a variable called "Device" which is determined by the device drop down menu in the top left corner of the panel. These conditions must be met for specific data we are interested. You can use flux language to write more complex queries. Other panels in this lab have more complex queries. Feel free to tour around. If you like to learn more about flux, please go to their [offical tutorial](https://docs.influxdata.com/influxdb/cloud/query-data/get-started/). There are many good examples.
+
+This is all we like you to examine inside grafana dashboard but feel free to take a look how the panel is setup. Personally I really like the flowcharting plugin. It can make the topology much more dynamic.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
