@@ -2,7 +2,7 @@
 
 ### Part 1: Explore MDT config with switch and TIG stack
 
-Now you have switches and router all configured through ansible. Well done! At this moment, telemetry has been collected through telegraf. Telegraf, data collector, outputs the data into influxDB, time series database. Then grafana visualizes the telemetry data in dashboard. In this lab, we have telegraf, influxDB, and grafana all configured already. There is no configuration change needed in this section. We will go through switch configuration, telegraf configuration, and grafana to explain how they are all tied together. Here is high level flow how the telemetry is collected through the TIG stack.
+You have completed configuring the switches and router with Ansible. Well done! At this moment, telemetry is being collected from your network infrastructure through Telegraf. Telegraf, a data collector, outputs the data into InfluxDB, which is a time series database. Then Grafana visualizes the telemetry data in a custom dashboard. In this lab, we have telegraf, influxDB, and grafana all configured already. There is no configuration change needed in this section. We will go through switch configuration, telegraf configuration, and grafana to explain how they are all tied together. Here is high level flow how the telemetry is collected through the TIG stack.
 
 ![json](./images/tig.png?raw=true "Import JSON")
 
