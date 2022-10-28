@@ -81,6 +81,7 @@ Step 2:  Complete the \[all:vars\] section in your inventory file.  Enter the va
 
 Don't forget to save your files after editing!  
 
+NOTE:  If you get stuck, a completed example is in the Z_Final_Files folder in your working directory.  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# 
 
 #### Explore Variable Files and Directories
@@ -563,7 +564,7 @@ To test this:
   
 Wait a minute or so and if you are successful, you'll see a cool message from a mysterious guy!  Let your proctor know who you saw!
 
-NOTE:  If you get stuck, the completed playbook is in the Final_Files folder in your working directory.
+NOTE:  If you get stuck, the completed playbook is in the Z_Final_Files folder in your working directory.
 
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
@@ -620,8 +621,10 @@ ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostna
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vv
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vvv
 ansible-playbook -i inventory_pod.ini Task_1.5_Day_N_Config_Change/router_hostname.yaml -vvvv
-```  
-
+```   
+  
+   
+NOTE:  If you get stuck, a completed example is in the Z_Final_Files folder in your working directory.  
 \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 
 ### Part 4:  Using pyATS parsers with Ansible
