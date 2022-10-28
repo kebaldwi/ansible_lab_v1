@@ -146,7 +146,7 @@ telemetry ietf subscription 3301
 
 **_update-policy periodic_** specifies how often the telemetry is sent out to collector. The unit is 1/100 seconds. 500 indicates 5 seconds.
 
-**_receiver ip address_** specifies the collector ip address which is the Telegraf ip address in our lab. _57500_ is the port Telegraf is listening on. _protocol_ is grpc-tcp which is insecure mode. We do support TLS based on gRPC protocol. Please refer to this [link](https://github.com/jeremycohoe/cisco-ios-xe-mdt/blob/master/c9300-grpc-tls-lab.md) for details.
+**_receiver ip address_** specifies the collector ip address which is the Telegraf ip address in our lab. _57500_ is the port Telegraf is listening on. _protocol_ is grpc-tcp which is insecure mode. We do support Secure gRPC protocol using TLS. Please refer to this [link](https://github.com/jeremycohoe/cisco-ios-xe-mdt/blob/master/c9300-grpc-tls-lab.md) for details.
 
 The puzzle in the configuration is how to figure out the right xpath for the telemetry data you want to stream from the switch. We suggest you leverage [YANGsuite](https://github.com/CiscoDevNet/yangsuite) to help you with that. 
 
