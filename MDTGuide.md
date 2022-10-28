@@ -1,8 +1,6 @@
 ## MDT Lab Guide
 
-### Part 1: Explore MDT config with switch and TIG stack
-
-You have completed configuring the switches and router with Ansible. Well done! At this moment, telemetry is being collected from your network infrastructure through Telegraf. Telegraf, a data collector, outputs the data into InfluxDB, which is a time series database. Then Grafana visualizes the telemetry data in a custom dashboard. In this lab, we have telegraf, influxDB, and grafana all configured already. There is no configuration change needed in this section. We will go through switch configuration, telegraf configuration, and grafana to explain how they are all tied together. Here is high level flow how the telemetry is collected through the TIG stack.
+Now you have switches and router all configured through ansible. Well done! At this moment, telemetry has been collected through telegraf. Telegraf, data collector, outputs the data into influxDB, time series database. Then grafana visualizes the telemetry data in dashboard. In this lab, we have telegraf, influxDB, and grafana all configured already. There is no configuration change needed in this section. We will go through switch configuration, telegraf configuration, and grafana to explain how they are all tied together. Here is high level flow how the telemetry is collected through the TIG stack.
 
 ![json](./images/tig.png?raw=true "Import JSON")
 
@@ -58,6 +56,70 @@ gnxi secure-port 9339
 ```
 You can refer to this [link](https://github.com/jeremycohoe/cisco-ios-xe-programmability-lab-module-5-gnmi) for detailed steps on how to get gNMI secure mode set up.
 
+To check gNMI status in switch, try execute command:
+```
+show gnxi state detail
+```
+You should see result like below for non-secure mode in core switch:
+```
+core#show gnxi state detail 
+Settings
+========
+  Server: Enabled
+  Server port: 50052
+  Secure server: Disabled
+  Secure server port: 9339
+  Secure client authentication: Disabled
+  Secure trustpoint: 
+  Secure client trustpoint: 
+  Secure password authentication: Disabled
+
+GNMI
+====
+  Admin state: Enabled
+  Oper status: Up
+  State: Provisioned
+
+  gRPC Server
+  -----------
+    Admin state: Enabled
+    Oper status: Up
+
+  Configuration service
+  ---------------------
+    Admin state: Enabled
+    Oper status: Up
+
+  Telemetry service
+  -----------------
+    Admin state: Enabled
+    Oper status: Up
+          
+GNOI
+====
+
+  Cert Management service
+  -----------------
+    Admin state: Enabled
+    Oper status: Up
+
+  OS Image service
+  ----------------
+    Admin state: Disabled
+    Oper status: Up
+    Supported: Not supported on this platform
+
+  Factory Reset service
+  ---------------------
+    Admin state: Enabled
+    Oper status: Up
+    Supported: Not supported on this platform
+
+gRPC Tunnel
+===========
+  Admin state: Enabled
+  Oper status: Up
+```
 #### gRPC
 Next, we will spend time to focus on gRPC configuration in the "access" switch. If you recall, the last ansible playbook for telemetry you executed has configured "access" switch for gRPC. You can either ssh to access switch through windows jumphost to check the configuration. You can also use Visual Code to view the [telemetry config jinja2 template](templates/telemetry_config.j2).
 
