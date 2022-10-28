@@ -13,15 +13,15 @@ There are several roles in Model Driven Telemetry.
 Telegraf plays a critical role in our lab since it collects all the telemetry data through gRPC/gNMI/SNMP and normalizes them before it writes to the InfluxDB database. InfluxDB in our lab doesn't have much customized configuration after the initialization of database. Grafana uses different types of queries to InfluxDB to fetch the telemetry for dashboard visualization. 
 
 There are three methods we use to collect the telemetry from the switches. 
-* gRPC: We use the gRPC dial-out method on the "access" switch. You have executed an Ansible playbook in the last section of the lab to configure the access switch to send telemetry to telegraf. 
-* gNMI: We use the gNMI dial-in method on the "core" switch. Most of the gNMI configuration specifying the YANG xpath is done through telegraf. If you compare the gNMI configuration to the gRPC configuration, we move all the xpath specifications from the switch side to the telegraf side.
+* gRPC: We use the gRPC dial-out method on the "access" switch. You have executed an Ansible playbook in the last section of the lab to configure the access switch to send telemetry to Telegraf. 
+* gNMI: We use the gNMI dial-in method on the "core" switch. Most of the gNMI configuration specifying the YANG xpath is done through Telegraf. If you compare the gNMI configuration to the gRPC configuration, we move all the xpath specifications from the switch side to the Telegraf side.
 * SNMP: We also use SNMP in this lab to pull the product ID (PID) and interface operational status on the "access" switch. This will show you how flexible the TIG stack is to support mixed types of telemetry.
 
-In the next sections, we will go through the switch, telegraf, influxDB, and Grafana configurations individually.
+In the next sections, we will go through the switch, Telegraf, influxDB, and Grafana configurations individually.
 
 ### Switch Configuration On Telemetry
 Model Driven Telemetry configuration on the switch needs several key prerequisites.
-* YANG. Since all data is stored in a database, we will need to enable the access to this database in the switch from the collector (telegraf). The **netconf-yang** command needs to be configured on the device for telemetry to work.
+* YANG. Since all data is stored in a database, we will need to enable the access to this database in the switch from the collector (Telegraf). The **netconf-yang** command needs to be configured on the device for telemetry to work.
 * XML Xpath. XPath is XML Path Language. This specifies where the telemetry data is. 
 * The _urn:ietf:params:netconf:capability:notification:1.1_ capability must be listed in hello messages. This capability is advertised only on devices that support IETF telemetry.
 
@@ -146,7 +146,7 @@ telemetry ietf subscription 3301
 
 **_update-policy periodic_** specifies how often the telemetry is sent out to collector. The unit is 1/100 seconds. 500 indicates 5 seconds.
 
-**_receiver ip address_** specifies the collector ip address which is the Telegraf ip address in our lab. _57500_ is the port telegraf is listening on. _protocol_ is grpc-tcp which is insecure mode. We do support tls based on gRPC protocol. Please refer to this [link](https://github.com/jeremycohoe/cisco-ios-xe-mdt/blob/master/c9300-grpc-tls-lab.md) for details.
+**_receiver ip address_** specifies the collector ip address which is the Telegraf ip address in our lab. _57500_ is the port Telegraf is listening on. _protocol_ is grpc-tcp which is insecure mode. We do support tls based on gRPC protocol. Please refer to this [link](https://github.com/jeremycohoe/cisco-ios-xe-mdt/blob/master/c9300-grpc-tls-lab.md) for details.
 
 The puzzle in the configuration is how to figure out the right xpath for the telemetry data you want to stream from the switch. We suggest you leverage [YANGsuite](https://github.com/CiscoDevNet/yangsuite) to help you with that. 
 
@@ -230,7 +230,7 @@ _cpu_ is the measurement name. _device_ is a tag and its value is _core_. _host_
 ```
 gRPC configuration uses the _inputs.cisco_telemetry_mdt_ plugin. The parameters are pretty simple. _grpc_ is the protocol we use and Telegraf listens on port _57500_. You can specify a different port if you like. Just make sure the switch has the same port configured for telemetry. _max_msg_size_ has the default value which is sufficient. You can see the gRPC configuration in Telegraf is pretty simple. The switch has the configuration to specify the xpath for the data and is responsible for sending the data to Telegraf. Telegraf is the receiver only in this case. Next, let's look at gNMI input settings.
 
-#### Input Setting for gNMI
+#### Input Settings for gNMI
 
 ```
 # Define where the IOS XE gNMI server is and how to auth
@@ -315,7 +315,7 @@ gRPC configuration uses the _inputs.cisco_telemetry_mdt_ plugin. The parameters 
   sample_interval = "5s"
 
 ```
-Do you see some similarities between gNMI input setting and switch gRPC telemetry configuration? Yes, we define xpath in telegraf instead of switch for gNMI since it's a dial-in method. telegraf dials into switch to pull the telemetry. It's a pub-sub model. Telegraf subscribes to switch's xpath. At the top, we define the switch we want to subscribe to. _core_ is the hostname, port _50052_ and CLI credentials. We use _json_ietf_ as encoding format. After first _inputs.gnmi_ definition, we have all the subscriptions listed. The first one is 5-seconds cpu utilization. _cpu_ is the measurement name. Please pay attention to the path _"/Cisco-IOS-XE-process-cpu-oper:cpu-usage/cpu-utilization/five-seconds"_. In previous section of switch telemetry configuration, we have xpath as _/process-cpu-ios-xe-oper:cpu-usage/cpu-utilization/five-seconds_. You also used YANGsuite to explore how you can get this xapth for switch configuration. This path value for the same data has different format in gnmi telegraf plugin. Instead of prefix _"/process-cpu-ios-xe-oper"_, we use YANG module name _"/Cisco-IOS-XE-process-cpu-oper"_. Pay attention to the position of "/". It's in front of module name like prefix name in grpc configuration. The path after ":" is same between grpc and gnmi configuration. _subscription_mode_ is "sample" and _sample_interval_ is every 5 seconds. It means we grab this data every 5 seconds.
+Do you see some similarities between the gNMI input settings and the switch gRPC telemetry configuration? Yes, we define the xpath in Telegraf instead of the switch for gNMI since it's a dial-in method. Telegraf dials into switch to pull the telemetry. It's a pub-sub model. Telegraf subscribes to switch's xpath. At the top, we define the switch we want to subscribe to. _core_ is the hostname, port _50052_ and CLI credentials. We use _json_ietf_ as encoding format. After the first _inputs.gnmi_ definition, we have all of the subscriptions listed. The first one is 5-seconds CPU utilization. _cpu_ is the measurement name. Please pay attention to the path _"/Cisco-IOS-XE-process-cpu-oper:cpu-usage/cpu-utilization/five-seconds"_. In the previous section on the switch telemetry configuration, we have the xpath as _/process-cpu-ios-xe-oper:cpu-usage/cpu-utilization/five-seconds_. You also used YANGsuite to explore how you can get this xpath for the switch configuration. This path value for the same data has a different format in the gNMI Telegraf plugin. Instead of the prefix _"/process-cpu-ios-xe-oper"_, we use the YANG module name _"/Cisco-IOS-XE-process-cpu-oper"_. Pay attention to the position of "/". It's in front of the module name like prefix name in gRPC configuration. The path after ":" is the same between gRPC and gNMI configuration. _subscription_mode_ is "sample" and _sample_interval_ is every 5 seconds. It means we grab this data every 5 seconds.
 
 #### Input Setting for SNMP
 ```
@@ -356,7 +356,7 @@ Do you see some similarities between gNMI input setting and switch gRPC telemetr
 ```
 
 #### Processors
-We won't dive into the details. But the configuration below help rename tags and measurement names. Some data also have the value type converted to help data visualization in Grafana dashboard. If you want to learn more about these functions. Please refer to this [link](https://docs.influxdata.com/telegraf/v1.21/plugins/). Filter with "Processors" type.
+We won't dive into the details. But the configuration below helps to rename tags and measurement names. Some data also have the value type converted to help data visualization in the Grafana dashboard. If you want to learn more about these functions, please refer to this [link](https://docs.influxdata.com/telegraf/v1.21/plugins/). Filter with "Processors" type.
 
 ```
 [[processors.converter]]
@@ -416,19 +416,19 @@ We won't dive into the details. But the configuration below help rename tags and
 ```
 
 ### InfluxDB Configuration
-InfluDB is a popular time series database. It's suitable for storing streaming data collected from IoT devices and network devices. Fortunately we don't need to configure InfluxDB database in much details like telegraf. The initialization of the lab creates the logins, database, and token for authentication. That's all we need. Please refer to [InfluxDB documentation](https://docs.influxdata.com/influxdb/v2.4/get-started/) to learn more about this time series database. Another popular database for storing streaming data is [Prometheus](https://prometheus.io/), which is very popular for network monitoring.
+InfluDB is a popular time series database. It's suitable for storing streaming data collected from IoT devices and network devices. Fortunately we don't need to configure the InfluxDB database in as much detail as Telegraf. The initialization of the lab creates the logins, database, and token for authentication. That's all we need. Please refer to [InfluxDB documentation](https://docs.influxdata.com/influxdb/v2.4/get-started/) to learn more about this time series database. Another popular database for storing streaming data is [Prometheus](https://prometheus.io/), which is very popular for network monitoring.
 
 ### Grafana Configuration
-[Grafana](https://grafana.com/) is really popular dashboard tool to visualize telemetry data. It's widely used in many areas. It provides on premise type of install such as docker and VM. Also it provides cloud option for ease of use.
+[Grafana](https://grafana.com/) is a really popular dashboard tool to visualize telemetry data. It's widely used in many areas. It provides an on premise type of install such as docker and VM. It also provides a cloud deployment option for ease of use.
 
 #### Action 3: Examine Grafana Dashboard
-Please go to windows jumphost chrome browser. Click the bookmark for Grafana and login to it. You will see a dashboard for our lab when you logged in like below. Since you executed telemetry ansible playbook early on, we should see some telemetry data displayed in the dashboard already for core and access switches. 
+Please go to the Windows jumphost Chrome browser. Click the bookmark for Grafana and login to it. You will see a dashboard for our lab when you log in like below. Since you executed the telemetry Ansible playbook early on, we should see some telemetry data displayed in the dashboard already for the core and access switches. 
 
 ![json](./images/grafana-home-1.png?raw=true "Import JSON")
 
-You have _"Device"_ drop down menu in top left corner to select which device you want to view in the dashboard. core switch has telemetry collected through gNMI. access switch has telemetry collected through mix of gRPC and SNMP. You can see _"Serial Number"_, _"PID"_, _"Version"_, _"Up Time"_, _"ARP"_, _"Routes"_, _"CPU"_, _"Memory"_, _"Interfaces"_, and _"Topology"_ information. All these sections are called panels inside Grafana dashboard. These panels have different style you can customize with. Table view, graph view, gauge view, etc. The _"Topology"_ panel is enabled by a Grafana plugin called "flowcharting". You can check this [link](https://grafana.com/grafana/plugins/agenty-flowcharting-panel/) for more details. In topology panel, you should see some numbers by tx or rx of interfaces. These numbers indicate the throughput through the interfaces in tx or rx direction. Most links (except the link between wan and server1) have colors. Green means link is up and operational. Red means link is down. Now let's do couple of tests.
+You have the _"Device"_ drop down menu in the top left corner to select which device you want to view in the dashboard. The core switch has telemetry collected through gNMI. The access switch has telemetry collected through mix of gRPC and SNMP. You can see _"Serial Number"_, _"PID"_, _"Version"_, _"Up Time"_, _"ARP"_, _"Routes"_, _"CPU"_, _"Memory"_, _"Interfaces"_, and _"Topology"_ information. All of these sections are called panels inside the Grafana dashboard. These panels have different styles you can customize with. Table view, graph view, gauge view, etc. The _"Topology"_ panel is enabled by a Grafana plugin called "flowcharting". You can check this [link](https://grafana.com/grafana/plugins/agenty-flowcharting-panel/) for more details. In the topology panel, you should see some numbers by tx or rx of interfaces. These numbers indicate the throughput through the interfaces in tx or rx direction. Most links (except the link between wan and server1) have colors. Green means link is up and operational. Red means link is down. Now let's do couple of tests.
 
-First, we will need to generate some traffic. Please go to windows jumphost. Open chrome browser and click _"client1_vnc"_ or _"client2_vnc"_. You will see linux desktop shown up. Click _"iperf3"_ icon on the desktop. Assume you already deployed all the ansible playbooks. This iperf3 script should generate traffic from the client1 or client2 to server1 depending on which client you use. The script generates traffic for 2 mins and stops. The example below is for client1 but it is same for client2 vnc.
+First, we will need to generate some traffic. Please go to the Windows jumphost. Open the Chrome browser and click _"client1_vnc"_ or _"client2_vnc"_. You will see the linux desktop show up. Click the _"iperf3"_ icon on the desktop. Assuming you already deployed all the ansible playbooks, this iperf3 script should generate traffic from the client1 or client2 to server1 depending on which client you selected. The script generates traffic for 2 mins and stops. The example below is for client1 but it is same for client2 vnc.
 ![json](./images/client-iperf3.png?raw=true "Import JSON")
 
 Observe the _"Interfaces"_ panel and _"Topology"_ panel to see the changes. You should see a symmetric trending lines in _"Interfaces"_ panel no matter you choose access or core switch. The _"Topology"_ panel will also display the throughput numbers for specific interfaces.
