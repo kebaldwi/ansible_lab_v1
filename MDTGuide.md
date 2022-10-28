@@ -191,8 +191,8 @@ Feel free to explore gNMI and gRPC with other xpath you like to explore.
 ### Telegraf Configuration
 Telegraf is developed by Influxdata, the same company that created InfluxDB. Telegraf is a server-based agent for collecting and sending all metrics and events from databases, systems, and IoT sensors. Normally the Telegraf configuration has 4 sections: global agent settings, input settings, output settings, and processors. Output settings determine where the data is written to. In our lab, output goes to InfluxDB database. Input settings include all types of telemetry Telegraf collects. In our lab, we have telemetry collected from the core switch through gNMI as one type of input. Telemetry collected from the access switch through gRPC is another type of input. We also have telemetry collected from the access switch through SNMP as third type of input. You can see Telegraf is flexible enough to collect the mix of different telemetry types. Processors are the functions that transform the data before Telegraf writes them to database. It's very helpful when you have a mix of types of telemetry like our lab.
 
-### Action 2: Examine telegraf configuration
-Let's look at the telegraf configuration in our lab.
+### Action 2: Examine the Telegraf Configuration
+Let's look at the Telegraf configuration in our lab.
 #### Output Setting
 ```
 # Output Plugin InfluxDB
@@ -207,13 +207,13 @@ Let's look at the telegraf configuration in our lab.
   files = ["stdout"]
   data_format = "influx"
 ```
-The syntax is pretty straightforward. We have two output destinations in the lab. One is to Influxdb database which listens on tcp port 8086. It's configured under _[[outputs.influxdb_v2]]_. This is the name of output plugin telegraf supports. It has specific "bucket", "token" and "organization" defined to access Influxdb database. The second output is print out the data received at telegraf to the terminal. This is helpful when you diagnose and verify the telemetry data. When you look the data printed out in the terminal, it follows the format like this:
-measurement,tag1=value1,tag2=value2,...,tagn=vlauen field1=value1,field2=value2,...fieldn=valuen
+The syntax is pretty straightforward. We have two output destinations in the lab. One is to Influxdb database which listens on tcp port 8086. It's configured under _[[outputs.influxdb_v2]]_. This is the name of output plugin Telegraf supports. It has a specific "bucket", "token" and "organization" defined to access the Influxdb database. The second output directs Telegraf to print the telemetry data received to the terminal. This is helpful when you are working on diagnosing and verifying the telemetry data. When you look the data printed out in the terminal, it follows the format like this:
+measurement,tag1=value1,tag2=value2,...,tagn=valuen field1=value1,field2=value2,...fieldn=valuen
 Here is example for the cpu 5 seconds output:
 ```
 cpu,device=core,host=telegraf five_seconds=1i 1666837816572038000
 ```
-_cpu_ is the measurement name. _device_ is a tag and its value is _core_. _host_ is another tag and its value is _telegraf_. Notice there is a "space" after _host_ tag. This indicates the data after the space is all fields which are the real telemetry data telegraf collects from the switch. _five_seconds_ is a field name and its value is _1i_. "i" means integer. _1666837816572038000_ in the end is a unix format timestamp. All data records received at telegraf and written in influx format have timestamps associated. 
+_cpu_ is the measurement name. _device_ is a tag and its value is _core_. _host_ is another tag and its value is _telegraf_. Notice there is a "space" after _host_ tag. This indicates the data after the space is all fields which are the real telemetry data Telegraf collects from the switch. _five_seconds_ is a field name and its value is _1i_. "i" means integer. _1666837816572038000_ in the end is a unix format timestamp. All data records received by Telegraf and written in the influx format have timestamps associated.  
 
 #### Input Setting for gRPC
 ```
@@ -228,7 +228,7 @@ _cpu_ is the measurement name. _device_ is a tag and its value is _core_. _host_
  ## Grpc Maximum Message Size, default is 4MB, increase the size.
  max_msg_size = 4000000
 ```
-gRPC configuration uses _inputs.cisco_telemetry_mdt_ plugin. The parameters are pretty simple. _grpc_ is the protocol we use and telegraf listens on port _57500_. You can specify different port if you like. Just to make sure switch has the same port configured for telemetry. _max_msg_size_ has default value which is sufficient. You can see gRPC configuration in telegraf is pretty simple. The switch has the configuration to specify the xpath for the data and is responsible for sending the data to telegraf. Telegraf is the receiver only in this case. Next, let's look at gNMI input setting.
+gRPC configuration uses the _inputs.cisco_telemetry_mdt_ plugin. The parameters are pretty simple. _grpc_ is the protocol we use and Telegraf listens on port _57500_. You can specify a different port if you like. Just make sure the switch has the same port configured for telemetry. _max_msg_size_ has the default value which is sufficient. You can see the gRPC configuration in Telegraf is pretty simple. The switch has the configuration to specify the xpath for the data and is responsible for sending the data to Telegraf. Telegraf is the receiver only in this case. Next, let's look at gNMI input settings.
 
 #### Input Setting for gNMI
 
