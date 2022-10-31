@@ -219,7 +219,11 @@ The practice above is a simple _gNMI get_ option, you can also use gNMI to set v
 ![json](./images/yang-gnmi-3.png?raw=true "Import JSON")
 
 
-Next, let's explore gRPC with YANG Suite. To receive the telemetry through gRPC from the switch, YANG Suite needs to be the receiver/collector. That means we need to add YANG Suite ip as receiver in the switch telemetry configuration. Let's use cpu 5 seconds telemetry in this case. ssh to your access switch in windows jumphost and add two commands below. Please change # to your pod number.
+Next, let's explore gRPC with YANG Suite. To receive the telemetry through gRPC from the switch, YANG Suite needs to be the receiver/collector. That means we need to add YANG Suite ip as receiver in the switch telemetry configuration. Let's use cpu 5 seconds telemetry in this case.
+
+### Action 1.5 Modify Access Switch Configuration to send telemetry to YANG Suite
+SSH to your access switch from the Windows jumphost using puTTy or your VSCode Terminal Window and add the commands below. Please change # to your pod number.
+
 ```
 conf t
 telemetry ietf subscription 3301
