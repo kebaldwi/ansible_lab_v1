@@ -173,11 +173,18 @@ After you click "Run RPC", you will have another window popped up showing you th
 
 The practice above is a simple _gNMI get_ option, you can also use gNMI to set values for the switch such as VLAN configuration, interface description, etc. Feel free to explore that function in your lab.
 
-Next, let's explore gRPC with YANGsuite. To receive the telemetry through gRPC from the switch, YANGsuite needs to be the receiver/collector. That means we need to add the YANGsuite IP as a receiver in the switch telemetry configuration. Let's use the cpu 5 seconds telemetry in this case. ssh to your access switch from the Windows jumphost and add the two commands below. Please change # to your pod number.
+Next, let's explore gRPC with YANGsuite. To receive the telemetry through gRPC from the switch, YANGsuite needs to be the receiver/collector. That means we need to add the YANGsuite IP as a receiver in the switch telemetry configuration. Let's use the cpu 5 seconds telemetry in this case. 
+
+### Action 1.5 Modify Access Switch Configuration to send telemetry to YANGSuite
+
+SSH to your access switch from the Windows jumphost using puTTy or your VSCode Terminal Window and add the commands below. Please change # to your pod number.
+
 ```
+conf t
 telemetry ietf subscription 3301
 receiver ip address 10.1.#.16 57500 protocol grpc-tcp
 ```
+
 These two commands will make the switch send cpu telemetry to YANGsuite. Let's go there to see the output. Follow the screenshot below to see the gRPC telemetry received from the switch.
 
 ![json](./images/yang-grpc-1.png?raw=true "Import JSON")
