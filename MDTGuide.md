@@ -226,18 +226,45 @@ SSH to your access switch from the Windows jumphost using puTTy or your VSCode T
 
 ```
 conf t
-telemetry ietf subscription 3301
-receiver ip address 10.1.#.16 57500 protocol grpc-tcp
+telemetry ietf subscription 3311
+ encoding encode-kvgpb
+ filter xpath /process-cpu-ios-xe-oper:cpu-usage/cpu-utilization/five-seconds
+ source-address 10.0.0.15
+ source-vrf Mgmt-vrf
+ stream yang-push
+ update-policy periodic 500
+ receiver ip address 10.1.#.16 57500 protocol grpc-tcp
 ```
-These two commands will make the switch send cpu telemetry to YANG Suite. Let's go there to see the output. Follow the screenshot below to see the gRPC telemetry received from the switch.
+These commands creates a new subscription on cpu metrics and send telemetry to YANG Suite. Let's go to YANG Suite to see the output. Follow the screenshot below to see the gRPC telemetry received from the switch.
+
+Step 1: Select "Protocols" -> "gRPC telemetry".
+
+Step 2: Enter 0.0.0.0 in "Listen at IP address" box.
+
+Step 3: Enter 57500 in "Listen at port" box.
+
+Step 4: Click "Start receiver" button.
+
+You should see a pop up window showing "Server started on 0.0.0.0 port 57500". Click "OK".
 
 ![json](./images/yang-grpc-1.png?raw=true "Import JSON")
 
 ![json](./images/yang-grpc-2.png?raw=true "Import JSON")
 
-You should see the cpu telemetry sent from access switch updated on the screen. You can click "Stop telemetry receiver" to stop receiving the telemetry.
 
-Feel free to explore gNMI and gRPC with other xpath you like to explore.
+You should see the cpu telemetry sent from access switch updated on the screen. You can click "Manage receivers" and then click "Stop" button to stop the receiver. You will see two pop up windows in a row like below. Just click "OK" to confirm.
+
+![json](./images/yang-grpc-3.png?raw=true "Import JSON")
+
+![json](./images/yang-grpc-4.png?raw=true "Import JSON")
+
+![json](./images/yang-grpc-5.png?raw=true "Import JSON")
+
+![json](./images/yang-grpc-6.png?raw=true "Import JSON")
+
+There are much more functions in YANG Suite such as SNMP to Xpath mapping, Ansible and python code generation for Netconf call. Please refer to **_Help_** section inside YANG Suite portal for more guidance about how-to.
+![json](./images/help.png?raw=true "Import JSON")
+
 
 ### Telegraf Configuration
 Telegraf is developed by Influxdata, the same company that created InfluxDB. Telegraf is a server-based agent for collecting and sending all metrics and events from databases, systems, and IoT sensors. Normally the Telegraf configuration has 4 sections: global agent settings, input settings, output settings, and processors. Output settings determine where the data is written to. In our lab, output goes to InfluxDB database. Input settings include all types of telemetry Telegraf collects. In our lab, we have telemetry collected from the core switch through gNMI as one type of input. Telemetry collected from the access switch through gRPC is another type of input. We also have telemetry collected from the access switch through SNMP as third type of input. You can see Telegraf is flexible enough to collect the mix of different telemetry types. Processors are the functions that transform the data before Telegraf writes them to database. It's very helpful when you have a mix of types of telemetry like our lab.
@@ -465,6 +492,10 @@ We won't dive into the details. But the configuration below helps to rename tags
       if-oper-state-ready = 1
       if-oper-state-no-pass = 0
 ```
+
+Now you have learned how Telegraf is configured. Let's see what data you see at Telegraf. Keep in mind, core switch has all telemetry done through gNMI subscription and access switch has mix of gRPC and snmp. To view the data received at Telegraf, please go to your windows jumphost. Open Visual Code and have terminal opened like screenshot below. There are two bash files staged. _"telegraf-access.sh"_ and _"telegraf-core.sh"_. Let's execute them one by one and observe the output. Enter "yes" when asked about ssh key. When the script asks for password, please enter the one told by your proctor. You should see results like below. 
+
+
 
 ### InfluxDB Configuration
 InfluDB is a popular time series database. It's suitable for storing streaming data collected from IoT devices and network devices. Fortunately we don't need to configure the InfluxDB database in as much detail as Telegraf. The initialization of the lab creates the logins, database, and token for authentication. That's all we need. Please refer to [InfluxDB documentation](https://docs.influxdata.com/influxdb/v2.4/get-started/) to learn more about this time series database. Another popular database for storing streaming data is [Prometheus](https://prometheus.io/), which is very popular for network monitoring.
