@@ -286,7 +286,7 @@ Let's look at the Telegraf configuration in our lab.
   data_format = "influx"
 ```
 The syntax is pretty straightforward. We have two output destinations in the lab. One is to Influxdb database which listens on tcp port 8086. It's configured under _[[outputs.influxdb_v2]]_. This is the name of output plugin Telegraf supports. It has a specific "bucket", "token" and "organization" defined to access the Influxdb database. The second output directs Telegraf to print the telemetry data received to the terminal. This is helpful when you are working on diagnosing and verifying the telemetry data. When you look the data printed out in the terminal, it follows the format like this:
-measurement,tag1=value1,tag2=value2,...,tagn=valuen field1=value1,field2=value2,...fieldn=valuen
+_measurement,tag1=value1,tag2=value2,...,tagn=valuen field1=value1,field2=value2,...fieldn=valuen_
 Here is example for the cpu 5 seconds output:
 ```
 cpu,device=core,host=telegraf five_seconds=1i 1666837816572038000
@@ -493,9 +493,35 @@ We won't dive into the details. But the configuration below helps to rename tags
       if-oper-state-no-pass = 0
 ```
 
-Now you have learned how Telegraf is configured. Let's see what data you see at Telegraf. Keep in mind, core switch has all telemetry done through gNMI subscription and access switch has mix of gRPC and snmp. To view the data received at Telegraf, please go to your windows jumphost. Open Visual Code and have terminal opened like screenshot below. There are two bash files staged. _"telegraf-access.sh"_ and _"telegraf-core.sh"_. Let's execute them one by one and observe the output. Enter "yes" when asked about ssh key. When the script asks for password, please enter the one told by your proctor. You should see results like below. 
+Now you have learned how Telegraf is configured. Let's see what data you see at Telegraf. Keep in mind, core switch has all telemetry done through gNMI subscription and access switch has mix of gRPC and snmp. To view the data received at Telegraf, please go to your windows jumphost. Open Visual Code and have terminal opened like screenshot below. There are two bash files staged. _"telegraf-access.sh"_ and _"telegraf-core.sh"_. Let's execute them one by one and observe the output. 
 
+Run 
+```
+bash telegraf-access.sh
+```
+Enter "yes" when asked about ssh key. When the script asks for password, please enter the one told by your proctor. You should see results like below. 
 
+_interface-state_ is measurement name which represents the row of data with specific timestamps.
+
+_device_ is a tag and its value is _access_.
+
+You can also see there are several data like key=value pairs for _host_, _interface_, _path_, _interface_, and _subscription_. These are all tags.
+
+After the _subscription_ key=value pair, there is a SPACE. After SPACE, we have all the fields which are also in key=value pair format. In the screenshot below. We have _oper_status_ and _status_code_ as fields.
+
+In the end of the row of data, there is a timestamp in unix time format.
+
+You can also see snmp data displayed like the screen below for counters for interfaces.
+
+![json](./images/telegraf-access.png?raw=true "Import JSON")
+
+Go ahead to execute the script telegraf-core.sh in terminal to observe the data telegraf sees from core switch.
+```
+bash telegraf-core.sh
+```
+![json](./images/telegraf-core.png?raw=true "Import JSON")
+
+That's all for Telegraf we like to show you. Hope you can see how flexible and powerful Telegraf is. Using YANG Suite can help you figure out the right format of xpath for Telegraf gNMI subscription and also the switch configuration for gRPC dial-out telemetry.
 
 ### InfluxDB Configuration
 InfluDB is a popular time series database. It's suitable for storing streaming data collected from IoT devices and network devices. Fortunately we don't need to configure the InfluxDB database in as much detail as Telegraf. The initialization of the lab creates the logins, database, and token for authentication. That's all we need. Please refer to [InfluxDB documentation](https://docs.influxdata.com/influxdb/v2.4/get-started/) to learn more about this time series database. Another popular database for storing streaming data is [Prometheus](https://prometheus.io/), which is very popular for network monitoring.
