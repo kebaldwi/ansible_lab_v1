@@ -158,7 +158,7 @@ mv 10.1.#.15 10.1.7.15
 
 Now that you have explored the Ansible configuration, inventory and variable files, let's continue to Part 2 of the lab to explore Ansible Playbooks and Jinja2 Templates!
 
-[##On to Part 2](LabGuide_Part2.md)
+[*On to Part 2*](LabGuide_Part2.md)
 
 
 ### Part 2: Ansible Playbooks & Templates
