@@ -272,7 +272,7 @@ NOTE:  A great resource for learning more about Jinja2 Templating is [Przemek Ro
 
 We can see what the final CLI configuration will be by running the playbook: [render_configurations.yaml](render_configurations.yaml).
 
-The playbook **render_configurations.yaml** will take the configuration templates and values from the host and group vars we defined and generate the CLI configuration that will pushed to the switches for us to review.  This step is not necessary as the config will be rendered on the fly by our configuration playbooks, but will allow us to get a preview of our complete configuration that will be pushed to the network devices prior to running the playbooks that will configure the switches.
+The playbook **render_configurations.yaml** will take the configuration templates and values from the host and group vars we defined and generate the CLI configuration that will be pushed to the switches for us to review.  This step is not necessary as the config will be rendered on the fly by our configuration playbooks, but will allow us to get a preview of our complete configuration that will be pushed to the network devices prior to running the playbooks that will configure the switches.
 
 Let's take a look at [render_configurations.yaml](render_configurations.yaml).
 
@@ -306,7 +306,7 @@ Let's take a look at [render_configurations.yaml](render_configurations.yaml).
 
 Let's focus on the tasks section of the playbook.
 
-There are 3 tasks that are very similar.  Each uses the [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html) module to render configuration based on the specified Jinja2 template.
+There are 3 tasks that are very similar.  Each uses the [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html) module to render the configuration based on the specified Jinja2 template.
 
 The first task, named Core Config Render, will render a config based on the template called [core_config.j2](templates/core_config.j2).  The rendered configuration will be written to a file named after the host in the review_configs directory, such that the host 10.1.6.14, will result in a file called **10.1.6.14.config**.  There is a new parameter in this task that we haven't seen before:  **when**.    
 
