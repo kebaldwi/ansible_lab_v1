@@ -53,7 +53,8 @@ Note: On pod, core and access are named the host ip for each host
 
 ## Lab Guide
 
-[Lab Guide Part 1](LabGuide.md)
-[Lab Guide Part 2](LabGuide_Part2.md)
-[Lab Guide Part 3](LabGuide_Part3.md)
-[Lab Guide Part 4](LabGuide_Part4.md)
+[Lab Guide Part 1](LabGuide.md)  
+[Lab Guide Part 2](LabGuide_Part2.md)  
+[Lab Guide Part 3](LabGuide_Part3.md)  
+[Lab Guide Part 4](LabGuide_Part4.md)  
+
