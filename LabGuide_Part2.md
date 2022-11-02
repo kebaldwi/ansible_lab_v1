@@ -1,6 +1,13 @@
 
 ## Ansible Lab Guide  -- Under Construction!!!
 
+## Lab Table of Contents
+* [Part 1: Ansible Setup Exploration](https://github.com/chanhale/ansible_lab_v1/blob/master/LabGuide_Part1.md#part-1-ansible-setup-exploration)
+* [Part 2: Ansible Playbooks & Templates](https://github.com/chanhale/ansible_lab_v1/blob/master/LabGuide_Part2.md#part-2-ansible-playbooks--templates)
+* [Part 3: Using Ansible Playbooks to Deploy Configuration](https://github.com/chanhale/ansible_lab_v1/blob/master/LabGuide_Part3.md#part-3-using-ansible-playbooks-to-deploy-configuration)
+* [Part 4:  Using pyATS parsers with Ansible](https://github.com/chanhale/ansible_lab_v1/blob/master/LabGuide_Part4.md#part-4--using-pyats-parsers-with-ansible)
+
+
 ### Part 2: Ansible Playbooks & Templates
 
 #### Ansible Playbook Taxonomy
@@ -218,4 +225,4 @@ Roles can be referenced in a playbook using the **roles** option.  See this exam
 ```
 If we review our lab directory structure, we can see that there is a roles directory.  Within that roles directory there is a directory called **ansible-pyats**.   A deep dive into roles is beyond the scope of this session, but as you move further along in your Ansible journey, you may find that roles bring some highly beneficial re-use and modularity to your Ansible practice.  
 
-[*On to Part 3: Using Ansible Playbooks to Deploy Configuration](LabGuide_Part2.md)
+[*On to Part 3: Using Ansible Playbooks to Deploy Configuration*](LabGuide_Part3.md)

@@ -1,6 +1,12 @@
 
 ## Ansible Lab Guide  -- Under Construction!!!
 
+## Lab Table of Contents
+* [Part 1: Ansible Setup Exploration](https://github.com/chanhale/ansible_lab_v1/blob/master/LabGuide_Part1.md#part-1-ansible-setup-exploration)
+* [Part 2: Ansible Playbooks & Templates](https://github.com/chanhale/ansible_lab_v1/blob/master/LabGuide_Part2.md#part-2-ansible-playbooks--templates)
+* [Part 3: Using Ansible Playbooks to Deploy Configuration](https://github.com/chanhale/ansible_lab_v1/blob/master/LabGuide_Part3.md#part-3-using-ansible-playbooks-to-deploy-configuration)
+* [Part 4:  Using pyATS parsers with Ansible](https://github.com/chanhale/ansible_lab_v1/blob/master/LabGuide_Part4.md#part-4--using-pyats-parsers-with-ansible)
+
 ### Part 3: Using Ansible Playbooks to Deploy Configuration
 
 In this section of the lab, we will deploy a base configuration to our topology.  Let's briefly review the topology
