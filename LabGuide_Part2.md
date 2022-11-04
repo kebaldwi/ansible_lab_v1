@@ -1,5 +1,5 @@
 
-## Ansible Lab Guide  -- Under Construction!!!
+# Ansible Lab Guide  -- Under Construction!!!
 
 ## Lab Table of Contents
 * [Part 1: Ansible Setup Exploration](https://github.com/chanhale/ansible_lab_v1/blob/master/LabGuide.md#part-1-ansible-setup-exploration)
@@ -8,9 +8,9 @@
 * [Part 4:  Using pyATS parsers with Ansible](https://github.com/chanhale/ansible_lab_v1/blob/master/LabGuide_Part4.md#part-4--using-pyats-parsers-with-ansible)
 
 
-### Part 2: Ansible Playbooks & Templates
+## Part 2: Ansible Playbooks & Templates
 
-#### Ansible Playbook Taxonomy
+### Ansible Playbook Taxonomy
 
 In order to explore playbook structure, we will view and run the playbook titled [ios_facts.yaml](Task_0_Fact_Finding/ios_facts.yaml). This playbook will connect to the devices in our inventory and collect data using the [cisco.ios.ios_facts](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_facts_module.html#ansible-collections-cisco-ios-ios-facts-module) module.
 
