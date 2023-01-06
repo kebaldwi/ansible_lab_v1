@@ -18,6 +18,11 @@
         command: show vlan summary
       register: vlan_output
 
+    - name: Get Trunk Info
+      pyats_parse_command:
+        command: show interface trunk
+      register: trunk_output 
+
     - name: Display Switch Info
       debug:
         msg:
@@ -27,7 +32,7 @@
           - "Config Register: {{ version_output.structured.version.curr_config_register | default('None Retrieved') }}"
           - "Uptime: {{ version_output.structured.version.uptime | default('None Retrieved') }}"
           - "Number of VLANs: {{ vlan_output.structured.vlan_summary.existing_vlans | default('None Retrieved') }}"
-          - "License Information: {{ version_output.structured | json_query('version.license_package.[*][0][0].license_level') | default('None Retrieved') }} {{ version_output.structured | json_query('version.license_package.[*][0][1].license_level') | default('None Retrieved') }}"
-
+          - "License Information: {{ version_output.structured | json_query('version.license_package.[*][0][0].license_level') }} {{ version_output.structured | json_query('version.license_package.[*][0][1].license_level') }}"
+          - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
 
       
