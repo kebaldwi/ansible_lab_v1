@@ -26,13 +26,13 @@
     - name: Display Switch Info
       debug:
         msg:
-          - "Hostname: {{ version_output.structured.version.hostname }}"
-          - "Serial Number: {{ version_output.structured.version.chassis_sn }}"
-          - "IOS-XE Version: {{ version_output.structured.version.version }}"
-          - "Config Register: {{ version_output.structured.version.curr_config_register }}"
-          - "Uptime: {{ version_output.structured.version.uptime }}"
-          - "Number of VLANs: {{ vlan_output.structured.vlan_summary.existing_vlans }}"
-          - "License Information: {{ version_output.structured | json_query('version.license_package.[*][0][0].license_level') }} {{ version_output.structured | json_query('version.license_package.[*][0][1].license_level') }}"
-          - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') }}"
+          - "Hostname: {{ version_output.structured.version.hostname | default('None Retrieved') }}"
+          - "Serial Number: {{ version_output.structured.version.chassis_sn | default('None Retrieved') }}"
+          - "IOS-XE Version: {{ version_output.structured.version.version | default('None Retrieved') }}"
+          - "Config Register: {{ version_output.structured.version.curr_config_register | default('None Retrieved') }}"
+          - "Uptime: {{ version_output.structured.version.uptime | default('None Retrieved') }}"
+          - "Number of VLANs: {{ vlan_output.structured.vlan_summary.existing_vlans | default('None Retrieved') }}"
+          - "License Information: {{ version_output.structured | json_query('version.license_package.[*][0][0].license_level') | default('None Retrieved') }} {{ version_output.structured | json_query('version.license_package.[*][0][1].license_level') | default('None Retrieved') }}"
+          - "Trunk and Active Vlans {{ trunk_output.structured | json_query('interface.[*][0][0].name') | default('None Retrieved') }}  {{ trunk_output.structured | json_query('interface.[*][0][0].vlans_allowed_active_in_mgmt_domain') | default('None Retrieved') }}"
 
       
