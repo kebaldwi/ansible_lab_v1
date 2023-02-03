@@ -1,0 +1,9 @@
+these are wip.  They are not guaranteed to work.  
+
+Make sure you have the version of the cisco.dnac collection that works with your DNAC version.  
+
+I am testing with cisco.dnac version 6.6.3, DNAC Version 2.3.4.x
+
+Also you need to install the dnacentersdk python module.  
+
+See here: for more info:  https://github.com/cisco-en-programmability/dnacenter-ansible
