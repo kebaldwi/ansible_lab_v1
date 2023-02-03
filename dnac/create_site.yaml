@@ -1,0 +1,55 @@
+- hosts: dnac_servers
+  gather_facts: no
+  vars:
+    dnac_conn: &dnac_conn
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_debug: "{{dnac_debug}}"   
+ 
+  tasks:
+    - name: Create New Area Under Global
+      cisco.dnac.site_create:
+        <<: *dnac_conn
+        site: 
+          area:
+            name: "Phoenix"
+            parentName: "Global"
+        type: "area"
+
+    - name: Wait for site to be created
+      wait_for:
+        timeout: 5
+      delegate_to: localhost
+
+    - name: Create New Building Under Area
+      cisco.dnac.site_create:
+        <<: *dnac_conn
+        site: 
+          building:
+            address: "2375 E. Camelback Rd, Phoenix, AZ 85016"
+            country: "US"
+            name: "Cisco_Office"
+            parentName: "Global/Phoenix"
+        type: "building"
+
+    - name: Wait for Building to be created
+      wait_for:
+        timeout: 5
+      delegate_to: localhost
+
+    - name: Create New Floor Under Building
+      cisco.dnac.site_create:
+        <<: *dnac_conn
+        site: 
+          floor:
+            floorNumber: 1
+            height: 10
+            length: 100
+            name: "Floor1"
+            parentName: "Global/Phoenix/Cisco_Office"
+            rfModel: "Cubes And Walled Offices"
+            width: 100
+        type: "floor"

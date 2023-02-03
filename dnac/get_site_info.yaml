@@ -1,0 +1,29 @@
+- hosts: dnac_servers
+  gather_facts: no
+  vars:
+    dnac_conn: &dnac_conn
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_debug: "{{dnac_debug}}"    
+      
+ 
+  tasks:
+    - name: Get all Site
+      cisco.dnac.site_info:
+        <<: *dnac_conn
+      register: result
+
+    - name: Work with results
+      debug:
+        msg:
+          - "SiteName {{result.dnac_response['response'][0].siteNameHierarchy}}"
+          - "SiteID   {{result.dnac_response['response'][0].id}}"
+          - "SiteName {{result.dnac_response['response'][1].siteNameHierarchy}}"
+          - "SiteID   {{result.dnac_response['response'][1].id}}"         
+          - "SiteName {{result.dnac_response['response'][2].siteNameHierarchy}}"
+          - "SiteID   {{result.dnac_response['response'][2].id}}" 
+          - "SiteName {{result.dnac_response['response'][3].siteNameHierarchy}}"
+          - "SiteID   {{result.dnac_response['response'][3].id}}"                     

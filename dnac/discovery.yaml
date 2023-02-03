@@ -1,0 +1,32 @@
+- hosts: dnac_servers
+  gather_facts: no
+  vars:
+    dnac_conn: &dnac_conn
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_debug: "{{dnac_debug}}"   
+ 
+  tasks:
+    - name: Create Discovery
+      cisco.dnac.discovery:
+        <<: *dnac_conn
+        state: present
+        discoveryType: "RANGE"
+        ipAddressList: "10.1.1.13-10.1.1.15"
+        name: "Pod1Discovery"
+        netconfPort: "830"
+        enablePasswordList:
+        - "C1sco12345"
+        passwordList:
+        - "C1sco12345"
+        protocolOrder: "ssh"
+        snmpROCommunity: "C1sco12345"
+        snmpROCommunityDesc: "Public"
+        snmpRWCommunity: "private"
+        snmpRWCommunityDesc: "Private"
+        snmpVersion: "v2"
+        userNameList:
+        - "netadmin"

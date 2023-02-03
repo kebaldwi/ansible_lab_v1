@@ -1,0 +1,33 @@
+- hosts: dnac_servers
+  gather_facts: no
+  vars:
+    local_site: Global/Tucson/Chaniis_Office/Floor1
+    dnac_conn: &dnac_conn
+        dnac_host: "{{dnac_host}}"
+        dnac_username: "{{dnac_username}}"
+        dnac_password: "{{dnac_password}}"
+        dnac_verify: "{{dnac_verify}}"
+        dnac_port: "{{dnac_port}}"
+        dnac_debug: "{{dnac_debug}}"
+  
+  tasks:
+    - name: Get Site ID from Name
+      cisco.dnac.site_info:
+        <<: *dnac_conn
+        name: "{{local_site}}"
+      register: result
+
+    - name: Report
+      debug:
+        msg:
+          - "Site with name {{result.dnac_response['response'][0].siteNameHierarchy}}"
+          - "Has ID  {{result.dnac_response['response'][0].id}}"
+
+    - name: Assign Devices To Site
+      cisco.dnac.assign_device_to_site:
+        <<: *dnac_conn
+        siteId: "{{result.dnac_response['response'][0].id}}"
+        device:
+        - ip: 10.1.1.13
+        - ip: 10.1.1.14
+        - ip: 10.1.1.15             
