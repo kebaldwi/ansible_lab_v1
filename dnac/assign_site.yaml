@@ -1,7 +1,7 @@
 - hosts: dnac_servers
   gather_facts: no
   vars:
-    local_site: Global/Tucson/Chaniis_Office/Floor1
+    local_site: Global/Phoenix/Cisco_Office/Floor1
     dnac_conn: &dnac_conn
         dnac_host: "{{dnac_host}}"
         dnac_username: "{{dnac_username}}"
