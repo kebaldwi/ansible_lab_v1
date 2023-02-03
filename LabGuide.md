@@ -100,11 +100,11 @@ There are many ways to define variables for use in our playbooks.  As we have ju
 Let's explore our group_vars and host_vars directories:
 
 ```
-├──group_vars
-|  └──switches
-├──host_vars
-|  ├──10.1.#.14
-|  └──10.1.#.15
+├── group_vars
+│   └── switches
+├── host_vars
+│   ├── 10.1.#.14
+│   └── 10.1.#.15
 
 ```
 
